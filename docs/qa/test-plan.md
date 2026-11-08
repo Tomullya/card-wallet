@@ -32,7 +32,6 @@ a defect in a real fintech product costs money or trust.
 
 - Transfers between clients, currency conversion, admin role, card unblocking, e-mail.
 - Load and performance testing (k6 is a stretch goal).
-- Frontend UI testing (planned in Plan 2 with Playwright).
 - Real payment networks and real card data — all data is fictional.
 
 ## 3. Test approach
@@ -45,6 +44,7 @@ a defect in a real fintech product costs money or trust.
 | gRPC | pytest + grpcio | Fraud Service contract, reflection, health | `tests/grpc` |
 | Database | pytest + SQL | Stored data, no plaintext secrets, balance = sum of transactions | `tests/db` |
 | Contract | schemathesis | Generated requests never cause 5xx; responses match OpenAPI | `tests/contract` |
+| End-to-end (UI) | Playwright (Chromium) | Real user journeys in the web app: registration to statement, errors, session expiry, double click | `tests/e2e` |
 | Manual / exploratory | Postman | Main flows, exploratory checks, demo | `postman/` |
 | Regression (collection) | Newman | The Postman collection's assertions, in CI | `postman/` |
 | Defect detection check | `scripts/verify_bugs_caught.py` | The suite catches each planted defect | `docs/qa/bug-reports` |
@@ -61,7 +61,7 @@ Each automated test is tagged with the requirement IDs it covers; the
 
 | Environment | How | Purpose |
 |---|---|---|
-| Local stack | `docker compose up -d --build` | Wallet :8000, Fraud :50051, PostgreSQL :5433 |
+| Local stack | `docker compose up -d --build` | Web app :3000, Wallet :8000, Fraud :50051, PostgreSQL :5433 |
 | Buggy stack | `docker compose --profile buggy up -d` | Same image with planted defects, Wallet :8001 |
 | CI | GitHub Actions (`.github/workflows/ci.yml`) | Full run on every push; Allure report |
 

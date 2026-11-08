@@ -18,6 +18,10 @@ wait_healthy() {  # $1 = base URL
 step "Lint"
 "$PY" -m ruff check .
 
+step "Frontend type check and build"
+npm --prefix frontend ci --no-audit --no-fund --silent
+npm --prefix frontend run build --silent
+
 step "Unit tests (no services needed)"
 "$PY" -m pytest tests/unit -q
 
@@ -25,8 +29,9 @@ step "Start the stack (normal + buggy wallet)"
 docker compose --profile buggy up -d --build
 wait_healthy http://localhost:8000
 wait_healthy http://localhost:8001
+wait_healthy http://localhost:3000  # frontend proxies /api to the wallet
 
-step "All automated tests (Allure results)"
+step "All automated tests incl. browser E2E (Allure results)"
 rm -rf reports/allure-results
 "$PY" -m pytest -q --alluredir reports/allure-results --junitxml reports/pytest.xml
 

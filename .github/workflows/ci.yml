@@ -32,6 +32,9 @@ jobs:
         with:
           node-version: "24"
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
 
       - uses: actions/setup-java@v4  # Allure CLI needs Java
         with:
@@ -42,6 +45,7 @@ jobs:
         run: |
           pip install -r requirements-dev.txt
           npm ci --no-audit --no-fund
+          python -m playwright install --with-deps chromium
 
       - name: Run everything (same script as locally)
         run: scripts/ci_local.sh

@@ -23,16 +23,17 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 | gRPC testing and service integration | [`tests/grpc/`](tests/grpc/), [`tests/integration/`](tests/integration/) |
 | SQL checks on stored data | [`tests/db/`](tests/db/) |
 | Contract testing against OpenAPI | [`tests/contract/`](tests/contract/) — schemathesis |
+| UI end-to-end testing | [`tests/e2e/`](tests/e2e/) — Playwright, full user journey in a browser |
 | Postman / Newman | [`postman/`](postman/) — 27 requests, 49 assertions |
 | Bug reporting | [16 bug reports](docs/qa/bug-reports/README.md) |
-| Traceability | [Matrix: every requirement has at least one test](docs/qa/traceability-matrix.md) — generated from test tags (NFR-07/NFR-08 partly: see the matrix note) |
+| Traceability | [Matrix: every requirement has at least one test](docs/qa/traceability-matrix.md) — generated from test tags (NFR-08 partly: see the matrix note) |
 | Proving the tests find bugs | `BUGGY_MODE`: 4 planted defects, each caught by a named test |
 | CI | [GitHub Actions](.github/workflows/ci.yml) + Allure report |
 
 ## Architecture
 
 ```
-[Client / Postman / tests] ──REST──▶ [Wallet API (FastAPI)] ──gRPC──▶ [Fraud Service]
+[Web app / Postman / tests] ──REST──▶ [Wallet API (FastAPI)] ──gRPC──▶ [Fraud Service]
                                               │
                                               ▼
                                         [PostgreSQL]
@@ -40,6 +41,7 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 
 | Component | Technology | Port |
 |---|---|---|
+| Web app | React, TypeScript, Vite; served by nginx (proxies `/api`) | 3000 |
 | Wallet API | Python 3.13, FastAPI, SQLAlchemy, Alembic | 8000 |
 | Fraud Service | Python gRPC, server reflection, health check | 50051 |
 | Database | PostgreSQL 16 | 5433 |
@@ -55,8 +57,9 @@ Business rules worth testing: commission 1 % (min 0.50), daily card limit, block
 Requirements: Docker, Python 3.13, Node.js (for Newman and Allure), Java (for Allure).
 
 ```bash
-docker compose up -d --build            # Swagger: http://localhost:8000/docs
+docker compose up -d --build            # app: http://localhost:3000 · Swagger: http://localhost:8000/docs
 python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+.venv/bin/playwright install chromium
 npm ci
 scripts/ci_local.sh                     # everything CI runs; ends with "CI OK"
 ```
@@ -73,7 +76,7 @@ Postman: import `postman/card-wallet.postman_collection.json` and
 `postman/card-wallet-local.postman_environment.json`, run top to bottom.
 gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection).
 
-## Automated tests — 207
+## Automated tests — 227
 
 | Level | Folder | Tests | What it checks |
 |---|---|---|---|
@@ -83,6 +86,7 @@ gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection
 | gRPC | `tests/grpc` | 10 | Fraud Service directly, reflection, health |
 | Database | `tests/db` | 9 | Stored data, no plaintext card data, balance = sum of transactions |
 | Contract | `tests/contract` | 1 (14 endpoints) | Generated requests never cause 5xx; responses and status codes match OpenAPI |
+| E2E (browser) | `tests/e2e` | 17 | Register → account → top-up → card → pay → statement; errors, session expiry, double click |
 
 Counts include parametrized cases. Every test is tagged with the requirements it covers
 (`@pytest.mark.req("BR-PAY-03")`); `scripts/traceability.py` builds the matrix and fails CI
