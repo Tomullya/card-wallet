@@ -33,6 +33,14 @@ services:
       fraud:
         condition: service_started
 
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      wallet:
+        condition: service_started
+
   # Same image with the planted defects switched on (docs/qa/bug-reports, BUG-01…04).
   # Start with: docker compose --profile buggy up -d
   wallet-buggy:

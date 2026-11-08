@@ -8,3 +8,4 @@ ruff>=0.7
 grpcio-tools>=1.67
 schemathesis>=4.0
 allure-pytest>=2.13
+pytest-playwright>=0.5
