@@ -7,3 +7,7 @@ select = ["E", "F", "I", "B", "UP"]
 
 [lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.Header", "fastapi.Query"]
+
+[lint.per-file-ignores]
+# Embedded Postman test scripts (JavaScript) read better on one line.
+"scripts/build_postman_collection.py" = ["E501"]
