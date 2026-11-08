@@ -124,3 +124,23 @@ def test_other_users_statement_404(api):
     r = statement(api, stranger, acc["id"])
     assert r.status_code == 404
     assert r.json()["error"]["message"] == "Account not found"
+
+
+@pytest.mark.req("BR-STM-02")
+def test_max_date_to_is_not_a_server_error(api):
+    """Found in final review: date_to=9999-12-31 overflowed with 500."""
+    client = register_and_login(api)
+    acc = create_account(api, client)
+    top_up(api, client, acc["id"], "1.00")
+    r = statement(api, client, acc["id"], date_to="9999-12-31")
+    assert r.status_code == 200
+    assert r.json()["total"] == 1
+
+
+@pytest.mark.req("BR-STM-03")
+@pytest.mark.parametrize("offset", [2**63, 10**20])
+def test_huge_offset_422(api, offset):
+    """Found in final review: offsets beyond PostgreSQL bigint crashed with 500."""
+    client = register_and_login(api)
+    acc = create_account(api, client)
+    assert statement(api, client, acc["id"], offset=offset).status_code == 422

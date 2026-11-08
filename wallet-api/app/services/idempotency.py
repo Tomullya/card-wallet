@@ -10,10 +10,15 @@ from sqlalchemy.orm import Session
 from app.errors import ApiError
 from app.models import IdempotencyKey
 
+# Never part of the stored hash: the other fields are in the transactions table,
+# so a hash that included the CVV would let anyone recover it with 1000 guesses.
+SECRET_FIELDS = {"cvv"}
+
 
 def request_hash(req: BaseModel) -> str:
     """Hash of the validated request, so "10" and "10.00" count as the same body."""
-    canonical = json.dumps(req.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+    body = req.model_dump(mode="json", exclude=SECRET_FIELDS)
+    canonical = json.dumps(body, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode()).hexdigest()
 
 

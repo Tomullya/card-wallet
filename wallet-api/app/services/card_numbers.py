@@ -2,6 +2,7 @@
 
 import calendar
 import hashlib
+import hmac
 import secrets
 from datetime import date
 
@@ -55,5 +56,10 @@ def generate_cvv() -> str:
     return f"{secrets.randbelow(1000):03d}"
 
 
-def pan_hash(pan: str) -> str:
-    return hashlib.sha256(pan.encode()).hexdigest()
+def pan_hash(pan: str, secret: str) -> str:
+    """Keyed hash (HMAC-SHA256) of the PAN, used only to keep card numbers unique.
+
+    A plain hash would be easy to reverse: prefix and last 4 digits are known,
+    so only 10^6 candidates remain.
+    """
+    return hmac.new(secret.encode(), pan.encode(), hashlib.sha256).hexdigest()

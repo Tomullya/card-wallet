@@ -75,3 +75,6 @@ Lint: `.venv/bin/ruff check .`
 | Contract tests | Login with a password longer than 72 bytes crashed with `500` (bcrypt limit) | Returns `401`; registration rejects such passwords with `422` |
 | Contract tests | A request body that is not valid UTF-8 returned an undocumented `400` | Returns `422 VALIDATION_ERROR` like any other invalid input |
 | Contract tests | A NUL character (`\u0000`) in any text field crashed with `500` (PostgreSQL cannot store it) | All request bodies reject NUL characters with `422` |
+| Code review | Statement with `date_to=9999-12-31` or a huge `offset` crashed with `500` | `200` / `422` |
+| Code review | Full PAN could be recovered from its unsalted SHA-256 hash (only 10^6 candidates) | PAN hash is now an HMAC with a server-side secret |
+| Code review | CVV could be recovered from the idempotency request hash (1000 guesses) | CVV is excluded from that hash |

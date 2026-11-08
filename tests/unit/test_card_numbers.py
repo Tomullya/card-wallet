@@ -71,7 +71,8 @@ def test_generate_cvv_format():
 
 
 @pytest.mark.req("NFR-04")
-def test_pan_hash_is_sha256_hex():
-    h = pan_hash("4000000000000002")
+def test_pan_hash_is_keyed_hmac():
+    h = pan_hash("4000000000000002", "secret-a")
     assert re.fullmatch(r"[0-9a-f]{64}", h)
     assert "4000000000000002" not in h
+    assert h != pan_hash("4000000000000002", "secret-b")  # keyed

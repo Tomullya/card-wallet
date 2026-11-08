@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "fraud-service"))
 # Settings used when unit tests import wallet code directly.
 # JWT_SECRET must match docker-compose.yml so tests can craft tokens.
 os.environ.setdefault("JWT_SECRET", "local-dev-jwt-secret-not-for-production-0001")
+os.environ.setdefault("CARD_HASH_SECRET", "local-dev-card-hash-secret-not-for-production")
 os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://wallet:wallet@localhost:5433/wallet")
 JWT_SECRET = os.environ["JWT_SECRET"]
 

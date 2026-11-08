@@ -6,6 +6,7 @@ from decimal import Decimal
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.config import get_settings
 from app.errors import ApiError
 from app.models import Account, BlockReason, Card, CardStatus
 from app.schemas.cards import CardOut
@@ -59,14 +60,15 @@ def issue_card(db: Session, account: Account, daily_limit: Decimal) -> tuple[Car
     if active >= MAX_ACTIVE_CARDS:
         raise ApiError(409, "CARD_LIMIT_REACHED", "An account can have at most 3 active cards")
 
+    secret = get_settings().card_hash_secret
     pan = generate_pan()
-    while db.scalar(select(Card.id).where(Card.pan_hash == pan_hash(pan))):
+    while db.scalar(select(Card.id).where(Card.pan_hash == pan_hash(pan, secret))):
         pan = generate_pan()
     cvv = generate_cvv()
     card = Card(
         account_id=account.id,
         pan_last4=pan[-4:],
-        pan_hash=pan_hash(pan),
+        pan_hash=pan_hash(pan, secret),
         expiry_date=expiry_for(today),
         cvv_hash=hash_secret(cvv),
         status=CardStatus.ACTIVE,

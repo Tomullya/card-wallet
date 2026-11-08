@@ -27,7 +27,7 @@ def _filtered(query: Select, account: Account, f: StatementFilters) -> Select:
     query = query.where(Transaction.account_id == account.id)
     if f.date_from:
         query = query.where(Transaction.created_at >= _start_of(f.date_from))
-    if f.date_to:  # inclusive: everything before the start of the next day
+    if f.date_to and f.date_to < date.max:  # inclusive: before the start of the next day
         query = query.where(Transaction.created_at < _start_of(f.date_to + timedelta(days=1)))
     if f.status:
         query = query.where(Transaction.status == f.status)

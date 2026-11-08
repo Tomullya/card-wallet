@@ -37,7 +37,7 @@ def get_statement(
     status: TxStatus | None = None,
     type: TxType | None = None,  # noqa: A002 (public query parameter name)
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
-    offset: Annotated[int, Query(ge=0)] = 0,
+    offset: Annotated[int, Query(ge=0, le=2**63 - 1)] = 0,  # PostgreSQL bigint
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> StatementOut:
