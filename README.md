@@ -1,83 +1,128 @@
-# Mini Card Wallet
+# Mini Card Wallet — fintech QA portfolio project
 
-A demo fintech application built as a QA portfolio project: clients open multi-currency
-accounts, issue virtual cards and pay with them. Every card payment is checked by a
-separate anti-fraud service over gRPC.
+A demo card wallet — multi-currency accounts, virtual cards, card payments with commission,
+daily limits and anti-fraud checks — built to show the **full QA cycle** on a system I fully
+control: requirements → design → implementation → automated tests at six levels →
+QA documentation → CI.
 
-The project shows the full QA cycle on a system I can fully control: business requirements →
-design → implementation → automated tests at several levels.
+I am a QA engineer with a fintech (card) background. The code and tests were written with an
+AI assistant; I drove the scope, requirements and review, and the QA design is mine.
 
-> All data is fictional. Card numbers use the fake prefix `400000` and are not real cards.
+> All data is fictional. Card numbers use the fake prefix `400000`.
+
+<!-- After the first push, add the CI badge and the Allure report link here:
+[![CI](https://github.com/<user>/card-wallet/actions/workflows/ci.yml/badge.svg)](…)  ·  Allure report: https://<user>.github.io/card-wallet/ -->
+
+## What this project demonstrates
+
+| Skill | Where to look |
+|---|---|
+| Requirements analysis (and finding a requirements defect before coding) | [`docs/requirements/`](docs/requirements/README.md), [BUG-05](docs/qa/bug-reports/BUG-05.md) |
+| Test design: boundaries, decision tables, state transitions, concurrency | [Test cases](docs/qa/test-cases/), [checklists](docs/qa/checklists/) |
+| REST API testing (positive, negative, boundary, auth, IDOR) | [`tests/api/`](tests/api/) — pytest + httpx |
+| gRPC testing and service integration | [`tests/grpc/`](tests/grpc/), [`tests/integration/`](tests/integration/) |
+| SQL checks on stored data | [`tests/db/`](tests/db/) |
+| Contract testing against OpenAPI | [`tests/contract/`](tests/contract/) — schemathesis |
+| Postman / Newman | [`postman/`](postman/) — 27 requests, 49 assertions |
+| Bug reporting | [16 bug reports](docs/qa/bug-reports/README.md) |
+| Traceability | [Matrix: 38 / 38 requirements covered](docs/qa/traceability-matrix.md) — generated from test tags |
+| Proving the tests find bugs | `BUGGY_MODE`: 4 planted defects, each caught by a named test |
+| CI | [GitHub Actions](.github/workflows/ci.yml) + Allure report |
 
 ## Architecture
 
 ```
-[Client / tests] ──REST──▶ [Wallet API (FastAPI)] ──gRPC──▶ [Fraud Service]
-                                    │
-                                    ▼
-                              [PostgreSQL]
+[Client / Postman / tests] ──REST──▶ [Wallet API (FastAPI)] ──gRPC──▶ [Fraud Service]
+                                              │
+                                              ▼
+                                        [PostgreSQL]
 ```
 
 | Component | Technology | Port |
 |---|---|---|
 | Wallet API | Python 3.13, FastAPI, SQLAlchemy, Alembic | 8000 |
-| Fraud Service | Python, gRPC (with reflection and health check) | 50051 |
-| Database | PostgreSQL 16 | 5433 (host) |
+| Fraud Service | Python gRPC, server reflection, health check | 50051 |
+| Database | PostgreSQL 16 | 5433 |
+| Wallet with planted defects (optional) | same image, `BUGGY_MODE=true` | 8001 |
 
-## Documentation
+Business rules worth testing: commission 1 % (min 0.50), daily card limit, block after
+3 wrong CVV, idempotent payments, no overdraft under parallel requests, anti-fraud timeout →
+503 with nothing saved. Details: [API guide (RU)](docs/api-guide.ru.md) ·
+[slides (RU)](docs/slides/card-wallet-api-guide.html) · [design](docs/design/2026-11-08-card-wallet-design.md).
 
-- [Business requirements](docs/requirements/README.md) — every requirement has an ID (`BR-PAY-03`)
-- [Technical design](docs/design/2026-11-08-card-wallet-design.md)
-- [API guide slides (Russian, open in a browser)](docs/slides/card-wallet-api-guide.html)
-- [API guide (Russian)](docs/api-guide.ru.md) — every endpoint: parameters, what is required and why
-- Postman environment: `postman/card-wallet-local.postman_environment.json`
-- [Backend implementation plan](docs/plans/2026-11-08-plan-1-backend.md)
+## Run it
 
-## Run locally
-
-Requirements: Docker Desktop, Python 3.13.
+Requirements: Docker, Python 3.13, Node.js (for Newman and Allure), Java (for Allure).
 
 ```bash
-docker compose up -d --build
+docker compose up -d --build            # Swagger: http://localhost:8000/docs
+python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+npm ci
+scripts/ci_local.sh                     # everything CI runs; ends with "CI OK"
 ```
 
-- Swagger UI: http://localhost:8000/docs
-- Health check: http://localhost:8000/api/v1/health
-- gRPC: `localhost:50051` — e.g. `grpcurl -plaintext localhost:50051 list`
-  or open it in Postman (New → gRPC, server reflection is enabled)
-
-Test merchants for the anti-fraud service: `TEST_TIMEOUT` (answers too late → `503`) and
-`TEST_ERROR` (gRPC error → `503`).
-
-## Run the tests
+Single pieces:
 
 ```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements-dev.txt
-.venv/bin/pytest            # everything (the stack must be running)
+.venv/bin/pytest                        # all automated tests (the stack must be running)
+scripts/run_newman.sh                   # Postman collection
+npx allure open reports/allure-report   # view the report after ci_local.sh
 ```
 
-| Folder | Level | What it checks |
-|---|---|---|
-| `tests/unit` | Unit | Commission, Luhn, card expiry, money rounding, fraud rules |
-| `tests/api` | API (black box) | Every endpoint: positive, negative, boundary values, auth, access to other clients' data, idempotency, parallel payments |
-| `tests/integration` | Integration | Wallet ↔ Fraud Service: approve, decline, timeout, error |
-| `tests/grpc` | gRPC | Fraud Service called directly; reflection and health |
-| `tests/db` | SQL | Data stored correctly; balance equals the sum of transactions |
-| `tests/contract` | Contract | Generated requests (schemathesis) vs. the OpenAPI schema |
+Postman: import `postman/card-wallet.postman_collection.json` and
+`postman/card-wallet-local.postman_environment.json`, run top to bottom.
+gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection).
 
-Each test is tagged with the requirements it covers: `@pytest.mark.req("BR-PAY-03")`.
+## Automated tests — 207
 
-Lint: `.venv/bin/ruff check .`
+| Level | Folder | Tests | What it checks |
+|---|---|---|---|
+| Unit | `tests/unit` | 45 | Commission, Luhn, expiry, money rounding, fraud rules, QA tooling |
+| API | `tests/api` | 138 | Every endpoint: positive, negative, boundaries, auth, other clients' data, idempotency, parallel payments |
+| Integration | `tests/integration` | 4 | Wallet ↔ Fraud Service: approve, decline, timeout, error |
+| gRPC | `tests/grpc` | 10 | Fraud Service directly, reflection, health |
+| Database | `tests/db` | 9 | Stored data, no plaintext card data, balance = sum of transactions |
+| Contract | `tests/contract` | 1 (14 endpoints) | Generated requests never cause 5xx; responses and status codes match OpenAPI |
+
+Counts include parametrized cases. Every test is tagged with the requirements it covers
+(`@pytest.mark.req("BR-PAY-03")`); `scripts/traceability.py` builds the matrix and fails CI
+if a requirement has no test.
+
+## BUGGY_MODE — do the tests really catch bugs?
+
+```bash
+docker compose --profile buggy up -d
+.venv/bin/python scripts/verify_bugs_caught.py
+```
+
+```
+BUG     normal  buggy            test
+BUG-01  pass    fail (caught)    tests/api/test_payments.py::test_min_commission_applied
+BUG-02  pass    fail (caught)    tests/api/test_payments.py::test_daily_limit_exact_allowed
+BUG-03  pass    fail (caught)    tests/api/test_cvv_attempts.py::test_success_resets_counter
+BUG-04  pass    fail (caught)    tests/api/test_cards.py::test_other_users_card_and_account_404
+All planted defects are caught.
+```
 
 ## Defects found during development
 
-| Where found | Defect | Fix |
-|---|---|---|
-| Requirements review | Card daily limit (max 5000) was checked before the anti-fraud rule "amount > 5000", so that rule could never trigger | Max daily limit raised to 10000 (BR-CARD-02) |
-| Contract tests | Login with a password longer than 72 bytes crashed with `500` (bcrypt limit) | Returns `401`; registration rejects such passwords with `422` |
-| Contract tests | A request body that is not valid UTF-8 returned an undocumented `400` | Returns `422 VALIDATION_ERROR` like any other invalid input |
-| Contract tests | A NUL character (`\u0000`) in any text field crashed with `500` (PostgreSQL cannot store it) | All request bodies reject NUL characters with `422` |
-| Code review | Statement with `date_to=9999-12-31` or a huge `offset` crashed with `500` | `200` / `422` |
-| Code review | Full PAN could be recovered from its unsalted SHA-256 hash (only 10^6 candidates) | PAN hash is now an HMAC with a server-side secret |
-| Code review | CVV could be recovered from the idempotency request hash (1000 guesses) | CVV is excluded from that hash |
+Seven real defects, each fixed with a regression test that failed first
+([all bug reports](docs/qa/bug-reports/README.md)):
+
+| How it was found | Defect |
+|---|---|
+| Requirements review | Daily limit (max 5000) blocked the anti-fraud rule "amount > 5000" from ever triggering — [BUG-05](docs/qa/bug-reports/BUG-05.md) |
+| Contract tests | Password over 72 bytes crashed login with 500 — [BUG-06](docs/qa/bug-reports/BUG-06.md) |
+| Contract tests | Non-UTF-8 body returned an undocumented 400 — [BUG-07](docs/qa/bug-reports/BUG-07.md) |
+| Contract tests | NUL character in any text field crashed with 500 — [BUG-08](docs/qa/bug-reports/BUG-08.md) |
+| Code review | Statement with an extreme date or offset crashed with 500 — [BUG-09](docs/qa/bug-reports/BUG-09.md) |
+| Code review | Full card number recoverable from an unsalted hash — [BUG-10](docs/qa/bug-reports/BUG-10.md) |
+| Code review | CVV recoverable from the idempotency hash — [BUG-11](docs/qa/bug-reports/BUG-11.md) |
+
+## Documentation
+
+- [Business requirements](docs/requirements/README.md) — 38 requirements with IDs and acceptance criteria
+- [Technical design](docs/design/2026-11-08-card-wallet-design.md)
+- [QA documentation](docs/qa/README.md) — test plan, 44 test cases, checklists, bug reports, traceability matrix
+- [API guide (RU)](docs/api-guide.ru.md) and [slides (RU)](docs/slides/card-wallet-api-guide.html)
+- Implementation plans: [backend](docs/plans/2026-11-08-plan-1-backend.md), [QA package](docs/plans/2026-11-08-plan-3-qa.md)
