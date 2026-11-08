@@ -53,3 +53,19 @@ def test_expired_session_redirects_to_login(signed_in):
     page.reload()
     expect(page.get_by_test_id("session-message")).to_contain_text("Session expired")
     expect(page).to_have_url(f"{FRONTEND_URL}/login")
+
+
+@pytest.mark.req("BR-AUTH-03")
+def test_session_expiring_during_an_action_redirects_to_login(signed_in, api):
+    """401 from an action on an already loaded page (not only on reload)."""
+    from tests.helpers import create_account
+
+    page, client = signed_in
+    account = create_account(api, client)
+    page.goto(f"{FRONTEND_URL}/accounts/{account['id']}")
+    expect(page.get_by_test_id("account-balance")).to_have_text("0.00 EUR")
+    page.evaluate("sessionStorage.setItem('cw.token', 'garbage')")
+    page.get_by_test_id("topup-amount").fill("10.00")
+    page.get_by_test_id("topup-submit").click()
+    expect(page.get_by_test_id("session-message")).to_contain_text("Session expired")
+    expect(page).to_have_url(f"{FRONTEND_URL}/login")

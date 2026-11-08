@@ -40,6 +40,7 @@ def test_full_journey(app):
 
     app.get_by_test_id("pay-account-link").click()
     expect(app.get_by_test_id("account-balance")).to_have_text("89.50 EUR")
+    expect(app.get_by_test_id("tx-type")).to_have_count(3)  # the statement loads after the balance
     types = app.get_by_test_id("tx-type").all_inner_texts()
     assert sorted(types) == ["Commission", "Payment", "Top-up"]
 
@@ -79,3 +80,35 @@ def test_fraud_unavailable_message(signed_in, api):
     expect(page.get_by_test_id("error-banner")).to_contain_text("try again")
     expect(page.get_by_test_id("pay-result")).to_have_count(0)
     assert balance_of(api, client, card["account_id"]) == "100.00"
+
+
+def payment_rows(db, card_id):
+    return db.execute(
+        "select count(*) from transactions where card_id = %s and type = 'PAYMENT'", (card_id,)
+    ).fetchone()[0]
+
+
+@pytest.mark.req("BR-PAY-05", "BR-PAY-07")
+def test_repeat_payment_with_same_values_charges_again(signed_in, api, db):
+    """Found in final review: a second identical purchase silently replayed the first result."""
+    page, client = signed_in
+    card = funded_card(api, client, "100.00")
+    fill_payment(page, card["cvv"])
+    page.get_by_test_id("pay-submit").click()
+    expect(page.get_by_test_id("pay-status")).to_have_text("APPROVED")
+    page.get_by_test_id("pay-cvv").fill(card["cvv"])
+    page.get_by_test_id("pay-submit").click()
+    expect(page.get_by_test_id("pay-status")).to_have_text("APPROVED")
+    page.wait_for_timeout(300)
+    assert payment_rows(db, card["id"]) == 2
+    assert balance_of(api, client, card["account_id"]) == "79.00"
+
+
+@pytest.mark.req("NFR-04")
+def test_cvv_cleared_after_payment(signed_in, api):
+    page, client = signed_in
+    card = funded_card(api, client, "100.00")
+    fill_payment(page, card["cvv"])
+    page.get_by_test_id("pay-submit").click()
+    expect(page.get_by_test_id("pay-status")).to_have_text("APPROVED")
+    expect(page.get_by_test_id("pay-cvv")).to_have_value("")

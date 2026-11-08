@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 
-import { request, type Account, type Card, type Payment } from "../api";
+import { ApiError, request, type Account, type Card, type Payment } from "../api";
 import ErrorBanner from "../components/ErrorBanner";
 import { formatMoney } from "../money";
 
@@ -23,8 +23,9 @@ export default function Pay() {
   const [result, setResult] = useState<Payment | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
-  // One Idempotency-Key per payment attempt: reused on a retry of the same values,
-  // renewed when anything changes. Together with inFlight this makes a double click safe.
+  // One Idempotency-Key per payment attempt. It is kept only when the outcome is unknown
+  // (network error or 5xx), so pressing Pay again is a safe retry. After a final answer the
+  // next Pay is a new purchase. Together with inFlight this makes a double click safe.
   const idempotencyKey = useRef<string | null>(null);
   const inFlight = useRef(false);
 
@@ -65,7 +66,10 @@ export default function Pay() {
         { "Idempotency-Key": idempotencyKey.current },
       );
       setResult(payment);
+      idempotencyKey.current = null;
+      setCvv(""); // do not leave the CVV on screen
     } catch (e) {
+      if (e instanceof ApiError && e.status < 500) idempotencyKey.current = null;
       setError(e);
     } finally {
       inFlight.current = false;

@@ -76,17 +76,17 @@ Postman: import `postman/card-wallet.postman_collection.json` and
 `postman/card-wallet-local.postman_environment.json`, run top to bottom.
 gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection).
 
-## Automated tests — 227
+## Automated tests — 230
 
 | Level | Folder | Tests | What it checks |
 |---|---|---|---|
-| Unit | `tests/unit` | 45 | Commission, Luhn, expiry, money rounding, fraud rules, QA tooling |
+| Unit | `tests/unit` | 48 | Commission, Luhn, expiry, money rounding, fraud rules, QA tooling |
 | API | `tests/api` | 138 | Every endpoint: positive, negative, boundaries, auth, other clients' data, idempotency, parallel payments |
 | Integration | `tests/integration` | 4 | Wallet ↔ Fraud Service: approve, decline, timeout, error |
 | gRPC | `tests/grpc` | 10 | Fraud Service directly, reflection, health |
 | Database | `tests/db` | 9 | Stored data, no plaintext card data, balance = sum of transactions |
 | Contract | `tests/contract` | 1 (14 endpoints) | Generated requests never cause 5xx; responses and status codes match OpenAPI |
-| E2E (browser) | `tests/e2e` | 17 | Register → account → top-up → card → pay → statement; errors, session expiry, double click |
+| E2E (browser) | `tests/e2e` | 20 | Register → account → top-up → card → pay → statement; errors, session expiry, double click |
 
 Counts include parametrized cases. Every test is tagged with the requirements it covers
 (`@pytest.mark.req("BR-PAY-03")`); `scripts/traceability.py` builds the matrix and fails CI
