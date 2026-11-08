@@ -1,0 +1,6 @@
+-r wallet-api/requirements.txt
+pytest>=8.3
+pytest-repeat>=0.9
+httpx>=0.27
+psycopg[binary]>=3.2
+ruff>=0.7

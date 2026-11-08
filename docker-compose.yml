@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: wallet
+      POSTGRES_PASSWORD: wallet
+      POSTGRES_DB: wallet
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wallet"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  wallet:
+    build: ./wallet-api
+    environment:
+      DATABASE_URL: postgresql+psycopg://wallet:wallet@db:5432/wallet
+      JWT_SECRET: dev-secret-change-me
+      FRAUD_ADDRESS: fraud:50051
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
