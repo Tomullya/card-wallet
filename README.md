@@ -25,7 +25,7 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 | Contract testing against OpenAPI | [`tests/contract/`](tests/contract/) — schemathesis |
 | Postman / Newman | [`postman/`](postman/) — 27 requests, 49 assertions |
 | Bug reporting | [16 bug reports](docs/qa/bug-reports/README.md) |
-| Traceability | [Matrix: 38 / 38 requirements covered](docs/qa/traceability-matrix.md) — generated from test tags |
+| Traceability | [Matrix: every requirement has at least one test](docs/qa/traceability-matrix.md) — generated from test tags (NFR-07/NFR-08 partly: see the matrix note) |
 | Proving the tests find bugs | `BUGGY_MODE`: 4 planted defects, each caught by a named test |
 | CI | [GitHub Actions](.github/workflows/ci.yml) + Allure report |
 
@@ -106,7 +106,8 @@ All planted defects are caught.
 
 ## Defects found during development
 
-Seven real defects, each fixed with a regression test that failed first
+Seven real defects. The six code defects were fixed with a regression test that failed
+before the fix; the requirements defect was fixed in the requirements and is covered by a test
 ([all bug reports](docs/qa/bug-reports/README.md)):
 
 | How it was found | Defect |

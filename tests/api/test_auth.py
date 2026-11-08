@@ -37,7 +37,7 @@ def test_register_duplicate_email_409(api):
         ("name", ""),
         ("name", "   "),
         ("name", "a" * 101),
-        ("password", "short1"),
+        ("password", "short12"),  # 7 characters: one below the minimum
         ("password", "onlyletters"),
         ("password", "12345678"),
     ],

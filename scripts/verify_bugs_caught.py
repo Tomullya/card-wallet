@@ -9,7 +9,9 @@ not count as "caught".
 import os
 import subprocess
 import sys
+import tempfile
 import urllib.request
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -32,15 +34,44 @@ def is_up(base_url: str) -> bool:
         return False
 
 
-def run_test(nodeid: str, base_url: str) -> tuple[bool, str]:
-    result = subprocess.run(
-        [sys.executable, "-m", "pytest", nodeid, "-q", "-p", "no:cacheprovider"],
-        cwd=ROOT,
-        env={**os.environ, "WALLET_URL": base_url},
-        capture_output=True,
-        text=True,
-    )
-    return result.returncode == 0, result.stdout + result.stderr
+def failure_kind(junit_xml: str) -> str:
+    """'passed', 'assertion' (the test's own check failed) or 'error' (anything else).
+
+    Uses the failure *message* from the JUnit report, not the traceback text: a
+    traceback shows the test's source lines, which contain the word "assert" even
+    when the real cause is a connection error.
+    """
+    root = ET.fromstring(junit_xml)
+    for case in root.iter("testcase"):
+        if case.find("error") is not None or case.find("skipped") is not None:
+            return "error"
+        failure = case.find("failure")
+        if failure is not None:
+            message = failure.get("message", "")
+            is_assert = message.startswith("assert") or message.startswith("AssertionError")
+            return "assertion" if is_assert else "error"
+    return "passed"
+
+
+def run_test(nodeid: str, base_url: str) -> str:
+    with tempfile.TemporaryDirectory() as tmp:
+        report = Path(tmp) / "junit.xml"
+        subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                nodeid,
+                "-q",
+                "-p",
+                "no:cacheprovider",
+                f"--junitxml={report}",
+            ],
+            cwd=ROOT,
+            env={**os.environ, "WALLET_URL": base_url},
+            capture_output=True,
+        )
+        return failure_kind(report.read_text()) if report.exists() else "error"
 
 
 def main() -> int:
@@ -53,16 +84,16 @@ def main() -> int:
     print(f"{'BUG':<7} {'normal':<7} {'buggy':<16} test")
     all_caught = True
     for bug, nodeid in PLANTED.items():
-        normal_ok, _ = run_test(nodeid, NORMAL_URL)
-        buggy_ok, output = run_test(nodeid, BUGGY_URL)
-        assertion = "AssertionError" in output or "assert " in output
-        caught = normal_ok and not buggy_ok and assertion
+        normal = run_test(nodeid, NORMAL_URL)
+        buggy = run_test(nodeid, BUGGY_URL)
+        caught = normal == "passed" and buggy == "assertion"
         all_caught &= caught
-        if buggy_ok:
-            buggy_state = "pass (MISSED)"
-        else:
-            buggy_state = "fail (caught)" if caught else "fail (other)"
-        print(f"{bug:<7} {'pass' if normal_ok else 'FAIL':<7} {buggy_state:<16} {nodeid}")
+        buggy_state = {
+            "passed": "pass (MISSED)",
+            "assertion": "fail (caught)",
+            "error": "error (not a catch)",
+        }[buggy]
+        print(f"{bug:<7} {'pass' if normal == 'passed' else 'FAIL':<7} {buggy_state:<16} {nodeid}")
 
     print("All planted defects are caught." if all_caught else "Some defects were NOT caught.")
     return 0 if all_caught else 1

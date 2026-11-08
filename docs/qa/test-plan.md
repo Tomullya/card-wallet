@@ -87,7 +87,7 @@ independent and can run in any order. Expired cards are prepared directly in the
 | Access to another client's data (IDOR) | Data leak | 404 tests for every object type with a second client |
 | Card data recoverable from the database | Security incident | DB tests: no full PAN/CVV, keyed hashes (NFR-04) |
 | Fraud service down | Payments stuck or charged unchecked | Timeout/error tests: 503, nothing saved (BR-PAY-08) |
-| Flaky concurrency tests | False alarms in CI | Database row locks; repeated runs (`--count=5`) |
+| Flaky concurrency tests | False alarms in CI | Database row locks; concurrency tests were run 5 times in a row (`--count=5`) during development |
 
 ## 7. Defect management
 

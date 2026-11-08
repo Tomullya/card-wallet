@@ -29,7 +29,7 @@ Base URL `http://localhost:8000/api/v1`. "Automated by" names the pytest test; r
 | BR-AUTH-01 | Medium | Boundary | `tests/api/test_auth.py::test_register_validation`, `tests/api/test_auth.py::test_register_boundaries_ok` |
 
 **Steps:** register with each value.
-**Expected result:** password `abcdefg1` (8) and name of 100 characters → 201. Password `short1` (7), `onlyletters`, `12345678`; name empty, spaces only, 101 characters; invalid e-mail → 422 `VALIDATION_ERROR`.
+**Expected result:** password `abcdefg1` (8) and name of 100 characters → 201. Password `short12` (7 characters), `onlyletters`, `12345678`; name empty, spaces only, 101 characters; invalid e-mail → 422 `VALIDATION_ERROR`.
 
 ### TC-AUTH-004 Password longer than 72 bytes
 

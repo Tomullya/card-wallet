@@ -40,6 +40,10 @@ def render_matrix(requirements: dict[str, str], coverage: dict[str, list[str]]) 
         "",
         f"Covered: {covered} / {len(requirements)}",
         "",
+        "> Partly verified: **NFR-07** (one-command start) is checked for the backend only — the "
+        "frontend is not built yet. **NFR-08** (CI with a published report) is checked by "
+        "`scripts/ci_local.sh`; the online report appears after the first push to GitHub.",
+        "",
         "| ID | Requirement | Tests | Count |",
         "|---|---|---|---|",
     ]
