@@ -8,6 +8,7 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app import buggy
 from app.errors import ApiError
 from app.fraud_client import FraudClient, FraudUnavailableError
 from app.models import (
@@ -84,8 +85,11 @@ def _run_checks(
         raise _Declined("INVALID_CVV")
     if account.balance < amount + commission:
         raise _Declined("INSUFFICIENT_FUNDS")
-    if _spent_today(db, card, now) + amount > card.daily_limit:
+    spent_after = _spent_today(db, card, now) + amount
+    if spent_after > card.daily_limit:
         raise _Declined("DAILY_LIMIT_EXCEEDED")
+    if buggy.enabled("BUG-02") and spent_after == card.daily_limit:
+        raise _Declined("DAILY_LIMIT_EXCEEDED")  # planted: exact limit declined
 
     decision = fraud.check_payment(
         transaction_id=tx_id,
@@ -123,6 +127,8 @@ def process_payment(
 
     amount = to_money(req.amount)
     commission = calculate_commission(amount)
+    if buggy.enabled("BUG-01"):
+        commission = to_money(amount * Decimal("0.01"))  # planted: no 0.50 minimum
     tx_id = uuid.uuid4()
     now = utcnow()
     payment = Transaction(
@@ -168,7 +174,8 @@ def process_payment(
         )
     )
     account.balance = to_money(account.balance - amount - commission)
-    card.failed_cvv_attempts = 0
+    if not buggy.enabled("BUG-03"):  # planted: counter not reset after approval
+        card.failed_cvv_attempts = 0
     return _commit(db, user, idempotency_key, req_hash, _payment_out(payment, commission))
 
 

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app import buggy
 from app.db import get_db
 from app.deps import get_current_user
 from app.models import Card, User
@@ -59,6 +60,10 @@ def list_cards(
 def get_card(
     card_id: uuid.UUID, user: User = Depends(get_current_user), db: Session = Depends(get_db)
 ) -> CardOut:
+    if buggy.enabled("BUG-04"):  # planted: no ownership check
+        card = db.get(Card, card_id)
+        if card is not None:
+            return card_service.card_out(card)
     return card_service.card_out(get_owned_card(db, user, card_id))
 
 

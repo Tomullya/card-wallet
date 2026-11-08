@@ -32,3 +32,21 @@ services:
         condition: service_healthy
       fraud:
         condition: service_started
+
+  # Same image with the planted defects switched on (docs/qa/bug-reports, BUG-01…04).
+  # Start with: docker compose --profile buggy up -d
+  wallet-buggy:
+    build: ./wallet-api
+    profiles: ["buggy"]
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://wallet:wallet@db:5432/wallet
+      JWT_SECRET: local-dev-jwt-secret-not-for-production-0001
+      CARD_HASH_SECRET: local-dev-card-hash-secret-not-for-production
+      FRAUD_ADDRESS: fraud:50051
+      BUGGY_MODE: "true"
+    ports:
+      - "8001:8000"
+    depends_on:
+      wallet:
+        condition: service_started
