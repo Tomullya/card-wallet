@@ -95,6 +95,9 @@ def test_me_returns_current_user(api):
     assert r.json()["id"] == client.user_id
 
 
+OTHER_SECRET = "another-secret-that-is-at-least-32-bytes"
+
+
 def _token(secret: str, user_id: str, minutes: int) -> str:
     exp = datetime.now(UTC) + timedelta(minutes=minutes)
     return jwt.encode({"sub": user_id, "exp": exp}, secret, algorithm="HS256")
@@ -107,7 +110,7 @@ def _token(secret: str, user_id: str, minutes: int) -> str:
         lambda c: {},
         lambda c: {"Authorization": "Bearer garbage"},
         lambda c: {"Authorization": f"Token {c.token}"},
-        lambda c: {"Authorization": f"Bearer {_token('another-secret-that-is-at-least-32-bytes', c.user_id, 10)}"},
+        lambda c: {"Authorization": f"Bearer {_token(OTHER_SECRET, c.user_id, 10)}"},
         lambda c: {"Authorization": f"Bearer {_token(JWT_SECRET, c.user_id, -1)}"},
         lambda c: {"Authorization": f"Bearer {_token(JWT_SECRET, str(uuid.uuid4()), 10)}"},
     ],
