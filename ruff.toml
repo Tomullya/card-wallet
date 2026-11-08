@@ -1,6 +1,6 @@
 target-version = "py313"
 line-length = 100
-extend-exclude = ["**/fraudpb/*_pb2*.py", "**/fraudpb/*_pb2*.pyi"]
+extend-exclude = ["wallet-api/migrations/versions/*", "**/fraudpb/*_pb2*.py", "**/fraudpb/*_pb2*.pyi"]
 
 [lint]
 select = ["E", "F", "I", "B", "UP"]
