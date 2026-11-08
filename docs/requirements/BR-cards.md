@@ -19,7 +19,9 @@ Acceptance criteria:
 - CVV is 3 random digits.
 - **Full PAN and CVV are returned only once**, in the issue response.
 - CVV is stored only as a hash.
-- Daily limit: optional in the request, from `1.00` to `5000.00`; default `1000.00`.
+- Daily limit: optional in the request, from `1.00` to `10000.00`; default `1000.00`.
+  (The maximum equals the maximum payment amount, so that large payments reach the
+  anti-fraud check — see BR-FRD-01.)
 - A new card has status `ACTIVE`.
 
 ## BR-CARD-03 View a card

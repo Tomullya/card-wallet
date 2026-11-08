@@ -240,7 +240,7 @@ def test_money_columns_are_numeric_12_2(db):
 
 - [ ] **Step 1: Write the failing tests**
   - `test_issue_card_returns_full_pan_and_cvv_once` — `pan` Luhn-valid with prefix `400000`, `cvv` 3 digits, `status == "ACTIVE"`, `daily_limit == "1000.00"`, `expiry` matches `MM/YY` of `expiry_for(today)`; then `GET /cards/{id}` has `masked_pan == "**** **** **** " + pan[-4:]` and no `pan`/`cvv` keys.
-  - `test_daily_limit_boundaries` parametrized: `"1.00"`, `"5000.00"` → 201; `"0.99"`, `"5000.01"`, `"0"` → 422.
+  - `test_daily_limit_boundaries` parametrized: `"1.00"`, `"10000.00"` → 201; `"0.99"`, `"10000.01"`, `"0"` → 422.
   - `test_fourth_active_card_409` — 3 issued OK, 4th → `CARD_LIMIT_REACHED`.
   - `test_blocked_card_frees_slot` — block one of 3, issuing again → 201.
   - `test_expired_card_frees_slot_and_shows_expired` — `set_card_expiry(db, id, today - 1 day)` → `GET` shows `EXPIRED`; issuing a new card → 201.
@@ -332,14 +332,14 @@ def test_money_columns_are_numeric_12_2(db):
     - `test_three_wrong_cvv_blocks_card` — 3× wrong CVV → each `INVALID_CVV`; card `BLOCKED`/`TOO_MANY_FAILED_ATTEMPTS`; 4th attempt with correct CVV → `CARD_BLOCKED`.
     - `test_success_resets_counter` — wrong, wrong, correct (APPROVED), wrong, wrong → card still `ACTIVE`.
     - `test_other_declines_do_not_count` — wrong, wrong, `INSUFFICIENT_FUNDS` with correct CVV, wrong → card `BLOCKED` only after that 3rd wrong one (i.e., `ACTIVE` before it).
-  - `test_fraud_integration.py`: `test_high_amount_declined_by_fraud` (balance 10000.00, limit 5000.00 — card daily limit max is 5000.00 so `5000.01` hits `DAILY_LIMIT_EXCEEDED` first; therefore assert `5000.00` is APPROVED and test `FRAUD_HIGH_AMOUNT` via the gRPC test layer only — document this in the test docstring), `test_gambling_declined` (`FRAUD_BLOCKED_CATEGORY`, balance unchanged), `test_timeout_returns_503_and_saves_nothing` (merchant `TEST_TIMEOUT` → 503 `FRAUD_SERVICE_UNAVAILABLE` within < 4 s, no new transactions, balance unchanged), `test_error_returns_503`.
+  - `test_fraud_integration.py`: `test_high_amount_declined_by_fraud` (two top-ups to balance `20000.00`, card daily limit `10000.00`: pay `5000.01` → DECLINED `FRAUD_HIGH_AMOUNT`, balance unchanged; pay `5000.00` → APPROVED), `test_gambling_declined` (`FRAUD_BLOCKED_CATEGORY`, balance unchanged), `test_timeout_returns_503_and_saves_nothing` (merchant `TEST_TIMEOUT` → 503 `FRAUD_SERVICE_UNAVAILABLE` within < 4 s, no new transactions, balance unchanged), `test_error_returns_503`.
   - `tests/db/test_payment_storage.py`: `test_approved_creates_payment_and_linked_commission` (2 rows; commission `parent_id` = payment id); `test_declined_creates_single_declined_row`.
 - [ ] **Step 2: Run** → FAIL.
 - [ ] **Step 3: Implement.**
 - [ ] **Step 4: Run** `pytest tests/api tests/integration tests/db -v` → PASS.
 - [ ] **Step 5: Commit** `git commit -m "feat: card payments with limits, commission, CVV blocking and fraud check"`
 
-> Note for the reviewer: because the card daily limit is capped at 5000.00 (BR-CARD-02) and the limit check runs before the fraud check (BR-PAY-02), `FRAUD_HIGH_AMOUNT` is unreachable through the wallet API. This is a real requirements finding — record it in Plan 3 as a bug report / requirements question rather than changing the rules silently.
+> Requirements history: the card daily limit maximum was originally 5000.00, which made `FRAUD_HIGH_AMOUNT` unreachable (the limit check runs first, BR-PAY-02). Found while planning on 2026-11-08 and fixed by raising the maximum to 10000.00 (BR-CARD-02). Plan 3 documents this as a requirements defect found during analysis.
 
 ---
 
