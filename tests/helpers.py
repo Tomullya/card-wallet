@@ -47,3 +47,14 @@ def top_up(api, client: AuthedClient, account_id: str, amount: str) -> dict:
     r = api.post(f"/accounts/{account_id}/top-up", json={"amount": amount}, headers=client.headers)
     assert r.status_code == 201, r.text
     return r.json()
+
+
+def issue_card(api, client: AuthedClient, account_id: str, daily_limit: str | None = None) -> dict:
+    body = {} if daily_limit is None else {"daily_limit": daily_limit}
+    r = api.post(f"/accounts/{account_id}/cards", json=body, headers=client.headers)
+    assert r.status_code == 201, r.text
+    return r.json()
+
+
+def set_card_expiry(db, card_id: str, expiry) -> None:
+    db.execute("update cards set expiry_date = %s where id = %s", (expiry, card_id))
