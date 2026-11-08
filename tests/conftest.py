@@ -50,3 +50,21 @@ def fraud_stub(fraud_channel):
     from fraudpb.fraud_pb2_grpc import FraudServiceStub
 
     return FraudServiceStub(fraud_channel)
+
+
+def pytest_collection_finish(session):
+    """With REQ_REPORT=<path>, write {requirement_id: [test node ids]} for traceability."""
+    report = os.getenv("REQ_REPORT")
+    if not report:
+        return
+    import json
+    from collections import defaultdict
+
+    coverage = defaultdict(set)
+    for item in session.items:
+        nodeid = item.nodeid.split("[")[0]  # one entry per test, not per parameter
+        for marker in item.iter_markers(name="req"):
+            for req_id in marker.args:
+                coverage[req_id].add(nodeid)
+    with open(report, "w") as f:
+        json.dump({k: sorted(v) for k, v in coverage.items()}, f, indent=1)

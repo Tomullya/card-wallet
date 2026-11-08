@@ -8,7 +8,7 @@ from tests.conftest import JWT_SECRET
 from tests.helpers import PASSWORD, register, register_and_login, unique_email
 
 
-@pytest.mark.req("BR-AUTH-01", "BR-AUTH-05")
+@pytest.mark.req("BR-AUTH-01", "BR-AUTH-05", "NFR-02")
 def test_register_success_returns_201_without_password(api):
     local = uuid.uuid4().hex[:10]
     r = register(api, email=f"User.{local}@Example.COM", name="Anna")

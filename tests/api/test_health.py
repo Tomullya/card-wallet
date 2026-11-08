@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.req("NFR-06")
+@pytest.mark.req("NFR-06", "NFR-07")
 def test_health_returns_ok(api):
     r = api.get("/health")
     assert r.status_code == 200

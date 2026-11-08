@@ -23,7 +23,7 @@ def assert_declined(r, reason):
     assert r.json()["decline_reason"] == reason
 
 
-@pytest.mark.req("BR-PAY-03", "BR-PAY-05")
+@pytest.mark.req("BR-PAY-03", "BR-PAY-05", "NFR-02")
 def test_approved_payment_charges_amount_plus_commission(api, client):
     card = funded_card(api, client, "1000.00")
     r = pay(api, client, card, "100.00")
