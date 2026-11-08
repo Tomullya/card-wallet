@@ -17,7 +17,7 @@ services:
     build: ./wallet-api
     environment:
       DATABASE_URL: postgresql+psycopg://wallet:wallet@db:5432/wallet
-      JWT_SECRET: dev-secret-change-me
+      JWT_SECRET: local-dev-jwt-secret-not-for-production-0001
       FRAUD_ADDRESS: fraud:50051
     ports:
       - "8000:8000"

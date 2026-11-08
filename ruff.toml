@@ -4,3 +4,6 @@ extend-exclude = ["wallet-api/migrations/versions/*", "**/fraudpb/*_pb2*.py", "*
 
 [lint]
 select = ["E", "F", "I", "B", "UP"]
+
+[lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Header", "fastapi.Query"]
