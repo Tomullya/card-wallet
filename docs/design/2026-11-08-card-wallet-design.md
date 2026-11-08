@@ -35,7 +35,7 @@ reviews the result and must be able to explain every part.
 | Fraud Service | Python 3.13, grpcio | Approve or decline a payment (BR-FRD) |
 | Database | PostgreSQL 16 | Wallet data |
 | Frontend | React, Vite, TypeScript | Client UI |
-| Contract | `proto/fraud.proto` | Shared gRPC contract |
+| Contract | `proto/fraudpb/fraud.proto` | Shared gRPC contract |
 | Runtime | Docker Compose | Starts all components with one command (NFR-07) |
 
 The fraud service is stateless and has no database.
@@ -157,9 +157,10 @@ card-wallet/
 │   ├── migrations/            # Alembic
 │   └── Dockerfile
 ├── fraud-service/
-│   ├── fraud/                 # server.py, rules.py
+│   ├── fraud_service/         # server.py, rules.py
+│   ├── fraudpb/               # generated gRPC code (scripts/gen_proto.sh)
 │   └── Dockerfile
-├── proto/fraud.proto
+├── proto/fraudpb/fraud.proto
 ├── frontend/                  # React + Vite + TypeScript
 ├── tests/
 │   ├── unit/                  # commission, luhn, masking, fraud rules

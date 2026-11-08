@@ -1,0 +1,4 @@
+grpcio>=1.67
+grpcio-reflection>=1.67
+grpcio-health-checking>=1.67
+protobuf>=5.28

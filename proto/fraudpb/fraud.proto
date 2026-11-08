@@ -1,0 +1,32 @@
+// Contract between the Wallet API (client) and the Fraud Service (server).
+// See docs/requirements/BR-fraud.md.
+syntax = "proto3";
+
+package fraud.v1;
+
+service FraudService {
+  // Decide whether a card payment may be charged.
+  rpc CheckPayment(CheckPaymentRequest) returns (CheckPaymentResponse);
+}
+
+message CheckPaymentRequest {
+  string transaction_id = 1;
+  string user_id = 2;
+  string card_last4 = 3;
+  string amount = 4;            // decimal as string, e.g. "123.45" (no precision loss)
+  string currency = 5;
+  string merchant_name = 6;
+  string merchant_category = 7;
+}
+
+enum Decision {
+  DECISION_UNSPECIFIED = 0;
+  APPROVE = 1;
+  DECLINE = 2;
+}
+
+message CheckPaymentResponse {
+  Decision decision = 1;
+  string reason = 2;            // HIGH_AMOUNT, BLOCKED_CATEGORY or empty
+  int32 risk_score = 3;         // 0-100
+}

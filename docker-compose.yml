@@ -13,6 +13,11 @@ services:
       timeout: 3s
       retries: 20
 
+  fraud:
+    build: ./fraud-service
+    ports:
+      - "50051:50051"
+
   wallet:
     build: ./wallet-api
     environment:
@@ -24,3 +29,5 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      fraud:
+        condition: service_started

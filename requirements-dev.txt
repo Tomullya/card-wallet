@@ -4,3 +4,5 @@ pytest-repeat>=0.9
 httpx>=0.27
 psycopg[binary]>=3.2
 ruff>=0.7
+-r fraud-service/requirements.txt
+grpcio-tools>=1.67
