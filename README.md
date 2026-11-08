@@ -28,6 +28,8 @@ design → implementation → automated tests at several levels.
 
 - [Business requirements](docs/requirements/README.md) — every requirement has an ID (`BR-PAY-03`)
 - [Technical design](docs/design/2026-11-08-card-wallet-design.md)
+- [API guide (Russian)](docs/api-guide.ru.md) — every endpoint: parameters, what is required and why
+- Postman environment: `postman/card-wallet-local.postman_environment.json`
 - [Backend implementation plan](docs/plans/2026-11-08-plan-1-backend.md)
 
 ## Run locally
