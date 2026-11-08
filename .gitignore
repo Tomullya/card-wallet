@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+dist/
+.env
+allure-results/
+allure-report/
+.pytest_cache/
