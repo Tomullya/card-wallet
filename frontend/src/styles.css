@@ -40,6 +40,7 @@ a { color: var(--sea); }
 .page { max-width: 1040px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2.5rem) 4rem; display: grid; gap: 2rem; }
 .page-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 .muted { color: var(--ink-soft); }
+.nowrap { white-space: nowrap; }
 .panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius-panel); padding: 1.25rem; }
 .split { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; }
 @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
