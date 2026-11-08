@@ -1,0 +1,11 @@
+{
+  "name": "card-wallet-qa",
+  "private": true,
+  "description": "QA tooling for Mini Card Wallet: Newman (Postman CLI) and Allure report",
+  "scripts": {
+    "newman": "newman run postman/card-wallet.postman_collection.json -e postman/card-wallet-local.postman_environment.json --reporters cli,junit --reporter-junit-export reports/newman.xml"
+  },
+  "devDependencies": {
+    "newman": "6.2.3"
+  }
+}
