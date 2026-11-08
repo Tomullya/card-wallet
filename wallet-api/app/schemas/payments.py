@@ -4,14 +4,14 @@ from typing import Annotated
 from pydantic import BaseModel, Field, StringConstraints
 
 from app.models import MerchantCategory
-from app.schemas.common import Amount, MoneyOut, UtcDatetime
+from app.schemas.common import Amount, MoneyOut, RequestModel, UtcDatetime
 
 MerchantName = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)
 ]
 
 
-class PaymentRequest(BaseModel):
+class PaymentRequest(RequestModel):
     card_id: uuid.UUID
     cvv: str = Field(pattern=r"^\d{3}$")
     amount: Amount

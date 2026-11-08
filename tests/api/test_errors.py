@@ -29,3 +29,29 @@ def test_malformed_body_is_validation_error(api, body):
     r = api.post("/auth/login", content=body, headers={"Content-Type": "application/json"})
     assert r.status_code == 422
     assert r.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.req("NFR-03")
+def test_nul_character_in_login_is_validation_error(api):
+    """Found by contract tests: PostgreSQL rejects NUL characters, which crashed with 500."""
+    r = api.post("/auth/login", json={"email": "a\u0000@example.com", "password": "Passw0rd!"})
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.req("BR-AUTH-01", "NFR-03")
+def test_nul_character_in_name_is_validation_error(api):
+    from tests.helpers import register
+
+    r = register(api, name="An\u0000na")
+    assert r.status_code == 422
+
+
+@pytest.mark.req("BR-PAY-01", "NFR-03")
+def test_nul_character_in_merchant_is_validation_error(api):
+    from tests.helpers import funded_card, pay, register_and_login
+
+    client = register_and_login(api)
+    card = funded_card(api, client)
+    r = pay(api, client, card, "10.00", merchant="Sh\u0000op")
+    assert r.status_code == 422

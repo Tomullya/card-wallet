@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Annotated
 
-from pydantic import BeforeValidator, Field, PlainSerializer
+from pydantic import BaseModel, BeforeValidator, Field, PlainSerializer, field_validator
 
 from app.services.money import to_money
 
@@ -35,3 +35,14 @@ Amount = Annotated[
     Field(gt=0, le=Decimal("10000.00"), max_digits=12, decimal_places=2),
     PlainSerializer(_money_str, return_type=str),
 ]
+
+
+class RequestModel(BaseModel):
+    """Base for request bodies. Rejects NUL characters, which PostgreSQL cannot store."""
+
+    @field_validator("*", mode="after")
+    @classmethod
+    def _reject_nul(cls, value: object) -> object:
+        if isinstance(value, str) and "\x00" in value:
+            raise ValueError("Text must not contain NUL characters")
+        return value

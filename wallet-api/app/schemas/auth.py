@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, StringConstraints, field_validator
 
-from app.schemas.common import UtcDatetime
+from app.schemas.common import RequestModel, UtcDatetime
 from app.security import BCRYPT_MAX_BYTES
 
 Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
@@ -22,7 +22,7 @@ def _normalize_email(value: object) -> object:
     return value.strip().lower() if isinstance(value, str) else value
 
 
-class RegisterRequest(BaseModel):
+class RegisterRequest(RequestModel):
     email: EmailStr
     name: Name
     password: Password
@@ -31,7 +31,7 @@ class RegisterRequest(BaseModel):
     _password = field_validator("password")(_check_password)
 
 
-class LoginRequest(BaseModel):
+class LoginRequest(RequestModel):
     email: str
     password: str
 

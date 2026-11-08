@@ -4,7 +4,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, BeforeValidator, Field
 
-from app.schemas.common import MoneyOut, _reject_bool
+from app.schemas.common import MoneyOut, RequestModel, _reject_bool
 
 DailyLimit = Annotated[
     Decimal,
@@ -13,7 +13,7 @@ DailyLimit = Annotated[
 ]
 
 
-class CardCreate(BaseModel):
+class CardCreate(RequestModel):
     daily_limit: DailyLimit = Decimal("1000.00")
 
 

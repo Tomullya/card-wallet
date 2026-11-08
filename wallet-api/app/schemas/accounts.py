@@ -3,11 +3,11 @@ import uuid
 from pydantic import BaseModel, ConfigDict
 
 from app.models import Currency
-from app.schemas.common import Amount, MoneyOut, UtcDatetime
+from app.schemas.common import Amount, MoneyOut, RequestModel, UtcDatetime
 from app.schemas.transactions import TransactionOut
 
 
-class AccountCreate(BaseModel):
+class AccountCreate(RequestModel):
     currency: Currency
 
 
@@ -20,7 +20,7 @@ class AccountOut(BaseModel):
     created_at: UtcDatetime
 
 
-class TopUpRequest(BaseModel):
+class TopUpRequest(RequestModel):
     amount: Amount
 
 

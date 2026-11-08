@@ -74,3 +74,4 @@ Lint: `.venv/bin/ruff check .`
 | Requirements review | Card daily limit (max 5000) was checked before the anti-fraud rule "amount > 5000", so that rule could never trigger | Max daily limit raised to 10000 (BR-CARD-02) |
 | Contract tests | Login with a password longer than 72 bytes crashed with `500` (bcrypt limit) | Returns `401`; registration rejects such passwords with `422` |
 | Contract tests | A request body that is not valid UTF-8 returned an undocumented `400` | Returns `422 VALIDATION_ERROR` like any other invalid input |
+| Contract tests | A NUL character (`\u0000`) in any text field crashed with `500` (PostgreSQL cannot store it) | All request bodies reject NUL characters with `422` |
