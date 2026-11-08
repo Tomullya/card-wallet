@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Header
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.db import get_db
@@ -22,5 +23,6 @@ def create_payment(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
     fraud: FraudClient = Depends(get_fraud_client),
-) -> PaymentOut:
-    return process_payment(db, user, req, fraud)
+) -> JSONResponse:
+    status_code, body = process_payment(db, user, req, fraud, idempotency_key)
+    return JSONResponse(status_code=status_code, content=body)

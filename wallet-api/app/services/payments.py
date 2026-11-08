@@ -5,6 +5,7 @@ from datetime import UTC, datetime, time
 from decimal import Decimal
 
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.errors import ApiError
@@ -22,6 +23,7 @@ from app.models import (
 )
 from app.schemas.payments import PaymentOut, PaymentRequest
 from app.security import verify_secret
+from app.services import idempotency
 from app.services.cards import effective_status
 from app.services.money import calculate_commission, to_money
 from app.services.ownership import get_owned_card
@@ -98,12 +100,26 @@ def _run_checks(
         raise _Declined(FRAUD_REASONS.get(decision.reason or "", "FRAUD_DECLINED"))
 
 
-def process_payment(db: Session, user: User, req: PaymentRequest, fraud: FraudClient) -> PaymentOut:
-    """Check and charge a card payment. Commits the result; raises 503 if fraud is unavailable."""
+def process_payment(
+    db: Session, user: User, req: PaymentRequest, fraud: FraudClient, idempotency_key: str
+) -> tuple[int, dict]:
+    """Check and charge a card payment exactly once per idempotency key.
+
+    Returns (HTTP status, response body). Raises 503 if the fraud service is unavailable;
+    in that case nothing is saved and the key can be used again.
+    """
+    req_hash = idempotency.request_hash(req)
+    if record := idempotency.find(db, user.id, idempotency_key):
+        return idempotency.replay(record, req_hash)
+
     card = get_owned_card(db, user, req.card_id)
     # Lock order: account, then card. Prevents double spending (BR-PAY-09).
     account = db.scalar(select(Account).where(Account.id == card.account_id).with_for_update())
     db.refresh(card, with_for_update=True)
+    # A parallel request with the same key may have finished while we waited for the lock.
+    if record := idempotency.find(db, user.id, idempotency_key):
+        db.rollback()
+        return idempotency.replay(record, req_hash)
 
     amount = to_money(req.amount)
     commission = calculate_commission(amount)
@@ -132,8 +148,7 @@ def process_payment(db: Session, user: User, req: PaymentRequest, fraud: FraudCl
         payment.status = TxStatus.DECLINED
         payment.decline_reason = declined.reason
         db.add(payment)
-        db.commit()
-        return _payment_out(payment, commission=None)
+        return _commit(db, user, idempotency_key, req_hash, _payment_out(payment, None))
 
     payment.status = TxStatus.APPROVED
     db.add(payment)
@@ -154,8 +169,23 @@ def process_payment(db: Session, user: User, req: PaymentRequest, fraud: FraudCl
     )
     account.balance = to_money(account.balance - amount - commission)
     card.failed_cvv_attempts = 0
-    db.commit()
-    return _payment_out(payment, commission=commission)
+    return _commit(db, user, idempotency_key, req_hash, _payment_out(payment, commission))
+
+
+def _commit(db: Session, user: User, key: str, req_hash: str, out: PaymentOut) -> tuple[int, dict]:
+    """Save the result together with the idempotency record in one database transaction."""
+    body = out.model_dump(mode="json")
+    idempotency.save(db, user.id, key, req_hash, 201, body)
+    try:
+        db.commit()
+    except IntegrityError:
+        # Another request with the same key won the race: undo ours, return theirs.
+        db.rollback()
+        record = idempotency.find(db, user.id, key)
+        if record is None:
+            raise
+        return idempotency.replay(record, req_hash)
+    return 201, body
 
 
 def _payment_out(payment: Transaction, commission: Decimal | None) -> PaymentOut:
