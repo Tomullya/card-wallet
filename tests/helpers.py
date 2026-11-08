@@ -58,3 +58,51 @@ def issue_card(api, client: AuthedClient, account_id: str, daily_limit: str | No
 
 def set_card_expiry(db, card_id: str, expiry) -> None:
     db.execute("update cards set expiry_date = %s where id = %s", (expiry, card_id))
+
+
+def wrong_cvv(cvv: str) -> str:
+    return f"{(int(cvv) + 1) % 1000:03d}"
+
+
+def pay(
+    api,
+    client: AuthedClient,
+    card: dict,
+    amount: str,
+    *,
+    cvv: str | None = None,
+    merchant: str = "Shop",
+    category: str = "GROCERIES",
+    key: str | None = None,
+):
+    """Send a card payment. Defaults: the card's real CVV and a fresh idempotency key."""
+    return api.post(
+        "/payments",
+        json={
+            "card_id": card["id"],
+            "cvv": card["cvv"] if cvv is None else cvv,
+            "amount": amount,
+            "merchant_name": merchant,
+            "merchant_category": category,
+        },
+        headers={**client.headers, "Idempotency-Key": key or uuid.uuid4().hex},
+    )
+
+
+def funded_card(
+    api, client: AuthedClient, balance: str = "1000.00", daily_limit: str | None = None
+) -> dict:
+    """Account with the given balance (top-ups of max 10000.00 each) and one card."""
+    from decimal import Decimal
+
+    account = create_account(api, client)
+    remaining = Decimal(balance)
+    while remaining > 0:
+        part = min(remaining, Decimal("10000.00"))
+        top_up(api, client, account["id"], str(part))
+        remaining -= part
+    return issue_card(api, client, account["id"], daily_limit=daily_limit)
+
+
+def balance_of(api, client: AuthedClient, account_id: str) -> str:
+    return api.get(f"/accounts/{account_id}", headers=client.headers).json()["balance"]
