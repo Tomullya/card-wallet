@@ -6,6 +6,7 @@
     "newman": "newman run postman/card-wallet.postman_collection.json -e postman/card-wallet-local.postman_environment.json --reporters cli,junit --reporter-junit-export reports/newman.xml"
   },
   "devDependencies": {
-    "newman": "6.2.3"
+    "newman": "6.2.3",
+    "allure-commandline": "2.46.1"
   }
 }

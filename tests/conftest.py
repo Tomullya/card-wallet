@@ -68,3 +68,26 @@ def pytest_collection_finish(session):
                 coverage[req_id].add(nodeid)
     with open(report, "w") as f:
         json.dump({k: sorted(v) for k, v in coverage.items()}, f, indent=1)
+
+
+def requirement_labels(item) -> list[str]:
+    """Requirement IDs from the test's @pytest.mark.req markers."""
+    return [req_id for marker in item.iter_markers(name="req") for req_id in marker.args]
+
+
+def level_of(item) -> str:
+    """Test level = the folder under tests/ (unit, api, integration, grpc, db, contract)."""
+    parts = item.nodeid.split("/")
+    return parts[1] if len(parts) > 2 else "other"
+
+
+def pytest_runtest_setup(item):
+    """Show requirement IDs and the test level in the Allure report."""
+    if not item.config.getoption("--alluredir", default=None):
+        return
+    import allure
+
+    allure.dynamic.parent_suite(level_of(item))
+    for req_id in requirement_labels(item):
+        allure.dynamic.tag(req_id)
+        allure.dynamic.label("requirement", req_id)

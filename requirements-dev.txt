@@ -7,3 +7,4 @@ ruff>=0.7
 -r fraud-service/requirements.txt
 grpcio-tools>=1.67
 schemathesis>=4.0
+allure-pytest>=2.13
