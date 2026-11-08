@@ -10,6 +10,7 @@ from app.db import get_db
 from app.deps import get_current_user
 from app.errors import ApiError
 from app.models import TxStatus, TxType, User
+from app.schemas.errors import error_responses
 from app.schemas.transactions import TransactionOut, transaction_out
 from app.services.ownership import get_owned_account
 from app.services.statement import StatementFilters, list_transactions
@@ -24,7 +25,11 @@ class StatementOut(BaseModel):
     offset: int
 
 
-@router.get("/accounts/{account_id}/transactions", response_model=StatementOut)
+@router.get(
+    "/accounts/{account_id}/transactions",
+    response_model=StatementOut,
+    responses=error_responses(401, 404, 422),
+)
 def get_statement(
     account_id: uuid.UUID,
     date_from: date | None = None,

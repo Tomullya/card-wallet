@@ -114,9 +114,11 @@ def test_list_cards_masked(api, owner):
     assert r.status_code == 200
     listed = r.json()
     assert {c["id"] for c in listed} == {c["id"] for c in issued}
-    assert all(set(c) == {
-        "id", "account_id", "masked_pan", "expiry", "status", "block_reason", "daily_limit"
-    } for c in listed)
+    assert all(
+        set(c)
+        == {"id", "account_id", "masked_pan", "expiry", "status", "block_reason", "daily_limit"}
+        for c in listed
+    )
 
 
 @pytest.mark.req("BR-CARD-01", "BR-CARD-03", "BR-CARD-04")

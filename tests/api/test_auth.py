@@ -121,3 +121,21 @@ def test_protected_endpoint_rejects_bad_tokens(api, make_header):
     r = api.get("/me", headers=make_header(client))
     assert r.status_code == 401
     assert r.json()["error"]["code"] == "UNAUTHORIZED"
+
+
+@pytest.mark.req("BR-AUTH-02")
+def test_login_with_very_long_password_401_not_500(api):
+    """Found by contract tests: bcrypt rejects >72 bytes and crashed login with 500."""
+    email = unique_email()
+    register(api, email)
+    r = api.post("/auth/login", json={"email": email, "password": "a1" * 50})
+    assert r.status_code == 401
+    assert r.json()["error"]["code"] == "INVALID_CREDENTIALS"
+
+
+@pytest.mark.req("BR-AUTH-01")
+def test_register_password_over_72_bytes_422_not_500(api):
+    """72 Cyrillic characters are 144 bytes — more than bcrypt can hash."""
+    r = register(api, password="пароль1" + "я" * 65)
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "VALIDATION_ERROR"

@@ -10,6 +10,7 @@ from app.config import get_settings
 from app.errors import ApiError
 
 _ALGORITHM = "HS256"
+BCRYPT_MAX_BYTES = 72  # bcrypt cannot hash longer input
 
 
 def hash_secret(value: str) -> str:
@@ -17,7 +18,10 @@ def hash_secret(value: str) -> str:
 
 
 def verify_secret(value: str, hashed: str) -> bool:
-    return bcrypt.checkpw(value.encode(), hashed.encode())
+    encoded = value.encode()
+    if len(encoded) > BCRYPT_MAX_BYTES:
+        return False  # could never have been stored, so it cannot match
+    return bcrypt.checkpw(encoded, hashed.encode())
 
 
 def create_access_token(user_id: uuid.UUID) -> str:

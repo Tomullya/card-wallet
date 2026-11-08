@@ -9,6 +9,7 @@ from app.deps import get_current_user
 from app.errors import ApiError
 from app.models import User
 from app.schemas.auth import LoginRequest, RegisterRequest, TokenOut, UserOut
+from app.schemas.errors import error_responses
 from app.security import create_access_token, hash_secret, verify_secret
 
 router = APIRouter(tags=["auth"])
@@ -17,7 +18,9 @@ router = APIRouter(tags=["auth"])
 _DUMMY_HASH = hash_secret("dummy-password-1")
 
 
-@router.post("/auth/register", status_code=201, response_model=UserOut)
+@router.post(
+    "/auth/register", status_code=201, response_model=UserOut, responses=error_responses(409, 422)
+)
 def register(req: RegisterRequest, db: Session = Depends(get_db)) -> User:
     user = User(email=req.email, name=req.name, password_hash=hash_secret(req.password))
     db.add(user)
@@ -29,7 +32,7 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)) -> User:
     return user
 
 
-@router.post("/auth/login", response_model=TokenOut)
+@router.post("/auth/login", response_model=TokenOut, responses=error_responses(401, 422))
 def login(req: LoginRequest, db: Session = Depends(get_db)) -> TokenOut:
     user = db.scalar(select(User).where(User.email == req.email))
     password_ok = verify_secret(req.password, user.password_hash if user else _DUMMY_HASH)
@@ -41,6 +44,6 @@ def login(req: LoginRequest, db: Session = Depends(get_db)) -> TokenOut:
     )
 
 
-@router.get("/me", response_model=UserOut)
+@router.get("/me", response_model=UserOut, responses=error_responses(401))
 def me(user: User = Depends(get_current_user)) -> User:
     return user

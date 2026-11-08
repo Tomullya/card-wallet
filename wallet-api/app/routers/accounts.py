@@ -10,6 +10,7 @@ from app.deps import get_current_user
 from app.errors import ApiError
 from app.models import Account, Transaction, TxStatus, TxType, User
 from app.schemas.accounts import AccountCreate, AccountOut, TopUpOut, TopUpRequest
+from app.schemas.errors import error_responses
 from app.schemas.transactions import transaction_out
 from app.services.money import to_money
 from app.services.ownership import get_owned_account
@@ -17,7 +18,12 @@ from app.services.ownership import get_owned_account
 router = APIRouter(tags=["accounts"])
 
 
-@router.post("/accounts", status_code=201, response_model=AccountOut)
+@router.post(
+    "/accounts",
+    status_code=201,
+    response_model=AccountOut,
+    responses=error_responses(401, 409, 422),
+)
 def open_account(
     req: AccountCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)
 ) -> Account:
@@ -33,7 +39,7 @@ def open_account(
     return account
 
 
-@router.get("/accounts", response_model=list[AccountOut])
+@router.get("/accounts", response_model=list[AccountOut], responses=error_responses(401))
 def list_accounts(
     user: User = Depends(get_current_user), db: Session = Depends(get_db)
 ) -> list[Account]:
@@ -41,14 +47,21 @@ def list_accounts(
     return list(db.scalars(query))
 
 
-@router.get("/accounts/{account_id}", response_model=AccountOut)
+@router.get(
+    "/accounts/{account_id}", response_model=AccountOut, responses=error_responses(401, 404, 422)
+)
 def get_account(
     account_id: uuid.UUID, user: User = Depends(get_current_user), db: Session = Depends(get_db)
 ) -> Account:
     return get_owned_account(db, user, account_id)
 
 
-@router.post("/accounts/{account_id}/top-up", status_code=201, response_model=TopUpOut)
+@router.post(
+    "/accounts/{account_id}/top-up",
+    status_code=201,
+    response_model=TopUpOut,
+    responses=error_responses(401, 404, 422),
+)
 def top_up(
     account_id: uuid.UUID,
     req: TopUpRequest,

@@ -53,6 +53,13 @@ def register_error_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(StarletteHTTPException)
     async def handle_http_error(_: Request, exc: StarletteHTTPException):
+        if exc.status_code == 400:
+            # FastAPI raises 400 when the body cannot be decoded at all (e.g. invalid UTF-8).
+            # For the client this is the same as any other invalid input (NFR-03).
+            return JSONResponse(
+                status_code=422,
+                content=error_body("VALIDATION_ERROR", "Request body is not valid JSON"),
+            )
         code = _HTTP_CODES.get(exc.status_code, "HTTP_ERROR")
         message = exc.detail if isinstance(exc.detail, str) else code
         return JSONResponse(

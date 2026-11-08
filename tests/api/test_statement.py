@@ -29,8 +29,15 @@ def test_newest_first_and_fields(api):
     assert payment["merchant_name"] == "Cafe"
     assert payment["amount"] == "10.00"
     assert set(payment) == {
-        "id", "type", "amount", "currency", "status", "decline_reason",
-        "merchant_name", "card_last4", "created_at",
+        "id",
+        "type",
+        "amount",
+        "currency",
+        "status",
+        "decline_reason",
+        "merchant_name",
+        "card_last4",
+        "created_at",
     }
     assert items[2]["card_last4"] is None
 
