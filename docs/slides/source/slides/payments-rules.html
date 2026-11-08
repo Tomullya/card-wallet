@@ -1,0 +1,26 @@
+<section id="payments-rules" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Платежи · BR-PAY-03, BR-PAY-04, BR-CARD-06</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Комиссия, лимит и неверный CVV</h2>
+<div style="flex:1;display:flex;gap:28px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:36px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:72px;font-weight:700;color:#B5541A">1%</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:34px;font-weight:600">Комиссия</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Минимум 0.50, округление «половина вверх». Только при одобрении, отдельной операцией COMMISSION.</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;line-height:1.5">10.00 → 0.50<br>100.00 → 1.00<br>150.50 → 1.51</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:36px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:72px;font-weight:700;color:#B5541A">00:00</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:34px;font-weight:600">Дневной лимит</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">По карте, за календарный день по UTC. Считаются только одобренные платежи, без комиссии.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Ровно до лимита — <b>можно</b>.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:36px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:72px;font-weight:700;color:#B5541A">3</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:34px;font-weight:600">Неверных CVV</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Три подряд — карта блокируется: TOO_MANY_FAILED_ATTEMPTS.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Успешный платёж обнуляет счётчик; другие отказы его не меняют.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 14</p>
+<aside>Пример на баланс: на счёте 100.00, платёж 99.50 требует 100.50 с комиссией и будет отклонён, а платёж 99.00 требует 99.99 и пройдёт. Это хороший граничный тест.</aside>
+</section>

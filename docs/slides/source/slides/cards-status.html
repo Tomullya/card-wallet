@@ -1,0 +1,29 @@
+<section id="cards-status" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Карты · BR-CARD</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Просмотр, статусы и блокировка</h2>
+<div style="display:flex;flex-direction:column;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:8px 36px">
+<div style="display:flex;gap:24px;align-items:center;padding:20px 0px;border-bottom:1px solid #D9DEE7">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#2B5797;color:#FFFDF9;padding:6px 20px;border-radius:10px">GET</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:600px">/accounts/{id}/cards</p>
+<p style="flex:1;font-size:26px;color:#4A5568">Все карты счёта, номер замаскирован</p>
+</div>
+<div style="display:flex;gap:24px;align-items:center;padding:20px 0px;border-bottom:1px solid #D9DEE7">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#2B5797;color:#FFFDF9;padding:6px 20px;border-radius:10px">GET</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:600px">/cards/{id}</p>
+<p style="flex:1;font-size:26px;color:#4A5568">Одна карта: masked_pan, expiry, status, block_reason</p>
+</div>
+<div style="display:flex;gap:24px;align-items:center;padding:20px 0px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#B5541A;color:#FFFDF9;padding:6px 20px;border-radius:10px">POST</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:600px">/cards/{id}/block</p>
+<p style="flex:1;font-size:26px;color:#4A5568">Тело не нужно. Повторно → 409 CARD_ALREADY_BLOCKED</p>
+</div>
+</div>
+<table style="font-family:Inter, Arial, sans-serif;font-size:26px;color:#14213D">
+<tr><th style="width:24%">status</th><th style="width:76%">Что значит</th></tr>
+<tr><td>ACTIVE</td><td>Можно платить</td></tr>
+<tr><td>BLOCKED</td><td>BLOCKED_BY_CLIENT — сам клиент · TOO_MANY_FAILED_ATTEMPTS — 3 неверных CVV</td></tr>
+<tr><td>EXPIRED</td><td>Срок истёк; рассчитывается по дате, в базе не хранится</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 11</p>
+<aside>Разблокировки в первой версии нет сознательно: в реальных банках она обычно требует дополнительной проверки личности. Заблокированные и истёкшие карты не занимают место в лимите из трёх активных карт.</aside>
+</section>

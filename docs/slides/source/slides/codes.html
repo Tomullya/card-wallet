@@ -1,0 +1,17 @@
+<section id="codes" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Общие правила</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Коды ответов</h2>
+<table style="font-family:Inter, Arial, sans-serif;font-size:28px;color:#14213D">
+<tr><th style="width:14%">Код</th><th style="width:86%">Когда</th></tr>
+<tr><td>200</td><td>Успешное чтение или действие без создания объекта</td></tr>
+<tr><td>201</td><td>Создан объект: пользователь, счёт, карта, операция</td></tr>
+<tr><td>401</td><td>Нет токена, он неверный — или неверный логин/пароль</td></tr>
+<tr><td>404</td><td>Объект не найден <b>или принадлежит другому клиенту</b></td></tr>
+<tr><td>409</td><td>Конфликт: дубликат, лимит карт, повтор ключа идемпотентности</td></tr>
+<tr><td>422</td><td>Ошибка в данных запроса</td></tr>
+<tr><td>503</td><td>Антифрод-сервис недоступен — платёж не проведён</td></tr>
+</table>
+<p style="font-size:28px;line-height:1.4;color:#4A5568;background:#FBEADB;border-radius:16px;padding:24px 32px"><b>Почему 404, а не 403?</b> 403 выдал бы, что объект с таким id существует. С 404 «чужое» не отличить от «несуществующего» — защита от перебора чужих id (IDOR).</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 04</p>
+<aside>Отдельно стоит запомнить: отклонённый платёж — это тоже 201, потому что операция создана со статусом DECLINED. Об этом подробнее в разделе платежей.</aside>
+</section>

@@ -1,0 +1,21 @@
+<section id="idempotency" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#F2A65A">Платежи · BR-PAY-07, BR-PAY-09</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:72px;font-weight:600;line-height:1.1;color:#F7F6F2;width:1500px">Связь оборвалась — деньги не спишутся дважды</h2>
+<p style="font-size:32px;line-height:1.45;color:#C9D3E3;width:1500px">Клиент не получил ответ и повторил платёж. Сервер узнаёт повтор по заголовку <b>Idempotency-Key</b> и возвращает прежний результат. Так работают Stripe и другие платёжные API.</p>
+<div style="display:flex;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1F3157;border-radius:20px;padding:32px">
+<h3 style="font-size:30px;font-weight:600;color:#F2A65A">Тот же ключ + те же данные</h3>
+<p style="font-size:26px;line-height:1.4;color:#E6EBF3">Тот же ответ, повторного списания нет</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1F3157;border-radius:20px;padding:32px">
+<h3 style="font-size:30px;font-weight:600;color:#F2A65A">Тот же ключ + другие данные</h3>
+<p style="font-size:26px;line-height:1.4;color:#E6EBF3">409 IDEMPOTENCY_KEY_REUSED</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1F3157;border-radius:20px;padding:32px">
+<h3 style="font-size:30px;font-weight:600;color:#F2A65A">Два платежа одновременно</h3>
+<p style="font-size:26px;line-height:1.4;color:#E6EBF3">Счёт блокируется в базе — баланс не уйдёт в минус</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#9AA8C0">Card Wallet API · 15 · ключи у каждого клиента свои · CVV в сравнение не входит</p>
+<aside>Пример параллельности: баланс 100.00, два одновременных платежа по 60.00 — один одобрен, второй отклонён с INSUFFICIENT_FUNDS. Если антифрод недоступен (503), ничего не сохраняется и тот же ключ можно использовать снова.</aside>
+</section>

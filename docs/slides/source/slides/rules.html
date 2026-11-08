@@ -1,0 +1,19 @@
+<section id="rules" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Общие правила</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Адрес, токен и формат ошибок</h2>
+<p style="font-size:30px;color:#4A5568">Базовый адрес: <b>http://localhost:8000/api/v1</b> · Swagger: <b>/docs</b></p>
+<div style="flex:1;display:flex;gap:40px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:40px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">Авторизация</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;line-height:1.5;background:#14213D;color:#E6EBF3;padding:24px 32px;border-radius:12px">Authorization: Bearer &lt;token&gt;</p>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Нужна везде, кроме health, register и login. Токен живёт 60 минут. Нет токена или он просрочен → <b>401</b>.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:40px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">Любая ошибка</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;line-height:1.5;background:#14213D;color:#E6EBF3;padding:24px 32px;border-radius:12px">{ "error": {<br>  "code": "CARD_BLOCKED",<br>  "message": "Card is blocked" } }</p>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Клиент опирается на <b>code</b>, а не на текст сообщения.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 03</p>
+<aside>JWT-токен сам содержит id пользователя и срок действия, сервер не хранит сессию. Единый формат ошибок позволяет фронтенду и автотестам разбирать все ошибки одним кодом. Для 422 добавляется список details с полем и проблемой.</aside>
+</section>

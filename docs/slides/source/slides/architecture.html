@@ -1,0 +1,28 @@
+<section id="architecture" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Архитектура</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Три сервиса и одна база</h2>
+<div style="position:absolute;left:128px;top:400px;width:400px;background:#FFFDF9;border:2px solid #14213D;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">Клиент</h3>
+<p style="font-size:26px;color:#4A5568">Postman, автотесты, фронтенд</p>
+</div>
+<div style="position:absolute;left:760px;top:400px;width:400px;background:#14213D;border:2px solid #14213D;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600;color:#F7F6F2">Wallet API</h3>
+<p style="font-size:26px;color:#C9D3E3">FastAPI · порт 8000</p>
+</div>
+<div style="position:absolute;left:1392px;top:400px;width:400px;background:#FFFDF9;border:2px solid #14213D;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">Антифрод</h3>
+<p style="font-size:26px;color:#4A5568">gRPC · порт 50051</p>
+</div>
+<div style="position:absolute;left:760px;top:720px;width:400px;background:#FFFDF9;border:2px solid #14213D;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">PostgreSQL</h3>
+<p style="font-size:26px;color:#4A5568">данные · порт 5433</p>
+</div>
+<x-connector x1="528" y1="500" x2="760" y2="500" head="end" style="color:#B5541A;border-width:4px"></x-connector>
+<x-connector x1="1160" y1="500" x2="1392" y2="500" head="end" style="color:#B5541A;border-width:4px"></x-connector>
+<x-connector x1="960" y1="580" x2="960" y2="720" head="both" style="color:#B5541A;border-width:4px"></x-connector>
+<p style="position:absolute;left:534px;top:440px;width:220px;font-size:24px;font-weight:600;text-align:center;color:#B5541A">REST / JSON</p>
+<p style="position:absolute;left:1166px;top:440px;width:220px;font-size:24px;font-weight:600;text-align:center;color:#B5541A">gRPC</p>
+<p style="position:absolute;left:984px;top:628px;width:120px;font-size:24px;font-weight:600;color:#B5541A">SQL</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 02 · всё запускается одной командой: docker compose up -d</p>
+<aside>Клиент общается только с Wallet API по REST. Перед каждым платежом Wallet API спрашивает антифрод по gRPC — одобрить или отклонить. Данные хранятся в PostgreSQL.</aside>
+</section>

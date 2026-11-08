@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Card Wallet API — гайд</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400..700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+html,body{margin:0;height:100%;background:#0b1222;overflow:hidden;font-family:Inter,Arial,sans-serif}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center}
+section{position:absolute;inset:0;width:1920px;height:1080px;box-sizing:border-box;display:none}
+section.on{display:flex} section.on[style*="display:grid"]{display:grid}
+h1,h2,h3,p,table{margin:0} table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:0.35em 0.6em;border-bottom:1px solid #D9DEE7;vertical-align:top} th{font-weight:600}
+aside.notes{display:none}
+#bar{position:fixed;bottom:12px;right:16px;color:#9AA8C0;font:14px Inter,Arial,sans-serif}
+</style></head><body>
+<div id="stage">
+<section id="cover" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:Inter, Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<p style="font-size:28px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:#F2A65A">QA-портфолио · финтех</p>
+<h1 style="font-family:Rubik, Arial, sans-serif;font-size:120px;font-weight:700;line-height:1.05;color:#F7F6F2">Card Wallet API</h1>
+<p style="font-size:44px;line-height:1.3;color:#C9D3E3;width:1300px">Гайд по эндпоинтам: что делает каждый, какие параметры обязательны и почему всё устроено именно так</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#9AA8C0">REST · gRPC · PostgreSQL — все данные вымышленные</p>
+<aside class="notes">Mini Card Wallet — демо-приложение: счета в трёх валютах, виртуальные карты, платежи с комиссией и лимитами, проверка каждого платежа отдельным антифрод-сервисом по gRPC.</aside>
+</section>
+
+<section id="architecture" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Архитектура</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Три сервиса и одна база</h2>
+<div style="position:absolute;left:128px;top:400px;width:400px;background:#FFFDF9;border:2px solid #14213D;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">Клиент</h3>
+<p style="font-size:26px;color:#4A5568">Postman, автотесты, фронтенд</p>
+</div>
+<div style="position:absolute;left:760px;top:400px;width:400px;background:#14213D;border:2px solid #14213D;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600;color:#F7F6F2">Wallet API</h3>
+<p style="font-size:26px;color:#C9D3E3">FastAPI · порт 8000</p>
+</div>
+<div style="position:absolute;left:1392px;top:400px;width:400px;background:#FFFDF9;border:2px solid #14213D;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">Антифрод</h3>
+<p style="font-size:26px;color:#4A5568">gRPC · порт 50051</p>
+</div>
+<div style="position:absolute;left:760px;top:720px;width:400px;background:#FFFDF9;border:2px solid #14213D;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">PostgreSQL</h3>
+<p style="font-size:26px;color:#4A5568">данные · порт 5433</p>
+</div>
+<svg width="1920" height="1080" style="position:absolute;left:0;top:0;pointer-events:none;overflow:visible"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#B5541A"/></marker></defs><line x1="528" y1="500" x2="760" y2="500" stroke="#B5541A" stroke-width="4" marker-end="url(#ah)"/></svg>
+<svg width="1920" height="1080" style="position:absolute;left:0;top:0;pointer-events:none;overflow:visible"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#B5541A"/></marker></defs><line x1="1160" y1="500" x2="1392" y2="500" stroke="#B5541A" stroke-width="4" marker-end="url(#ah)"/></svg>
+<svg width="1920" height="1080" style="position:absolute;left:0;top:0;pointer-events:none;overflow:visible"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#B5541A"/></marker></defs><line x1="960" y1="580" x2="960" y2="720" stroke="#B5541A" stroke-width="4" marker-end="url(#ah)" marker-start="url(#ah)"/></svg>
+<p style="position:absolute;left:534px;top:440px;width:220px;font-size:24px;font-weight:600;text-align:center;color:#B5541A">REST / JSON</p>
+<p style="position:absolute;left:1166px;top:440px;width:220px;font-size:24px;font-weight:600;text-align:center;color:#B5541A">gRPC</p>
+<p style="position:absolute;left:984px;top:628px;width:120px;font-size:24px;font-weight:600;color:#B5541A">SQL</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 02 · всё запускается одной командой: docker compose up -d</p>
+<aside class="notes">Клиент общается только с Wallet API по REST. Перед каждым платежом Wallet API спрашивает антифрод по gRPC — одобрить или отклонить. Данные хранятся в PostgreSQL.</aside>
+</section>
+
+<section id="rules" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Общие правила</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Адрес, токен и формат ошибок</h2>
+<p style="font-size:30px;color:#4A5568">Базовый адрес: <b>http://localhost:8000/api/v1</b> · Swagger: <b>/docs</b></p>
+<div style="flex:1;display:flex;gap:40px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:40px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">Авторизация</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;line-height:1.5;background:#14213D;color:#E6EBF3;padding:24px 32px;border-radius:12px">Authorization: Bearer &lt;token&gt;</p>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Нужна везде, кроме health, register и login. Токен живёт 60 минут. Нет токена или он просрочен → <b>401</b>.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:40px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600">Любая ошибка</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;line-height:1.5;background:#14213D;color:#E6EBF3;padding:24px 32px;border-radius:12px">{ "error": {<br>  "code": "CARD_BLOCKED",<br>  "message": "Card is blocked" } }</p>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Клиент опирается на <b>code</b>, а не на текст сообщения.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 03</p>
+<aside class="notes">JWT-токен сам содержит id пользователя и срок действия, сервер не хранит сессию. Единый формат ошибок позволяет фронтенду и автотестам разбирать все ошибки одним кодом. Для 422 добавляется список details с полем и проблемой.</aside>
+</section>
+
+<section id="codes" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Общие правила</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Коды ответов</h2>
+<table style="font-family:Inter, Arial, sans-serif;font-size:28px;color:#14213D">
+<tr><th style="width:14%">Код</th><th style="width:86%">Когда</th></tr>
+<tr><td>200</td><td>Успешное чтение или действие без создания объекта</td></tr>
+<tr><td>201</td><td>Создан объект: пользователь, счёт, карта, операция</td></tr>
+<tr><td>401</td><td>Нет токена, он неверный — или неверный логин/пароль</td></tr>
+<tr><td>404</td><td>Объект не найден <b>или принадлежит другому клиенту</b></td></tr>
+<tr><td>409</td><td>Конфликт: дубликат, лимит карт, повтор ключа идемпотентности</td></tr>
+<tr><td>422</td><td>Ошибка в данных запроса</td></tr>
+<tr><td>503</td><td>Антифрод-сервис недоступен — платёж не проведён</td></tr>
+</table>
+<p style="font-size:28px;line-height:1.4;color:#4A5568;background:#FBEADB;border-radius:16px;padding:24px 32px"><b>Почему 404, а не 403?</b> 403 выдал бы, что объект с таким id существует. С 404 «чужое» не отличить от «несуществующего» — защита от перебора чужих id (IDOR).</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 04</p>
+<aside class="notes">Отдельно стоит запомнить: отклонённый платёж — это тоже 201, потому что операция создана со статусом DECLINED. Об этом подробнее в разделе платежей.</aside>
+</section>
+
+<section id="money" data-transition="fade" style="background:#EEF1F5;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Общие правила</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Деньги, время и идентификаторы</h2>
+<div style="flex:1;display:flex;gap:32px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border-radius:20px;padding:40px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:48px;font-weight:600;color:#B5541A">"100.00"</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600">Деньги — строкой</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">В ответах всегда строка с двумя знаками. В запросе можно строку или число, но не больше 2 знаков после точки.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568"><b>Почему:</b> float теряет точность — 0.1 + 0.2 = 0.30000000000000004.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border-radius:20px;padding:40px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:48px;font-weight:600;color:#B5541A">…Z</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600">Время — в UTC</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Формат ISO 8601 с буквой Z на конце: 2026-11-08T13:06:26Z.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568"><b>Почему:</b> одна шкала времени для всех клиентов; дневной лимит тоже считается по UTC.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border-radius:20px;padding:40px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:48px;font-weight:600;color:#B5541A">UUID</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600">ID и текст</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Все id — UUID; не UUID в адресе → 422.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Нулевой символ \u0000 в любом тексте → 422: PostgreSQL не умеет его хранить.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 05</p>
+<aside class="notes">Правило про нулевой символ появилось после того, как контрактные тесты нашли ошибку 500 на таком вводе. Хороший пример для собеседования.</aside>
+</section>
+
+<section id="auth-register" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Регистрация и вход · BR-AUTH</p>
+<div style="display:flex;gap:24px;align-items:center">
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;background:#B5541A;color:#FFFDF9;padding:8px 24px;border-radius:12px">POST</p>
+<h2 style="font-family:'JetBrains Mono', monospace;font-size:52px;font-weight:600;color:#14213D">/auth/register</h2>
+</div>
+<p style="font-size:28px;color:#4A5568">Регистрация клиента. Токен не нужен. Успех → <b>201</b> с id, email, name, created_at — пароль не возвращается никогда.</p>
+<table style="font-family:Inter, Arial, sans-serif;font-size:25px;color:#14213D">
+<tr><th style="width:15%">Поле</th><th style="width:11%">Обяз.</th><th style="width:40%">Правила</th><th style="width:34%">Почему</th></tr>
+<tr><td>email</td><td>Да</td><td>Корректный email; хранится в нижнем регистре; уникальный</td><td>Anna@ и anna@ — один человек</td></tr>
+<tr><td>name</td><td>Да</td><td>1–100 символов после обрезки пробелов</td><td>Пустое имя бессмысленно в интерфейсе</td></tr>
+<tr><td>password</td><td>Да</td><td>От 8 символов, буква + цифра, не больше 72 байт</td><td>72 байта — предел алгоритма bcrypt</td></tr>
+</table>
+<div style="display:flex;gap:24px">
+<p style="flex:1;font-size:26px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:16px;padding:20px 28px"><b>409</b> EMAIL_ALREADY_REGISTERED — email занят (без учёта регистра)</p>
+<p style="flex:1;font-size:26px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:16px;padding:20px 28px"><b>422</b> VALIDATION_ERROR — нарушено любое правило из таблицы</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 06</p>
+<aside class="notes">Кириллица занимает 2 байта на символ, поэтому пароль из 72 русских букв — это 144 байта и он будет отклонён. Это тоже находка контрактных тестов. Пример тела: email anna@example.com, name Anna, password Passw0rd1.</aside>
+</section>
+
+<section id="auth-login" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Регистрация и вход · BR-AUTH</p>
+<div style="display:flex;gap:24px;align-items:center">
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;background:#B5541A;color:#FFFDF9;padding:8px 24px;border-radius:12px">POST</p>
+<h2 style="font-family:'JetBrains Mono', monospace;font-size:52px;font-weight:600;color:#14213D">/auth/login</h2>
+</div>
+<div style="display:flex;gap:40px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Тело: <b>email</b> и <b>password</b> — оба обязательны. Регистр и пробелы в email не важны.</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;line-height:1.5;background:#14213D;color:#E6EBF3;padding:24px 32px;border-radius:12px">200 →<br>{ "access_token": "eyJhbGci…",<br>  "token_type": "bearer",<br>  "expires_in": 3600 }</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FBEADB;border-radius:20px;padding:36px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600">401 INVALID_CREDENTIALS</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Один и тот же ответ на «нет такого email» и «неверный пароль». Время ответа тоже одинаковое.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568"><b>Почему:</b> иначе можно выяснить, какие email зарегистрированы.</p>
+</div>
+</div>
+<div style="display:flex;gap:24px;align-items:center;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:16px;padding:20px 28px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#2B5797;color:#FFFDF9;padding:6px 20px;border-radius:10px">GET</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600">/me</p>
+<p style="font-size:26px;color:#4A5568">— профиль владельца токена. Удобно проверить, что токен рабочий.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 07</p>
+<aside class="notes">В коллекции Postman запрос Login сам сохраняет токен в переменную token, и все остальные запросы подставляют его автоматически.</aside>
+</section>
+
+<section id="accounts" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Счета · BR-ACC</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Открыть счёт и посмотреть баланс</h2>
+<div style="display:flex;flex-direction:column;gap:0px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:12px 36px">
+<div style="display:flex;gap:24px;align-items:center;padding:24px 0px;border-bottom:1px solid #D9DEE7">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#B5541A;color:#FFFDF9;padding:6px 20px;border-radius:10px">POST</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:520px">/accounts</p>
+<p style="flex:1;font-size:26px;color:#4A5568"><b>currency</b> — обязательно: EUR, USD или PLN заглавными. Ответ 201, баланс "0.00"</p>
+</div>
+<div style="display:flex;gap:24px;align-items:center;padding:24px 0px;border-bottom:1px solid #D9DEE7">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#2B5797;color:#FFFDF9;padding:6px 20px;border-radius:10px">GET</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:520px">/accounts</p>
+<p style="flex:1;font-size:26px;color:#4A5568">Только свои счета, по дате создания. Параметров нет</p>
+</div>
+<div style="display:flex;gap:24px;align-items:center;padding:24px 0px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#2B5797;color:#FFFDF9;padding:6px 20px;border-radius:10px">GET</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:520px">/accounts/{id}</p>
+<p style="flex:1;font-size:26px;color:#4A5568">Один счёт с балансом. Чужой или несуществующий → 404</p>
+</div>
+</div>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBEADB;border-radius:16px;padding:28px 32px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:32px;font-weight:600">409 ACCOUNT_ALREADY_EXISTS</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">Второй счёт в той же валюте. Один счёт на валюту — проще клиенту и контролю баланса; защищено и в базе.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:16px;padding:28px 32px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:32px;font-weight:600">422 VALIDATION_ERROR</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">GBP, "eur" маленькими, пустое значение, id не в формате UUID.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 08</p>
+<aside class="notes">Ограничение «один счёт на валюту» закреплено уникальным ключом user_id + currency в базе, поэтому оно соблюдается даже при одновременных запросах.</aside>
+</section>
+
+<section id="topup" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Счета · BR-ACC-03</p>
+<div style="display:flex;gap:24px;align-items:center">
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;background:#B5541A;color:#FFFDF9;padding:8px 24px;border-radius:12px">POST</p>
+<h2 style="font-family:'JetBrains Mono', monospace;font-size:52px;font-weight:600;color:#14213D">/accounts/{id}/top-up</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Одно поле — <b>amount</b>, обязательно. Валюту передавать не нужно: пополнение всегда в валюте счёта. Ответ <b>201</b>: операция TOP_UP и новый баланс.</p>
+<div style="display:flex;gap:24px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:36px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600;color:#1F6E43">Проходит</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;line-height:1.6">"0.01" — минимум<br>"10000.00" — максимум<br>10.1 → "10.10"</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:36px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600;color:#A33A2A">Отказ 422</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;line-height:1.6">"0", "-1", "10000.01"<br>"10.555" — 3 знака<br>"abc", true, null</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4A5568;background:#FBEADB;border-radius:16px;padding:24px 32px"><b>Почему лимит 10 000 за операцию:</b> типичное правило для пополнений — защищает от ошибок ввода и подозрительно крупных зачислений.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 09</p>
+<aside class="notes">Это классический набор граничных значений для тест-дизайна: минимум, максимум, чуть больше максимума, ноль, отрицательное, лишний знак после точки, неверный тип.</aside>
+</section>
+
+<section id="cards-issue" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Карты · BR-CARD</p>
+<div style="display:flex;gap:24px;align-items:center">
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;background:#B5541A;color:#FFFDF9;padding:8px 24px;border-radius:12px">POST</p>
+<h2 style="font-family:'JetBrains Mono', monospace;font-size:52px;font-weight:600;color:#14213D">/accounts/{id}/cards</h2>
+</div>
+<div style="display:flex;gap:40px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:28px;line-height:1.4;color:#4A5568"><b>daily_limit</b> — необязательно, по умолчанию 1000.00, от 1.00 до 10000.00. Тело можно отправить пустым: {}.</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;line-height:1.5;background:#14213D;color:#E6EBF3;padding:24px 32px;border-radius:12px">201 →<br>{ "pan": "4000001234567890",<br>  "cvv": "123",<br>  "expiry": "11/29",<br>  "status": "ACTIVE", … }</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#14213D;border-radius:20px;padding:40px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:600;color:#F2A65A">Номер и CVV — один раз</h3>
+<p style="font-size:26px;line-height:1.45;color:#C9D3E3">Дальше видно только **** **** **** 7890. В базе — последние 4 цифры, ключевой хеш номера и bcrypt-хеш CVV.</p>
+<p style="font-size:26px;line-height:1.45;color:#C9D3E3">Так работают виртуальные карты в банках: восстановить данные из базы нельзя.</p>
+</div>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">Номер начинается с вымышленного <b>400000</b> и проходит проверку Луна · срок — конец месяца через 3 года · <b>409 CARD_LIMIT_REACHED</b> — уже 3 активные карты на счёте</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 10</p>
+<aside class="notes">Максимальный дневной лимит 10 000 равен максимальной сумме платежа. Изначально был 5 000, и тогда правило антифрода «сумма больше 5 000» никогда бы не сработало — это противоречие нашли ещё на этапе анализа требований.</aside>
+</section>
+
+<section id="cards-status" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Карты · BR-CARD</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Просмотр, статусы и блокировка</h2>
+<div style="display:flex;flex-direction:column;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:8px 36px">
+<div style="display:flex;gap:24px;align-items:center;padding:20px 0px;border-bottom:1px solid #D9DEE7">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#2B5797;color:#FFFDF9;padding:6px 20px;border-radius:10px">GET</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:600px">/accounts/{id}/cards</p>
+<p style="flex:1;font-size:26px;color:#4A5568">Все карты счёта, номер замаскирован</p>
+</div>
+<div style="display:flex;gap:24px;align-items:center;padding:20px 0px;border-bottom:1px solid #D9DEE7">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#2B5797;color:#FFFDF9;padding:6px 20px;border-radius:10px">GET</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:600px">/cards/{id}</p>
+<p style="flex:1;font-size:26px;color:#4A5568">Одна карта: masked_pan, expiry, status, block_reason</p>
+</div>
+<div style="display:flex;gap:24px;align-items:center;padding:20px 0px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:26px;font-weight:600;background:#B5541A;color:#FFFDF9;padding:6px 20px;border-radius:10px">POST</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;width:600px">/cards/{id}/block</p>
+<p style="flex:1;font-size:26px;color:#4A5568">Тело не нужно. Повторно → 409 CARD_ALREADY_BLOCKED</p>
+</div>
+</div>
+<table style="font-family:Inter, Arial, sans-serif;font-size:26px;color:#14213D">
+<tr><th style="width:24%">status</th><th style="width:76%">Что значит</th></tr>
+<tr><td>ACTIVE</td><td>Можно платить</td></tr>
+<tr><td>BLOCKED</td><td>BLOCKED_BY_CLIENT — сам клиент · TOO_MANY_FAILED_ATTEMPTS — 3 неверных CVV</td></tr>
+<tr><td>EXPIRED</td><td>Срок истёк; рассчитывается по дате, в базе не хранится</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 11</p>
+<aside class="notes">Разблокировки в первой версии нет сознательно: в реальных банках она обычно требует дополнительной проверки личности. Заблокированные и истёкшие карты не занимают место в лимите из трёх активных карт.</aside>
+</section>
+
+<section id="payments-params" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Платежи · BR-PAY</p>
+<div style="display:flex;gap:24px;align-items:center">
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;background:#B5541A;color:#FFFDF9;padding:8px 24px;border-radius:12px">POST</p>
+<h2 style="font-family:'JetBrains Mono', monospace;font-size:52px;font-weight:600;color:#14213D">/payments</h2>
+<p style="font-size:28px;color:#4A5568">— оплата картой в магазине, все поля обязательны</p>
+</div>
+<table style="font-family:Inter, Arial, sans-serif;font-size:25px;color:#14213D">
+<tr><th style="width:24%">Поле</th><th style="width:38%">Правила</th><th style="width:38%">Зачем</th></tr>
+<tr><td>Idempotency-Key</td><td>Заголовок, 8–64 символа</td><td>Защита от двойного списания</td></tr>
+<tr><td>card_id</td><td>UUID своей карты</td><td>Какой картой платим</td></tr>
+<tr><td>cvv</td><td>Ровно 3 цифры</td><td>Подтверждение владения картой</td></tr>
+<tr><td>amount</td><td>&gt; 0, ≤ 10000.00, до 2 знаков</td><td>Сумма в валюте счёта карты</td></tr>
+<tr><td>merchant_name</td><td>1–100 символов</td><td>Название в выписке</td></tr>
+<tr><td>merchant_category</td><td>GROCERIES · ELECTRONICS · TRAVEL · RESTAURANTS · GAMBLING · OTHER</td><td>Нужна антифроду</td></tr>
+</table>
+<div style="display:flex;gap:24px;align-items:stretch">
+<p style="flex:1;font-family:'JetBrains Mono', monospace;font-size:24px;line-height:1.5;background:#14213D;color:#E6EBF3;padding:20px 28px;border-radius:12px">201 { "status": "APPROVED",<br>  "decline_reason": null,<br>  "commission": "0.50" }</p>
+<p style="flex:1;font-size:26px;line-height:1.4;background:#FBEADB;border-radius:16px;padding:20px 28px"><b>Отказ — тоже 201.</b> Запрос корректный, операция создана со статусом DECLINED и видна в выписке. 4xx — только для ошибок самого запроса.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 12</p>
+<aside class="notes">Ошибки этого эндпоинта: 404 — чужая или несуществующая карта; 409 — ключ уже использован с другими данными; 422 — неверные поля или нет заголовка; 503 — антифрод недоступен.</aside>
+</section>
+
+<section id="payments-checks" data-transition="fade" style="background:#EEF1F5;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Платежи · BR-PAY-02</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Шесть проверок — строго по порядку</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:44px;font-weight:700;color:#B5541A">1</p>
+<h3 style="font-size:30px;font-weight:600">Карта не заблокирована</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;color:#4A5568">CARD_BLOCKED</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:44px;font-weight:700;color:#B5541A">2</p>
+<h3 style="font-size:30px;font-weight:600">Карта не истекла</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;color:#4A5568">CARD_EXPIRED</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:44px;font-weight:700;color:#B5541A">3</p>
+<h3 style="font-size:30px;font-weight:600">CVV верный</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;color:#4A5568">INVALID_CVV</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:44px;font-weight:700;color:#B5541A">4</p>
+<h3 style="font-size:30px;font-weight:600">Баланс ≥ сумма + комиссия</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;color:#4A5568">INSUFFICIENT_FUNDS</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:44px;font-weight:700;color:#B5541A">5</p>
+<h3 style="font-size:30px;font-weight:600">Не превышен дневной лимит</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;color:#4A5568">DAILY_LIMIT_EXCEEDED</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#14213D;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:44px;font-weight:700;color:#F2A65A">6</p>
+<h3 style="font-size:30px;font-weight:600;color:#F7F6F2">Антифрод одобрил (gRPC)</h3>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;color:#C9D3E3">FRAUD_HIGH_AMOUNT · FRAUD_BLOCKED_CATEGORY</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Первая неудачная проверка определяет причину отказа. <b>Антифрод — последним:</b> это внешний вызов, медленнее локальных проверок; спрашивать его, когда денег не хватает, незачем.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 13</p>
+<aside class="notes">Хороший тест на порядок проверок: карта одновременно заблокирована и истекла — ответ должен быть CARD_BLOCKED, потому что эта проверка идёт первой.</aside>
+</section>
+
+<section id="payments-rules" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Платежи · BR-PAY-03, BR-PAY-04, BR-CARD-06</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Комиссия, лимит и неверный CVV</h2>
+<div style="flex:1;display:flex;gap:28px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:36px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:72px;font-weight:700;color:#B5541A">1%</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:34px;font-weight:600">Комиссия</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Минимум 0.50, округление «половина вверх». Только при одобрении, отдельной операцией COMMISSION.</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;line-height:1.5">10.00 → 0.50<br>100.00 → 1.00<br>150.50 → 1.51</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:36px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:72px;font-weight:700;color:#B5541A">00:00</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:34px;font-weight:600">Дневной лимит</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">По карте, за календарный день по UTC. Считаются только одобренные платежи, без комиссии.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Ровно до лимита — <b>можно</b>.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:36px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:72px;font-weight:700;color:#B5541A">3</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:34px;font-weight:600">Неверных CVV</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Три подряд — карта блокируется: TOO_MANY_FAILED_ATTEMPTS.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Успешный платёж обнуляет счётчик; другие отказы его не меняют.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 14</p>
+<aside class="notes">Пример на баланс: на счёте 100.00, платёж 99.50 требует 100.50 с комиссией и будет отклонён, а платёж 99.00 требует 99.99 и пройдёт. Это хороший граничный тест.</aside>
+</section>
+
+<section id="idempotency" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#F2A65A">Платежи · BR-PAY-07, BR-PAY-09</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:72px;font-weight:600;line-height:1.1;color:#F7F6F2;width:1500px">Связь оборвалась — деньги не спишутся дважды</h2>
+<p style="font-size:32px;line-height:1.45;color:#C9D3E3;width:1500px">Клиент не получил ответ и повторил платёж. Сервер узнаёт повтор по заголовку <b>Idempotency-Key</b> и возвращает прежний результат. Так работают Stripe и другие платёжные API.</p>
+<div style="display:flex;gap:28px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1F3157;border-radius:20px;padding:32px">
+<h3 style="font-size:30px;font-weight:600;color:#F2A65A">Тот же ключ + те же данные</h3>
+<p style="font-size:26px;line-height:1.4;color:#E6EBF3">Тот же ответ, повторного списания нет</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1F3157;border-radius:20px;padding:32px">
+<h3 style="font-size:30px;font-weight:600;color:#F2A65A">Тот же ключ + другие данные</h3>
+<p style="font-size:26px;line-height:1.4;color:#E6EBF3">409 IDEMPOTENCY_KEY_REUSED</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1F3157;border-radius:20px;padding:32px">
+<h3 style="font-size:30px;font-weight:600;color:#F2A65A">Два платежа одновременно</h3>
+<p style="font-size:26px;line-height:1.4;color:#E6EBF3">Счёт блокируется в базе — баланс не уйдёт в минус</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#9AA8C0">Card Wallet API · 15 · ключи у каждого клиента свои · CVV в сравнение не входит</p>
+<aside class="notes">Пример параллельности: баланс 100.00, два одновременных платежа по 60.00 — один одобрен, второй отклонён с INSUFFICIENT_FUNDS. Если антифрод недоступен (503), ничего не сохраняется и тот же ключ можно использовать снова.</aside>
+</section>
+
+<section id="statement" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Выписка · BR-STM</p>
+<div style="display:flex;gap:24px;align-items:center">
+<p style="font-family:'JetBrains Mono', monospace;font-size:30px;font-weight:600;background:#2B5797;color:#FFFDF9;padding:8px 24px;border-radius:12px">GET</p>
+<h2 style="font-family:'JetBrains Mono', monospace;font-size:48px;font-weight:600;color:#14213D">/accounts/{id}/transactions</h2>
+</div>
+<p style="font-size:28px;color:#4A5568">Все параметры необязательные. Сначала новые операции; <b>total</b> — сколько всего подходит под фильтры.</p>
+<table style="font-family:Inter, Arial, sans-serif;font-size:25px;color:#14213D">
+<tr><th style="width:20%">Параметр</th><th style="width:22%">По умолчанию</th><th style="width:58%">Правила</th></tr>
+<tr><td>date_from</td><td>—</td><td>YYYY-MM-DD, включительно</td></tr>
+<tr><td>date_to</td><td>—</td><td>YYYY-MM-DD, включительно, не раньше date_from</td></tr>
+<tr><td>status</td><td>—</td><td>APPROVED или DECLINED</td></tr>
+<tr><td>type</td><td>—</td><td>TOP_UP, PAYMENT или COMMISSION</td></tr>
+<tr><td>limit</td><td>20</td><td>От 1 до 100</td></tr>
+<tr><td>offset</td><td>0</td><td>Не меньше 0</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;background:#FBEADB;border-radius:16px;padding:20px 28px"><b>Почему страницы и максимум 100:</b> у реального клиента тысячи операций — отдавать всё разом медленно, а один запрос не должен «положить» сервер.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 16</p>
+<aside class="notes">Пример: ?status=DECLINED&amp;limit=10 — только отказы, по 10 на страницу. Баланс счёта всегда равен сумме одобренных пополнений минус платежи и комиссии — это проверяет SQL-тест.</aside>
+</section>
+
+<section id="grpc" data-transition="fade" style="background:#EEF1F5;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Антифрод · BR-FRD</p>
+<h2 style="font-family:'JetBrains Mono', monospace;font-size:44px;font-weight:600;color:#14213D">fraud.v1.FraudService/CheckPayment</h2>
+<div style="display:flex;gap:28px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border-radius:20px;padding:36px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:34px;font-weight:600">Правила по порядку</h3>
+<table style="font-family:Inter, Arial, sans-serif;font-size:25px;color:#14213D">
+<tr><th style="width:44%">Условие</th><th style="width:38%">Ответ</th><th style="width:18%">Риск</th></tr>
+<tr><td>Сумма &gt; 5000.00</td><td>HIGH_AMOUNT</td><td>90</td></tr>
+<tr><td>GAMBLING</td><td>BLOCKED_CATEGORY</td><td>80</td></tr>
+<tr><td>Иначе</td><td>APPROVE</td><td>10</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;color:#4A5568">Ровно 5000.00 — одобряется. Сумма передаётся строкой, чтобы не терять точность.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border-radius:20px;padding:36px">
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:34px;font-weight:600">Тестовые магазины</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568"><b>TEST_TIMEOUT</b> — ответ через 5 с, Wallet ждёт 2 с → 503</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568"><b>TEST_ERROR</b> — ошибка gRPC → 503</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568"><b>Postman:</b> New → gRPC → localhost:50051 → методы подтянутся через server reflection</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;background:#FBEADB;border-radius:16px;padding:20px 28px"><b>Почему gRPC, а не REST:</b> это внутренний вызов между сервисами — бинарный формат быстрее, а контракт строго описан в .proto-файле, из которого генерируется код для обеих сторон.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 17 · контракт: proto/fraudpb/fraud.proto</p>
+<aside class="notes">Вызывать антифрод напрямую нужно только для тестов — Wallet API делает это сам перед каждым платежом. Тестовые магазины работают как тестовые номера карт в песочницах платёжных систем.</aside>
+</section>
+
+<section id="scenario" data-transition="fade" style="background:#F7F6F2;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Шпаргалка</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">От регистрации до выписки за 6 шагов</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:700;color:#B5541A">1</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;font-weight:600">register → login</p>
+<p style="font-size:26px;color:#4A5568">Сохранить токен</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:700;color:#B5541A">2</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;font-weight:600">POST /accounts</p>
+<p style="font-size:26px;color:#4A5568">EUR-счёт, сохранить id</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:700;color:#B5541A">3</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;font-weight:600">top-up 100.00</p>
+<p style="font-size:26px;color:#4A5568">Баланс 100.00</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:700;color:#B5541A">4</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;font-weight:600">POST …/cards</p>
+<p style="font-size:26px;color:#4A5568">Сохранить id карты и CVV</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border:1px solid #D9DEE7;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:700;color:#B5541A">5</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;font-weight:600">POST /payments 10.00</p>
+<p style="font-size:26px;color:#4A5568">APPROVED, баланс 89.50</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#14213D;border-radius:20px;padding:28px 32px">
+<p style="font-family:Rubik, Arial, sans-serif;font-size:40px;font-weight:700;color:#F2A65A">6</p>
+<p style="font-family:'JetBrains Mono', monospace;font-size:24px;font-weight:600;color:#F7F6F2">GET …/transactions</p>
+<p style="font-size:26px;color:#C9D3E3">Пополнение, платёж, комиссия</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">В коллекции Postman «Card Wallet API» токен, id счёта, id карты и CVV сохраняются сами — запросы можно просто выполнять сверху вниз.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 18</p>
+<aside class="notes">Что попробовать руками дальше: неверный CVV три раза подряд, магазин TEST_TIMEOUT, повтор платежа с тем же Idempotency-Key.</aside>
+</section>
+
+<section id="links" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:80px;font-weight:600;line-height:1.1;color:#F7F6F2">Где смотреть дальше</h2>
+<div style="display:flex;flex-direction:column;gap:20px">
+<p style="font-size:34px;line-height:1.4;color:#C9D3E3"><span style="color:#F2A65A">Swagger</span> — http://localhost:8000/docs</p>
+<p style="font-size:34px;line-height:1.4;color:#C9D3E3"><span style="color:#F2A65A">Подробный гайд</span> — docs/api-guide.ru.md</p>
+<p style="font-size:34px;line-height:1.4;color:#C9D3E3"><span style="color:#F2A65A">Требования</span> — docs/requirements/ (ID вида BR-PAY-03)</p>
+<p style="font-size:34px;line-height:1.4;color:#C9D3E3"><span style="color:#F2A65A">Postman</span> — коллекция «Card Wallet API» + окружение «Card Wallet — local»</p>
+<p style="font-size:34px;line-height:1.4;color:#C9D3E3"><span style="color:#F2A65A">Запуск</span> — docker compose up -d в папке card-wallet</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#9AA8C0">Card Wallet API · 19</p>
+<aside class="notes">Если сервис не отвечает после перезагрузки Mac: запустить Docker (выйдя из пользователя Paysera), затем docker compose up -d в папке проекта.</aside>
+</section>
+
+</div>
+<div id="bar">← → или пробел · <span id="n"></span></div>
+<script>
+const s=[...document.querySelectorAll('#stage > section')];let i=0;
+function show(k){i=Math.max(0,Math.min(s.length-1,k));s.forEach((e,j)=>e.classList.toggle('on',j===i));
+ document.getElementById('n').textContent=(i+1)+' / '+s.length;location.hash=i+1;}
+function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);document.getElementById('stage').style.transform=`translate(-50%,-50%) scale(${k})`;}
+addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key))show(i+1);if(['ArrowLeft','PageUp'].includes(e.key))show(i-1);});
+addEventListener('click',e=>show(e.clientX>innerWidth/2?i+1:i-1));addEventListener('resize',fit);
+fit();show((parseInt(location.hash.slice(1))||1)-1);
+</script></body></html>

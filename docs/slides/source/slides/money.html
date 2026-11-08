@@ -1,0 +1,26 @@
+<section id="money" data-transition="fade" style="background:#EEF1F5;color:#14213D;font-family:Inter, Arial, sans-serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B5541A">Общие правила</p>
+<h2 style="font-family:Rubik, Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Деньги, время и идентификаторы</h2>
+<div style="flex:1;display:flex;gap:32px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border-radius:20px;padding:40px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:48px;font-weight:600;color:#B5541A">"100.00"</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600">Деньги — строкой</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">В ответах всегда строка с двумя знаками. В запросе можно строку или число, но не больше 2 знаков после точки.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568"><b>Почему:</b> float теряет точность — 0.1 + 0.2 = 0.30000000000000004.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border-radius:20px;padding:40px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:48px;font-weight:600;color:#B5541A">…Z</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600">Время — в UTC</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Формат ISO 8601 с буквой Z на конце: 2026-11-08T13:06:26Z.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568"><b>Почему:</b> одна шкала времени для всех клиентов; дневной лимит тоже считается по UTC.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FFFDF9;border-radius:20px;padding:40px">
+<p style="font-family:'JetBrains Mono', monospace;font-size:48px;font-weight:600;color:#B5541A">UUID</p>
+<h3 style="font-family:Rubik, Arial, sans-serif;font-size:36px;font-weight:600">ID и текст</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Все id — UUID; не UUID в адресе → 422.</p>
+<p style="font-size:26px;line-height:1.45;color:#4A5568">Нулевой символ \u0000 в любом тексте → 422: PostgreSQL не умеет его хранить.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7280">Card Wallet API · 05</p>
+<aside>Правило про нулевой символ появилось после того, как контрактные тесты нашли ошибку 500 на таком вводе. Хороший пример для собеседования.</aside>
+</section>

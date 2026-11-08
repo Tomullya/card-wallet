@@ -1,0 +1,30 @@
+{
+  "v": 4,
+  "createdOnFiles": { "v": 1, "at": "2026-11-08T14:30:00Z" },
+  "lists": "css",
+  "title": "Card Wallet API — гайд",
+  "cover": "cover",
+  "order": [
+    "cover", "architecture", "rules", "codes", "money",
+    "auth-register", "auth-login", "accounts", "topup",
+    "cards-issue", "cards-status", "payments-params", "payments-checks",
+    "payments-rules", "idempotency", "statement", "grpc", "scenario", "links"
+  ],
+  "sections": {
+    "intro": { "description": "Что это за API и как оно устроено", "start": "cover" },
+    "common": { "description": "Правила, общие для всех эндпоинтов", "start": "rules" },
+    "auth": { "description": "Регистрация, вход и токен", "start": "auth-register" },
+    "accounts": { "description": "Счета и пополнение", "start": "accounts" },
+    "cards": { "description": "Выпуск, просмотр и блокировка карт", "start": "cards-issue" },
+    "payments": { "description": "Платежи: параметры, проверки, комиссия, идемпотентность", "start": "payments-params" },
+    "statement": { "description": "Выписка с фильтрами и страницами", "start": "statement" },
+    "grpc": { "description": "Внутренний gRPC-сервис антифрода", "start": "grpc" },
+    "wrap": { "description": "Сквозной сценарий и полезные ссылки", "start": "scenario" }
+  },
+  "faces": {
+    "rubik": { "family": "Rubik", "href": "https://fonts.googleapis.com/css2?family=Rubik:wght@400..700&display=swap" },
+    "inter": { "family": "Inter", "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" },
+    "jetbrains-mono": { "family": "JetBrains Mono", "href": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" }
+  },
+  "designSystems": []
+}
