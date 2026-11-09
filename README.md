@@ -78,14 +78,14 @@ Postman: import `postman/card-wallet.postman_collection.json` and
 gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection); add metadata
 `x-api-key: dev-wallet-key`. Step-by-step lessons: [`docs/grpc-lab/`](docs/grpc-lab/README.md).
 
-## Automated tests — 276
+## Automated tests — 283
 
 | Level | Folder | Tests | What it checks |
 |---|---|---|---|
-| Unit | `tests/unit` | 59 | Commission, Luhn, expiry, money rounding, fraud rules, API-key roles, event hub, QA tooling |
+| Unit | `tests/unit` | 62 | Commission, Luhn, expiry, money rounding, fraud rules, API-key roles, event hub, QA tooling |
 | API | `tests/api` | 138 | Every endpoint: positive, negative, boundaries, auth, other clients' data, idempotency, parallel payments |
 | Integration | `tests/integration` | 5 | Wallet ↔ Fraud Service: approve, decline, timeout, error; REST payment appears in the gRPC event stream |
-| gRPC | `tests/grpc` | 44 | Fraud Service directly: 4 call types, metadata, deadlines, cancellation, limits, every status code, reflection, health |
+| gRPC | `tests/grpc` | 48 | Fraud Service directly: 4 call types, metadata, deadlines, cancellation, limits, every status code, reflection, health |
 | Database | `tests/db` | 9 | Stored data, no plaintext card data, balance = sum of transactions |
 | Contract | `tests/contract` | 1 (14 endpoints) | Generated requests never cause 5xx; responses and status codes match OpenAPI |
 | E2E (browser) | `tests/e2e` | 20 | Register → account → top-up → card → pay → statement; errors, session expiry, double click |
