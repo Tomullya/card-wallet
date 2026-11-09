@@ -465,7 +465,43 @@ Authorization: Bearer <access_token>
 
 Правила по порядку: сумма > 5000.00 → `HIGH_AMOUNT`; категория `GAMBLING` → `BLOCKED_CATEGORY`; иначе `APPROVE`. Сумма ровно 5000.00 одобряется.
 
-**Как вызвать в Postman:** New → gRPC → `localhost:50051` → методы подтянутся через server reflection → выбрать `CheckPayment` → Use Example Message.
+В ответе есть и `transaction_id` — копия из запроса.
+
+**Как вызвать в Postman:** New → gRPC → `localhost:50051` → методы подтянутся через server reflection → выбрать `CheckPayment` → вкладка Metadata: `x-api-key: dev-wallet-key` → Use Example Message.
+
+### Metadata: ключ доступа и ID запроса (BR-FRD-04, BR-FRD-05)
+
+| Ключ | Обязателен | Смысл |
+|---|---|---|
+| `x-api-key` | да, для всех методов `FraudService` | `dev-wallet-key` — всё; `dev-monitor-key` — только `WatchRiskEvents` и `GetDecision` |
+| `x-request-id` | нет | ID запроса; сервис возвращает его в trailers (или свой UUID) и пишет в лог |
+
+Health check и reflection работают без ключа.
+
+### Остальные методы
+
+| Метод | Тип | Что делает |
+|---|---|---|
+| `GetDecision` | обычный | решение по `transaction_id`; неизвестный → `NOT_FOUND` |
+| `WatchRiskEvents` | поток от сервера | живые события риска с фильтром `min_risk_score` (0–100); до 8 подписчиков |
+| `CheckBatch` | поток от клиента | пачка до 1000 платежей → один итог `total / approved / declined`; ошибка в одном — отклоняется вся пачка |
+| `ScorePayments` | поток в обе стороны | ответ на каждый платёж сразу, в том же порядке |
+
+### Статус-коды
+
+| Код | Когда |
+|---|---|
+| `INVALID_ARGUMENT` | сумма не число; `min_risk_score` вне 0–100; пустая пачка |
+| `NOT_FOUND` | `GetDecision` с неизвестным id |
+| `UNAUTHENTICATED` | нет ключа или ключ неизвестен |
+| `PERMISSION_DENIED` | ключ мониторинга на методе, который ему нельзя |
+| `RESOURCE_EXHAUSTED` | пачка больше 1000; 9-й подписчик потока |
+| `DEADLINE_EXCEEDED` | клиент не дождался (магазин `TEST_TIMEOUT` отвечает 5 с) |
+| `CANCELLED` | клиент сам отменил вызов |
+| `INTERNAL` | магазин `TEST_ERROR` |
+| `UNAVAILABLE` | сервис не запущен или неверный адрес |
+
+Подробно, с упражнениями: [gRPC-тренажёр](grpc-lab/README.md).
 
 > **Почему gRPC, а не REST:** это внутренний вызов между сервисами. gRPC быстрее (бинарный формат), а контракт строго описан в `.proto`-файле, из которого генерируется код для обеих сторон. Так обычно общаются сервисы внутри платёжной системы.
 

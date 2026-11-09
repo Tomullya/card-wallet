@@ -19,14 +19,15 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 | Requirements analysis (and finding a requirements defect before coding) | [`docs/requirements/`](docs/requirements/README.md), [BUG-05](docs/qa/bug-reports/BUG-05.md) |
 | Test design: boundaries, decision tables, state transitions, concurrency | [Test cases](docs/qa/test-cases/), [checklists](docs/qa/checklists/) |
 | REST API testing (positive, negative, boundary, auth, IDOR) | [`tests/api/`](tests/api/) — pytest + httpx |
-| gRPC testing and service integration | [`tests/grpc/`](tests/grpc/), [`tests/integration/`](tests/integration/) |
+| gRPC testing: all 4 call types (unary, server / client / bidirectional streaming), metadata auth, request ids, deadlines, every status code | [`tests/grpc/`](tests/grpc/), [`tests/integration/`](tests/integration/) |
+| gRPC trainer (RU): 9 lessons with auto-checked exercises | [`docs/grpc-lab/`](docs/grpc-lab/README.md), [`grpc-lab/`](grpc-lab/) |
 | SQL checks on stored data | [`tests/db/`](tests/db/) |
 | Contract testing against OpenAPI | [`tests/contract/`](tests/contract/) — schemathesis |
 | UI end-to-end testing | [`tests/e2e/`](tests/e2e/) — Playwright, full user journey in a browser |
 | Postman / Newman | [`postman/`](postman/) — 27 requests, 49 assertions |
-| Bug reporting | [16 bug reports](docs/qa/bug-reports/README.md) |
+| Bug reporting | [19 bug reports](docs/qa/bug-reports/README.md) |
 | Traceability | [Matrix: every requirement has at least one test](docs/qa/traceability-matrix.md) — generated from test tags (NFR-08 partly: see the matrix note) |
-| Proving the tests find bugs | `BUGGY_MODE`: 4 planted defects, each caught by a named test |
+| Proving the tests find bugs | `BUGGY_MODE`: 7 planted defects (4 REST, 3 gRPC), each caught by a named test |
 | CI | [GitHub Actions](.github/workflows/ci.yml) + Allure report |
 
 ## Architecture
@@ -42,9 +43,10 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 |---|---|---|
 | Web app | React, TypeScript, Vite; served by nginx (proxies `/api`) | 3000 |
 | Wallet API | Python 3.13, FastAPI, SQLAlchemy, Alembic | 8000 |
-| Fraud Service | Python gRPC, server reflection, health check | 50051 |
+| Fraud Service | Python gRPC: 5 methods incl. 3 streaming, API-key metadata, reflection, health check | 50051 |
 | Database | PostgreSQL 16 | 5433 |
 | Wallet with planted defects (optional) | same image, `BUGGY_MODE=true` | 8001 |
+| Fraud Service with planted defects (optional) | same image, `BUGGY_MODE=true` | 50052 |
 
 Business rules worth testing: commission 1 % (min 0.50), daily card limit, block after
 3 wrong CVV, idempotent payments, no overdraft under parallel requests, anti-fraud timeout →
@@ -73,16 +75,17 @@ npx allure open reports/allure-report   # view the report after ci_local.sh
 
 Postman: import `postman/card-wallet.postman_collection.json` and
 `postman/card-wallet-local.postman_environment.json`, run top to bottom.
-gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection).
+gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection); add metadata
+`x-api-key: dev-wallet-key`. Step-by-step lessons: [`docs/grpc-lab/`](docs/grpc-lab/README.md).
 
-## Automated tests — 230
+## Automated tests — 276
 
 | Level | Folder | Tests | What it checks |
 |---|---|---|---|
-| Unit | `tests/unit` | 48 | Commission, Luhn, expiry, money rounding, fraud rules, QA tooling |
+| Unit | `tests/unit` | 59 | Commission, Luhn, expiry, money rounding, fraud rules, API-key roles, event hub, QA tooling |
 | API | `tests/api` | 138 | Every endpoint: positive, negative, boundaries, auth, other clients' data, idempotency, parallel payments |
-| Integration | `tests/integration` | 4 | Wallet ↔ Fraud Service: approve, decline, timeout, error |
-| gRPC | `tests/grpc` | 10 | Fraud Service directly, reflection, health |
+| Integration | `tests/integration` | 5 | Wallet ↔ Fraud Service: approve, decline, timeout, error; REST payment appears in the gRPC event stream |
+| gRPC | `tests/grpc` | 44 | Fraud Service directly: 4 call types, metadata, deadlines, cancellation, limits, every status code, reflection, health |
 | Database | `tests/db` | 9 | Stored data, no plaintext card data, balance = sum of transactions |
 | Contract | `tests/contract` | 1 (14 endpoints) | Generated requests never cause 5xx; responses and status codes match OpenAPI |
 | E2E (browser) | `tests/e2e` | 20 | Register → account → top-up → card → pay → statement; errors, session expiry, double click |
@@ -104,6 +107,9 @@ BUG-01  pass    fail (caught)    tests/api/test_payments.py::test_min_commission
 BUG-02  pass    fail (caught)    tests/api/test_payments.py::test_daily_limit_exact_allowed
 BUG-03  pass    fail (caught)    tests/api/test_cvv_attempts.py::test_success_resets_counter
 BUG-04  pass    fail (caught)    tests/api/test_cards.py::test_other_users_card_and_account_404
+BUG-17  pass    fail (caught)    tests/grpc/test_metadata.py::test_unknown_key_unauthenticated
+BUG-18  pass    fail (caught)    tests/grpc/test_bidi_streaming.py::test_stream_ends_after_client_closes
+BUG-19  pass    fail (caught)    tests/grpc/test_metadata.py::test_request_id_echoed_in_trailers
 All planted defects are caught.
 ```
 
@@ -125,7 +131,7 @@ before the fix; the requirements defect was fixed in the requirements and is cov
 
 ## Documentation
 
-- [Business requirements](docs/requirements/README.md) — 38 requirements with IDs and acceptance criteria
+- [Business requirements](docs/requirements/README.md) — 44 requirements with IDs and acceptance criteria
 - [Technical design](docs/design/2026-11-08-card-wallet-design.md)
 - [QA documentation](docs/qa/README.md) — test plan, 44 test cases, checklists, bug reports, traceability matrix
 - [API guide (RU)](docs/api-guide.ru.md) and [slides (RU)](docs/slides/card-wallet-api-guide.html)
