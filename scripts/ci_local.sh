@@ -22,6 +22,9 @@ step "Frontend type check and build"
 npm --prefix frontend ci --no-audit --no-fund --silent
 npm --prefix frontend run build --silent
 
+step "gRPC Lab site: simulator tests (Node)"
+node --test "site/grpc-lab/tests/*.test.mjs"
+
 step "Unit tests (no services needed)"
 "$PY" -m pytest tests/unit -q
 
@@ -53,5 +56,10 @@ step "Planted defects are caught (BUGGY_MODE)"
 
 step "Allure report"
 npx --no-install allure generate reports/allure-results -o reports/allure-report --clean
+
+step "gRPC Lab site next to the Allure report (published on GitHub Pages)"
+mkdir -p reports/allure-report/grpc-lab
+cp -R site/grpc-lab/. reports/allure-report/grpc-lab/
+rm -rf reports/allure-report/grpc-lab/tests
 
 printf '\nCI OK\n'
