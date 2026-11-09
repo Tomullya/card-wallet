@@ -18,6 +18,7 @@ const REACTION = {
 const ROW_KEYS = {
   call: "call", subscribed: "subscribed", event: "event", filtered: "filtered", answer: "answer",
   payment: "payment", "end of sending": "endOfSending", summary: "summary", "more payments": "morePayments",
+  "not published": "notPublished",
 };
 
 const scenariosReady = fetch(new URL("../scenarios.json", import.meta.url)).then((r) => r.json());

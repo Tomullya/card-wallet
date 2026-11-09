@@ -136,7 +136,10 @@ def _watch(stub, s, payments, md, result):
     reader = threading.Thread(target=read, daemon=True)
     reader.start()
     for p in payments:
-        stub.CheckPayment(p, timeout=2, metadata=(("x-api-key", WALLET_KEY),))
+        try:  # other clients' payments may fail (TEST_ERROR, bad amount): nothing is published
+            stub.CheckPayment(p, timeout=2, metadata=(("x-api-key", WALLET_KEY),))
+        except grpc.RpcError:
+            pass
     if s.get("clientAction") == "cancel":
         call.cancel()
     reader.join(s.get("deadline", 2) + 3)

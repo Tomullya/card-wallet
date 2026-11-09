@@ -554,5 +554,6 @@
   "preset.bug18-bidi-hangs": "Баг 2: диалог не кончается",
   "preset.bug19-no-trailer": "Баг 3: где trailers?",
   "sb.buggy": "Сломанный сервис (fraud-buggy :50052)",
-  "sb.buggyHint": "Включи, повтори вызов и сравни с выключенным."
+  "sb.buggyHint": "Включи, повтори вызов и сравни с выключенным.",
+  "sb.row.notPublished": "не опубликовано: вызов не удался"
 }

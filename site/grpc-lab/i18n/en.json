@@ -554,5 +554,6 @@
   "preset.bug18-bidi-hangs": "Bug 2: the dialogue never ends",
   "preset.bug19-no-trailer": "Bug 3: where are the trailers?",
   "sb.buggy": "Broken service (fraud-buggy :50052)",
-  "sb.buggyHint": "Switch it on, repeat the call and compare with it off."
+  "sb.buggyHint": "Switch it on, repeat the call and compare with it off.",
+  "sb.row.notPublished": "not published: the call failed"
 }
