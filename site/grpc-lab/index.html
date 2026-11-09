@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>gRPC Lab — Card Wallet</title>
+  <meta name="description" content="Interactive gRPC trainer built on the Card Wallet fraud service: comics, sandbox, quizzes. RU/EN.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Pangolin&family=Unbounded:wght@500;700&display=swap">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315233B'/%3E%3Ccircle cx='11' cy='14' r='5' fill='%23F6F1E6'/%3E%3Ccircle cx='21' cy='14' r='5' fill='%23F6F1E6'/%3E%3Ccircle cx='11' cy='14' r='2' fill='%2315233B'/%3E%3Ccircle cx='21' cy='14' r='2' fill='%2315233B'/%3E%3Cpath d='M14 20l2 3 2-3z' fill='%23E0B25C'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="ui.skip">Skip to lesson</a>
+  <div class="app">
+    <aside class="rail">
+      <header class="brand">
+        <p class="brand__name" data-i18n="ui.brand">gRPC Lab</p>
+        <p class="brand__tagline" data-i18n="ui.tagline"></p>
+      </header>
+      <div class="switches">
+        <div class="lang" role="group" data-i18n-aria="ui.language">
+          <button type="button" data-lang="ru" data-testid="lang-ru">RU</button>
+          <button type="button" data-lang="en" data-testid="lang-en">EN</button>
+        </div>
+        <button type="button" class="theme" data-testid="theme-toggle" aria-pressed="false">
+          <span class="theme__icon" aria-hidden="true"></span><span data-i18n="ui.theme"></span>
+        </button>
+      </div>
+      <nav class="lessons" data-i18n-aria="ui.lessons">
+        <ol id="lesson-list"></ol>
+      </nav>
+      <p class="progress" id="progress-note"></p>
+    </aside>
+    <main id="main" class="lesson" tabindex="-1">
+      <header class="lesson__head">
+        <p class="lesson__number" id="lesson-number"></p>
+        <h1 class="lesson__title" data-testid="lesson-title" id="lesson-title"></h1>
+        <p class="lesson__subtitle" id="lesson-subtitle"></p>
+      </header>
+      <div class="tabs" role="tablist" id="tab-list"></div>
+      <section class="panel" role="tabpanel" id="panel" tabindex="0"></section>
+    </main>
+  </div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

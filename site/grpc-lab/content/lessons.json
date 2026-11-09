@@ -1,0 +1,11 @@
+[
+  {"id": "00", "callType": null, "presets": [], "quiz": [], "comic": [], "practice": {"check": null, "files": ["docs/grpc-lab/00-basics.md", "proto/fraudpb/fraud.proto"]}},
+  {"id": "01", "callType": "unary", "presets": [], "quiz": [], "comic": [], "practice": {"check": "1", "files": ["docs/grpc-lab/01-unary.md", "grpc-lab/exercises/test_lab_01_unary.py"]}},
+  {"id": "02", "callType": "unary", "presets": [], "quiz": [], "comic": [], "practice": {"check": "2", "files": ["docs/grpc-lab/02-metadata.md", "grpc-lab/exercises/test_lab_02_metadata.py"]}},
+  {"id": "03", "callType": "unary", "presets": [], "quiz": [], "comic": [], "practice": {"check": "3", "files": ["docs/grpc-lab/03-status-codes.md", "grpc-lab/exercises/test_lab_03_status_codes.py"]}},
+  {"id": "04", "callType": "unary", "presets": [], "quiz": [], "comic": [], "practice": {"check": "4", "files": ["docs/grpc-lab/04-deadlines.md", "grpc-lab/exercises/test_lab_04_deadlines.py"]}},
+  {"id": "05", "callType": "server", "presets": [], "quiz": [], "comic": [], "practice": {"check": "5", "files": ["docs/grpc-lab/05-server-streaming.md", "grpc-lab/exercises/test_lab_05_server_streaming.py"]}},
+  {"id": "06", "callType": "client", "presets": [], "quiz": [], "comic": [], "practice": {"check": "6", "files": ["docs/grpc-lab/06-client-streaming.md", "grpc-lab/exercises/test_lab_06_client_streaming.py"]}},
+  {"id": "07", "callType": "bidi", "presets": [], "quiz": [], "comic": [], "practice": {"check": "7", "files": ["docs/grpc-lab/07-bidi.md", "grpc-lab/exercises/test_lab_07_bidi.py"]}},
+  {"id": "08", "callType": null, "presets": [], "quiz": [], "comic": [], "practice": {"check": "9", "files": ["docs/grpc-lab/08-how-to-test.md", "grpc-lab/exercises/test_lab_09_bug_hunt.py"]}}
+]

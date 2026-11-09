@@ -25,3 +25,33 @@ def signed_in(app, api):
     app.get_by_test_id("login-submit").click()
     app.get_by_test_id("user-name").wait_for()
     return app, client
+
+
+@pytest.fixture(scope="session")
+def lab_url():
+    """Serve site/ locally (ES modules need http://, not file://) and return the trainer URL."""
+    import socket
+    import subprocess
+    import sys
+    import time
+    from pathlib import Path
+
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        port = s.getsockname()[1]
+    site = Path(__file__).resolve().parents[2] / "site"
+    server = subprocess.Popen(
+        [sys.executable, "-m", "http.server", str(port), "--bind", "127.0.0.1"],
+        cwd=site,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    for _ in range(50):
+        try:
+            socket.create_connection(("127.0.0.1", port), timeout=0.2).close()
+            break
+        except OSError:
+            time.sleep(0.1)
+    yield f"http://127.0.0.1:{port}/grpc-lab/index.html"
+    server.terminate()
+    server.wait(5)
