@@ -121,6 +121,10 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
                 summary.declined_transaction_ids.append(answer.transaction_id)
         return summary
 
+    def ScorePayments(self, request_iterator, context):  # noqa: N802
+        for index, request in enumerate(request_iterator):
+            yield self.decide(request, context, index)
+
     def WatchRiskEvents(self, request, context):  # noqa: N802
         if not 0 <= request.min_risk_score <= 100:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, "min_risk_score must be 0-100")
