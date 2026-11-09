@@ -133,6 +133,6 @@ before the fix; the requirements defect was fixed in the requirements and is cov
 
 - [Business requirements](docs/requirements/README.md) — 44 requirements with IDs and acceptance criteria
 - [Technical design](docs/design/2026-11-08-card-wallet-design.md)
-- [QA documentation](docs/qa/README.md) — test plan, 44 test cases, checklists, bug reports, traceability matrix
+- [QA documentation](docs/qa/README.md) — test plan, 50 test cases, checklists, bug reports, traceability matrix
 - [API guide (RU)](docs/api-guide.ru.md) and [slides (RU)](docs/slides/card-wallet-api-guide.html)
 - Implementation plans: [backend](docs/plans/2026-11-08-plan-1-backend.md), [QA package](docs/plans/2026-11-08-plan-3-qa.md)

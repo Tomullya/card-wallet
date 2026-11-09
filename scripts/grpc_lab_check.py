@@ -34,6 +34,20 @@ def lesson_file(number: int, solutions: bool) -> Path:
     return LAB / folder / f"test_lab_{number:02d}_{LESSONS[number]}.py"
 
 
+def case_kind(case) -> str:
+    """'passed', 'assertion' (the test's own check failed) or 'error' (anything else).
+
+    Same rule as scripts/verify_bugs_caught.py: only a failed assert counts as a caught bug.
+    """
+    if case.find("error") is not None or case.find("skipped") is not None:
+        return "error"
+    failure = case.find("failure")
+    if failure is None:
+        return "passed"
+    message = failure.get("message", "")
+    return "assertion" if message.startswith(("assert", "AssertionError")) else "error"
+
+
 def first_line(case) -> str:
     problem = case.find("failure")
     if problem is None:
@@ -71,10 +85,13 @@ def main() -> int:
             return result.returncode or 1
         cases = list(ET.parse(report).getroot().iter("testcase"))
 
+    if args.buggy:
+        return buggy_verdict(cases)
+
     passed = 0
     for case in cases:
         name = case.get("name")
-        if case.find("failure") is None and case.find("error") is None:
+        if case_kind(case) == "passed":
             passed += 1
             print(f"  ✅ {name}")
         else:
@@ -90,6 +107,28 @@ def main() -> int:
     else:
         print(f"Прошло {passed} из {len(cases)}. Поправь красные тесты и запусти проверку снова.")
     return result.returncode
+
+
+def buggy_verdict(cases) -> int:
+    """On the planted-defect copy a good test FAILS on its assert: that is a caught bug."""
+    caught = 0
+    for case in cases:
+        name, kind = case.get("name"), case_kind(case)
+        if kind == "assertion":
+            caught += 1
+            print(f"  🐞 {name}: баг пойман — {first_line(case)}")
+        elif kind == "passed":
+            print(f"  ⚪ {name}: тест прошёл, значит баг НЕ пойман")
+        else:
+            line = first_line(case)
+            hint = " (ещё не написан)" if "TODO" in line else ""
+            print(f"  ⚠️ {name}: упал с ошибкой, а не на assert — это не считается{hint}: {line}")
+    print()
+    if caught == len(cases):
+        print(f"Отлично: все {caught} бага пойманы. Проверь, что без --buggy эти тесты зелёные.")
+        return 0
+    print(f"Поймано {caught} из {len(cases)}. Тест должен падать на assert, а не на ошибке вызова.")
+    return 1
 
 
 if __name__ == "__main__":

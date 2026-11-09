@@ -16,8 +16,8 @@ Trailer `x-request-id: lab-123`.
 
 ## Actual
 
-No `x-request-id` trailer on successful calls (errors still have it). Support cannot match a
-client's request to the service log line.
+No `x-request-id` trailer on any call except authentication errors (`UNAUTHENTICATED`,
+`PERMISSION_DENIED`). Support cannot match a client's request to the service log line.
 
 ## Evidence
 

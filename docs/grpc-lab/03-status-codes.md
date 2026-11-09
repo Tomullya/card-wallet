@@ -17,7 +17,7 @@
 | `DEADLINE_EXCEEDED` (4) | время вышло | магазин `TEST_TIMEOUT` + дедлайн 1 с | 504 |
 | `NOT_FOUND` (5) | клиент | `GetDecision` с несуществующим id | 404 |
 | `PERMISSION_DENIED` (7) | права | ключ мониторинга на `CheckPayment` | 403 |
-| `RESOURCE_EXHAUSTED` (8) | лимит | `CheckBatch` из 1001 платежа; 9-й подписчик потока | 429 |
+| `RESOURCE_EXHAUSTED` (8) | лимит | `CheckBatch` из 1001 платежа; 9-й подписчик потока; 17-й одновременный `CheckBatch` / `ScorePayments` | 429 |
 | `INTERNAL` (13) | сервер | магазин `TEST_ERROR` | 500 |
 | `UNAVAILABLE` (14) | сеть или сервис лежит | вызов на `localhost:59999` или выключенный сервис | 503 |
 | `UNAUTHENTICATED` (16) | ключ | нет `x-api-key` | 401 |

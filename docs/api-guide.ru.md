@@ -495,7 +495,7 @@ Health check и reflection работают без ключа.
 | `NOT_FOUND` | `GetDecision` с неизвестным id |
 | `UNAUTHENTICATED` | нет ключа или ключ неизвестен |
 | `PERMISSION_DENIED` | ключ мониторинга на методе, который ему нельзя |
-| `RESOURCE_EXHAUSTED` | пачка больше 1000; 9-й подписчик потока |
+| `RESOURCE_EXHAUSTED` | пачка больше 1000; 9-й подписчик потока; больше 16 открытых `CheckBatch` / `ScorePayments` |
 | `DEADLINE_EXCEEDED` | клиент не дождался (магазин `TEST_TIMEOUT` отвечает 5 с) |
 | `CANCELLED` | клиент сам отменил вызов |
 | `INTERNAL` | магазин `TEST_ERROR` |
