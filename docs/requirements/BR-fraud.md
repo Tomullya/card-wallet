@@ -67,6 +67,8 @@ Acceptance criteria:
 - `GetDecision(transaction_id)` returns the stored decision of any scoring RPC.
 - Unknown transaction id → `NOT_FOUND`.
 - The last 10 000 decisions are kept; older ones are evicted.
+- A decision finished after the client gave up (deadline expired or call cancelled) is not
+  stored or published: the wallet has already answered 503 and saved nothing.
 
 ## BR-FRD-07 Risk event stream
 
@@ -89,7 +91,7 @@ Acceptance criteria:
 - The answer has `total`, `approved`, `declined` and the declined transaction ids in order.
 - Empty batch → `INVALID_ARGUMENT`; more than 1000 payments → `RESOURCE_EXHAUSTED`.
 - One invalid payment → `INVALID_ARGUMENT` naming its index (0-based); nothing from that batch
-  is stored or published.
+  is stored or published. The same holds when any payment fails (e.g. `TEST_ERROR` → `INTERNAL`).
 
 ## BR-FRD-09 Live scoring
 

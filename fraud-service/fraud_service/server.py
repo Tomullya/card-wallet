@@ -64,8 +64,8 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
 
         context.add_callback(release)
 
-    def decide(self, request, context, index: int | None = None):
-        """Score one payment: test merchants, rules, then store and publish the decision."""
+    def score(self, request, context, index: int | None = None):
+        """Decide on one payment without side effects: test merchants, then the rules."""
         where = "" if index is None else f" (index {index})"
         if request.merchant_name == TEST_ERROR_MERCHANT:
             context.abort(grpc.StatusCode.INTERNAL, "Simulated fraud service error" + where)
@@ -75,21 +75,23 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
             amount = parse_amount(request)
         except ValueError as e:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, f"{e}{where}")
-
         decision, reason, risk_score = evaluate(amount, request.merchant_category)
-        request_id = current_request_id()
-        logger.info(
-            "transaction=%s decision=%s reason=%s request_id=%s",
-            request.transaction_id,
-            decision,
-            reason,
-            request_id,
-        )
-        response = fraud_pb2.CheckPaymentResponse(
+        return fraud_pb2.CheckPaymentResponse(
             decision=fraud_pb2.Decision.Value(decision),
             reason=reason,
             risk_score=risk_score,
             transaction_id=request.transaction_id,
+        )
+
+    def record(self, request, response) -> None:
+        """Log, store and publish a decision the client is still waiting for."""
+        request_id = current_request_id()
+        logger.info(
+            "transaction=%s decision=%s reason=%s request_id=%s",
+            request.transaction_id,
+            fraud_pb2.Decision.Name(response.decision),
+            response.reason,
+            request_id,
         )
         self.store.put(response)
         self.hub.publish(
@@ -97,14 +99,20 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
                 transaction_id=request.transaction_id,
                 user_id=request.user_id,
                 decision=response.decision,
-                reason=reason,
-                risk_score=risk_score,
+                reason=response.reason,
+                risk_score=response.risk_score,
                 amount=request.amount,
                 currency=request.currency,
                 occurred_at=datetime.now(UTC).isoformat(),
                 request_id=request_id,
             )
         )
+
+    def decide(self, request, context, index: int | None = None):
+        """Score one payment; keep the decision only if the client has not given up."""
+        response = self.score(request, context, index)
+        if context.is_active():
+            self.record(request, response)
         return response
 
     def CheckPayment(self, request, context):  # noqa: N802 (names come from the .proto)
@@ -134,9 +142,14 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
             except ValueError as e:
                 context.abort(grpc.StatusCode.INVALID_ARGUMENT, f"{e} (index {index})")
 
+        # Score everything first; keep the decisions only if all succeeded and the client waits.
+        answers = [self.score(request, context, index) for index, request in enumerate(batch)]
+        if context.is_active():
+            for request, answer in zip(batch, answers, strict=True):
+                self.record(request, answer)
+
         summary = fraud_pb2.BatchSummary(total=len(batch))
-        for index, request in enumerate(batch):
-            answer = self.decide(request, context, index)
+        for answer in answers:
             if answer.decision == fraud_pb2.APPROVE:
                 summary.approved += 1
             else:
