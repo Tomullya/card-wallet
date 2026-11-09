@@ -40,16 +40,43 @@ registerTab("practice", (lesson, { t }) => {
   }
 
   const h2 = document.createElement("h2");
-  h2.textContent = t("pr.check");
+  h2.textContent = t(lesson.practice?.check ? "pr.how" : "pr.check");
   wrap.append(h2);
   if (lesson.practice?.check) {
-    const hint = document.createElement("p");
-    hint.textContent = t("pr.checkHint");
+    const file = (lesson.practice.files ?? []).find((f) => f.includes("exercises/")) ?? "";
+    const steps = document.createElement("ol");
+    steps.dataset.testid = "practice-steps";
+    for (let i = 1; i <= 6; i++) {
+      const li = document.createElement("li");
+      li.innerHTML = t(`pr.step.${i}`, { file, n: lesson.practice.check });
+      steps.append(li);
+    }
     const pre = document.createElement("pre");
     pre.className = "command";
     pre.dataset.testid = "practice-check";
     pre.textContent = `.venv/bin/python scripts/grpc_lab_check.py ${lesson.practice.check}`;
-    wrap.append(hint, pre);
+    wrap.append(steps, pre);
+
+    const hh = document.createElement("h2");
+    hh.textContent = t("pr.helpers");
+    const helpers = document.createElement("ul");
+    helpers.dataset.testid = "practice-helpers";
+    for (let i = 1; i <= 4; i++) {
+      const li = document.createElement("li");
+      li.innerHTML = t(`pr.helper.${i}`);
+      helpers.append(li);
+    }
+    wrap.append(hh, helpers);
+
+    if (lesson.example) {
+      const he = document.createElement("h2");
+      he.textContent = t("pr.example");
+      const code = document.createElement("pre");
+      code.className = "code";
+      code.dataset.testid = "practice-example";
+      code.textContent = t(`l${lesson.id}.example`);
+      wrap.append(he, code);
+    }
   } else {
     const p = document.createElement("p");
     p.textContent = t("pr.noCheck");

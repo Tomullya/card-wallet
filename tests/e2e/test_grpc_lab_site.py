@@ -175,3 +175,17 @@ def test_theory_and_practice_have_content(page, lab_url):
     expect(page.get_by_test_id("practice-link").first).to_have_attribute(
         "href", re.compile(r"^https://github.com/Tomullya/card-wallet/blob/main/")
     )
+
+
+@pytest.mark.req("NFR-09")
+def test_practice_explains_where_and_how(page, lab_url):
+    """Author feedback: the practice tab did not say where to write tests or where to look."""
+    open_lab(page, lab_url, "#/05/practice")
+    steps = page.get_by_test_id("practice-steps").locator("li")
+    assert steps.count() >= 5
+    expect(page.get_by_test_id("practice-steps")).to_contain_text(
+        "grpc-lab/exercises/test_lab_05_server_streaming.py"
+    )
+    expect(page.get_by_test_id("practice-example")).to_contain_text("Watch(stub")
+    expect(page.get_by_test_id("practice-example")).to_contain_text("assert")
+    expect(page.get_by_test_id("practice-helpers")).to_contain_text("lab.py")

@@ -191,5 +191,19 @@
   "pr.checkHint": "Fill in the exercise tests and run the check from the card-wallet folder:",
   "pr.files": "Files on GitHub",
   "pr.noCheck": "No auto-check in this lesson: answer the lesson questions in writing.",
-  "react.watchEnd": "Listening is over: the client's hourglass ran out. For a stream that is the usual end."
+  "react.watchEnd": "Listening is over: the client's hourglass ran out. For a stream that is the usual end.",
+  "pr.how": "How to do the exercise",
+  "pr.step.1": "Start the project from the card-wallet folder: <code>docker compose --profile buggy up -d</code>.",
+  "pr.step.2": "Open the exercise file <code>{file}</code>, for example with <code>open -a \"Visual Studio Code\" {file}</code>.",
+  "pr.step.3": "Each test has hint comments (lines starting with <code>#</code>) and a line <code>pytest.fail(\"TODO\")</code>. Replace that line with your code.",
+  "pr.step.4": "Peek at: the Theory tab, the sandbox button “Show as Postman and Python” (nearly ready call code) and the example below.",
+  "pr.step.5": "Check: <code>.venv/bin/python scripts/grpc_lab_check.py {n}</code>. ✅ — the test passed, ❌ — the check shows what is wrong.",
+  "pr.step.6": "Compare with the solution in <code>grpc-lab/solutions/</code> — only after your own attempt.",
+  "pr.helpers": "Helpers from grpc-lab/lab.py",
+  "pr.helper.1": "<code>WALLET</code>, <code>MONITOR</code> — ready seals (metadata with the key).",
+  "pr.helper.2": "<code>payment(...)</code> — build a payment: <code>payment(amount=\"6000.00\")</code>, <code>payment(merchant_category=\"GAMBLING\")</code>.",
+  "pr.helper.3": "<code>Watch(stub)</code> — subscribe to the stream; <code>.find(transaction_id)</code> finds your event, <code>.stop()</code> hangs up.",
+  "pr.helper.4": "<code>assert</code> — a check: “I claim this is true”. If it is not, the test turns red.",
+  "pr.example": "Example test (not from the exercise — write yours the same way)",
+  "l05.example": "def test_monitor_sees_big_payment(stub):\n    watch = Watch(stub, metadata=MONITOR)           # monitoring subscribed\n    request = payment(amount=\"6000.00\")             # a large payment\n    stub.CheckPayment(request, metadata=WALLET, timeout=2)\n    event = watch.find(request.transaction_id)      # wait for our event\n    watch.stop()                                    # hang up\n    assert event is not None                        # the event arrived\n    assert event.reason == \"HIGH_AMOUNT\"\n    assert event.risk_score == 90"
 }

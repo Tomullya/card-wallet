@@ -191,5 +191,19 @@
   "pr.checkHint": "Допиши тесты в файле задания и запусти проверку из папки card-wallet:",
   "pr.files": "Файлы на GitHub",
   "pr.noCheck": "В этом уроке нет автопроверки: ответь письменно на вопросы урока.",
-  "react.watchEnd": "Слушание окончено: часы клиента истекли. Для потока это обычный конец."
+  "react.watchEnd": "Слушание окончено: часы клиента истекли. Для потока это обычный конец.",
+  "pr.how": "Как сделать задание",
+  "pr.step.1": "Запусти проект из папки card-wallet: <code>docker compose --profile buggy up -d</code>.",
+  "pr.step.2": "Открой файл задания <code>{file}</code>, например командой <code>open -a \"Visual Studio Code\" {file}</code>.",
+  "pr.step.3": "В каждом тесте есть комментарии-подсказки (строки с <code>#</code>) и строка <code>pytest.fail(\"TODO\")</code>. Замени эту строку своим кодом.",
+  "pr.step.4": "Подсматривай: вкладка «Теория», кнопка «Показать как в Postman и Python» в песочнице (это почти готовый код вызова) и пример ниже.",
+  "pr.step.5": "Проверь: <code>.venv/bin/python scripts/grpc_lab_check.py {n}</code>. ✅ — тест прошёл, ❌ — проверка покажет, что не так.",
+  "pr.step.6": "Сравни с решением в <code>grpc-lab/solutions/</code> — только после своей попытки.",
+  "pr.helpers": "Помощники из grpc-lab/lab.py",
+  "pr.helper.1": "<code>WALLET</code>, <code>MONITOR</code> — готовые печати (metadata с ключом).",
+  "pr.helper.2": "<code>payment(...)</code> — собрать платёж: <code>payment(amount=\"6000.00\")</code>, <code>payment(merchant_category=\"GAMBLING\")</code>.",
+  "pr.helper.3": "<code>Watch(stub)</code> — подписаться на поток; <code>.find(transaction_id)</code> ищет своё событие, <code>.stop()</code> кладёт трубку.",
+  "pr.helper.4": "<code>assert</code> — проверка: «утверждаю, что это правда». Если неправда, тест красный.",
+  "pr.example": "Пример теста (не из задания — по его образцу пиши свои)",
+  "l05.example": "def test_monitor_sees_big_payment(stub):\n    watch = Watch(stub, metadata=MONITOR)           # мониторинг подписался\n    request = payment(amount=\"6000.00\")             # крупный платёж\n    stub.CheckPayment(request, metadata=WALLET, timeout=2)\n    event = watch.find(request.transaction_id)      # ждём своё событие\n    watch.stop()                                    # кладём трубку\n    assert event is not None                        # событие пришло\n    assert event.reason == \"HIGH_AMOUNT\"\n    assert event.risk_score == 90"
 }
