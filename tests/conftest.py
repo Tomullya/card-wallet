@@ -20,6 +20,8 @@ JWT_SECRET = os.environ["JWT_SECRET"]
 
 WALLET_URL = os.getenv("WALLET_URL", "http://localhost:8000")
 FRAUD_ADDR = os.getenv("FRAUD_ADDR", "localhost:50051")
+WALLET_KEY = os.getenv("FRAUD_API_KEY_WALLET", "dev-wallet-key")
+MONITOR_KEY = os.getenv("FRAUD_API_KEY_MONITOR", "dev-monitor-key")
 DB_URL = os.getenv("DB_URL", "postgresql://wallet:wallet@localhost:5433/wallet")
 
 
@@ -38,7 +40,8 @@ def db():
 
 
 @pytest.fixture(scope="session")
-def fraud_channel():
+def raw_fraud_channel():
+    """Channel to the Fraud Service that sends no metadata (for auth tests)."""
     import grpc
 
     with grpc.insecure_channel(FRAUD_ADDR) as channel:
@@ -46,10 +49,69 @@ def fraud_channel():
 
 
 @pytest.fixture(scope="session")
+def fraud_channel(raw_fraud_channel):
+    """Channel that adds the wallet API key to every call unless the call sends its own."""
+    import grpc
+
+    return grpc.intercept_channel(raw_fraud_channel, *_default_key_interceptors())
+
+
+@pytest.fixture(scope="session")
 def fraud_stub(fraud_channel):
     from fraudpb.fraud_pb2_grpc import FraudServiceStub
 
     return FraudServiceStub(fraud_channel)
+
+
+@pytest.fixture(scope="session")
+def raw_fraud_stub(raw_fraud_channel):
+    from fraudpb.fraud_pb2_grpc import FraudServiceStub
+
+    return FraudServiceStub(raw_fraud_channel)
+
+
+def _default_key_interceptors():
+    import collections
+
+    import grpc
+
+    class Details(
+        collections.namedtuple(
+            "Details",
+            ("method", "timeout", "metadata", "credentials", "wait_for_ready", "compression"),
+        ),
+        grpc.ClientCallDetails,
+    ):
+        pass
+
+    def with_key(details):
+        metadata = list(details.metadata or ())
+        if not any(k == "x-api-key" for k, _ in metadata):
+            metadata.append(("x-api-key", WALLET_KEY))
+        return Details(
+            details.method, details.timeout, metadata, details.credentials,
+            details.wait_for_ready, details.compression,
+        )
+
+    class AddKey(
+        grpc.UnaryUnaryClientInterceptor,
+        grpc.UnaryStreamClientInterceptor,
+        grpc.StreamUnaryClientInterceptor,
+        grpc.StreamStreamClientInterceptor,
+    ):
+        def intercept_unary_unary(self, continuation, details, request):
+            return continuation(with_key(details), request)
+
+        def intercept_unary_stream(self, continuation, details, request):
+            return continuation(with_key(details), request)
+
+        def intercept_stream_unary(self, continuation, details, requests):
+            return continuation(with_key(details), requests)
+
+        def intercept_stream_stream(self, continuation, details, requests):
+            return continuation(with_key(details), requests)
+
+    return (AddKey(),)
 
 
 def pytest_collection_finish(session):

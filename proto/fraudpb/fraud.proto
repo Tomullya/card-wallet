@@ -7,6 +7,18 @@ package fraud.v1;
 service FraudService {
   // Decide whether a card payment may be charged.
   rpc CheckPayment(CheckPaymentRequest) returns (CheckPaymentResponse);
+
+  // Look up a stored decision by transaction id (BR-FRD-06).
+  rpc GetDecision(GetDecisionRequest) returns (CheckPaymentResponse);
+
+  // Server streaming: live feed of decisions made after subscribing (BR-FRD-07).
+  rpc WatchRiskEvents(WatchRiskEventsRequest) returns (stream RiskEvent);
+
+  // Client streaming: score a batch, answer once at the end (BR-FRD-08).
+  rpc CheckBatch(stream CheckPaymentRequest) returns (BatchSummary);
+
+  // Bidirectional streaming: one answer per payment, as soon as it is scored (BR-FRD-09).
+  rpc ScorePayments(stream CheckPaymentRequest) returns (stream CheckPaymentResponse);
 }
 
 message CheckPaymentRequest {
@@ -29,4 +41,32 @@ message CheckPaymentResponse {
   Decision decision = 1;
   string reason = 2;            // HIGH_AMOUNT, BLOCKED_CATEGORY or empty
   int32 risk_score = 3;         // 0-100
+  string transaction_id = 4;    // copied from the request; matches answers in streams
+}
+
+message GetDecisionRequest {
+  string transaction_id = 1;
+}
+
+message WatchRiskEventsRequest {
+  int32 min_risk_score = 1;     // 0 = all events
+}
+
+message RiskEvent {
+  string transaction_id = 1;
+  string user_id = 2;
+  Decision decision = 3;
+  string reason = 4;
+  int32 risk_score = 5;
+  string amount = 6;
+  string currency = 7;
+  string occurred_at = 8;       // RFC 3339, UTC
+  string request_id = 9;        // x-request-id of the call that made the decision
+}
+
+message BatchSummary {
+  int32 total = 1;
+  int32 approved = 2;
+  int32 declined = 3;
+  repeated string declined_transaction_ids = 4;
 }

@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     jwt_ttl_minutes: int = 60
     fraud_address: str = "fraud:50051"
     fraud_timeout_seconds: float = 2.0
+    fraud_api_key: str = "dev-wallet-key"
     buggy_mode: bool = False
 
 

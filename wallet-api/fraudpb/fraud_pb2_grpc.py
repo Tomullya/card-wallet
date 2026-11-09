@@ -39,6 +39,26 @@ class FraudServiceStub:
                 request_serializer=fraudpb_dot_fraud__pb2.CheckPaymentRequest.SerializeToString,
                 response_deserializer=fraudpb_dot_fraud__pb2.CheckPaymentResponse.FromString,
                 _registered_method=True)
+        self.GetDecision = channel.unary_unary(
+                '/fraud.v1.FraudService/GetDecision',
+                request_serializer=fraudpb_dot_fraud__pb2.GetDecisionRequest.SerializeToString,
+                response_deserializer=fraudpb_dot_fraud__pb2.CheckPaymentResponse.FromString,
+                _registered_method=True)
+        self.WatchRiskEvents = channel.unary_stream(
+                '/fraud.v1.FraudService/WatchRiskEvents',
+                request_serializer=fraudpb_dot_fraud__pb2.WatchRiskEventsRequest.SerializeToString,
+                response_deserializer=fraudpb_dot_fraud__pb2.RiskEvent.FromString,
+                _registered_method=True)
+        self.CheckBatch = channel.stream_unary(
+                '/fraud.v1.FraudService/CheckBatch',
+                request_serializer=fraudpb_dot_fraud__pb2.CheckPaymentRequest.SerializeToString,
+                response_deserializer=fraudpb_dot_fraud__pb2.BatchSummary.FromString,
+                _registered_method=True)
+        self.ScorePayments = channel.stream_stream(
+                '/fraud.v1.FraudService/ScorePayments',
+                request_serializer=fraudpb_dot_fraud__pb2.CheckPaymentRequest.SerializeToString,
+                response_deserializer=fraudpb_dot_fraud__pb2.CheckPaymentResponse.FromString,
+                _registered_method=True)
 
 
 class FraudServiceServicer:
@@ -51,11 +71,59 @@ class FraudServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetDecision(self, request, context):
+        """Look up a stored decision by transaction id (BR-FRD-06).
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def WatchRiskEvents(self, request, context):
+        """Server streaming: live feed of decisions made after subscribing (BR-FRD-07).
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CheckBatch(self, request_iterator, context):
+        """Client streaming: score a batch, answer once at the end (BR-FRD-08).
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ScorePayments(self, request_iterator, context):
+        """Bidirectional streaming: one answer per payment, as soon as it is scored (BR-FRD-09).
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_FraudServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'CheckPayment': grpc.unary_unary_rpc_method_handler(
                     servicer.CheckPayment,
+                    request_deserializer=fraudpb_dot_fraud__pb2.CheckPaymentRequest.FromString,
+                    response_serializer=fraudpb_dot_fraud__pb2.CheckPaymentResponse.SerializeToString,
+            ),
+            'GetDecision': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetDecision,
+                    request_deserializer=fraudpb_dot_fraud__pb2.GetDecisionRequest.FromString,
+                    response_serializer=fraudpb_dot_fraud__pb2.CheckPaymentResponse.SerializeToString,
+            ),
+            'WatchRiskEvents': grpc.unary_stream_rpc_method_handler(
+                    servicer.WatchRiskEvents,
+                    request_deserializer=fraudpb_dot_fraud__pb2.WatchRiskEventsRequest.FromString,
+                    response_serializer=fraudpb_dot_fraud__pb2.RiskEvent.SerializeToString,
+            ),
+            'CheckBatch': grpc.stream_unary_rpc_method_handler(
+                    servicer.CheckBatch,
+                    request_deserializer=fraudpb_dot_fraud__pb2.CheckPaymentRequest.FromString,
+                    response_serializer=fraudpb_dot_fraud__pb2.BatchSummary.SerializeToString,
+            ),
+            'ScorePayments': grpc.stream_stream_rpc_method_handler(
+                    servicer.ScorePayments,
                     request_deserializer=fraudpb_dot_fraud__pb2.CheckPaymentRequest.FromString,
                     response_serializer=fraudpb_dot_fraud__pb2.CheckPaymentResponse.SerializeToString,
             ),
@@ -85,6 +153,114 @@ class FraudService:
             request,
             target,
             '/fraud.v1.FraudService/CheckPayment',
+            fraudpb_dot_fraud__pb2.CheckPaymentRequest.SerializeToString,
+            fraudpb_dot_fraud__pb2.CheckPaymentResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetDecision(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/fraud.v1.FraudService/GetDecision',
+            fraudpb_dot_fraud__pb2.GetDecisionRequest.SerializeToString,
+            fraudpb_dot_fraud__pb2.CheckPaymentResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def WatchRiskEvents(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/fraud.v1.FraudService/WatchRiskEvents',
+            fraudpb_dot_fraud__pb2.WatchRiskEventsRequest.SerializeToString,
+            fraudpb_dot_fraud__pb2.RiskEvent.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CheckBatch(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_unary(
+            request_iterator,
+            target,
+            '/fraud.v1.FraudService/CheckBatch',
+            fraudpb_dot_fraud__pb2.CheckPaymentRequest.SerializeToString,
+            fraudpb_dot_fraud__pb2.BatchSummary.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ScorePayments(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_stream(
+            request_iterator,
+            target,
+            '/fraud.v1.FraudService/ScorePayments',
             fraudpb_dot_fraud__pb2.CheckPaymentRequest.SerializeToString,
             fraudpb_dot_fraud__pb2.CheckPaymentResponse.FromString,
             options,

@@ -11,6 +11,7 @@ from fraudpb import fraud_pb2, fraud_pb2_grpc
 from grpc_health.v1 import health, health_pb2, health_pb2_grpc
 from grpc_reflection.v1alpha import reflection
 
+from fraud_service.auth import AuthInterceptor, current_request_id
 from fraud_service.rules import evaluate
 
 logger = logging.getLogger("fraud")
@@ -37,7 +38,11 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
 
         decision, reason, risk_score = evaluate(amount, request.merchant_category)
         logger.info(
-            "transaction=%s decision=%s reason=%s", request.transaction_id, decision, reason
+            "transaction=%s decision=%s reason=%s request_id=%s",
+            request.transaction_id,
+            decision,
+            reason,
+            current_request_id(),
         )
         return fraud_pb2.CheckPaymentResponse(
             decision=fraud_pb2.Decision.Value(decision), reason=reason, risk_score=risk_score
@@ -45,7 +50,9 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
 
 
 def serve(port: int = 50051) -> None:
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=16))
+    server = grpc.server(
+        futures.ThreadPoolExecutor(max_workers=16), interceptors=[AuthInterceptor()]
+    )
     fraud_pb2_grpc.add_FraudServiceServicer_to_server(FraudServicer(), server)
 
     health_servicer = health.HealthServicer()

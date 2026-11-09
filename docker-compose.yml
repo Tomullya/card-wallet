@@ -15,6 +15,9 @@ services:
 
   fraud:
     build: ./fraud-service
+    environment:
+      FRAUD_API_KEY_WALLET: dev-wallet-key
+      FRAUD_API_KEY_MONITOR: dev-monitor-key
     ports:
       - "50051:50051"
 
@@ -25,6 +28,7 @@ services:
       JWT_SECRET: local-dev-jwt-secret-not-for-production-0001
       CARD_HASH_SECRET: local-dev-card-hash-secret-not-for-production
       FRAUD_ADDRESS: fraud:50051
+      FRAUD_API_KEY: dev-wallet-key
     ports:
       - "8000:8000"
     depends_on:
@@ -52,6 +56,7 @@ services:
       JWT_SECRET: local-dev-jwt-secret-not-for-production-0001
       CARD_HASH_SECRET: local-dev-card-hash-secret-not-for-production
       FRAUD_ADDRESS: fraud:50051
+      FRAUD_API_KEY: dev-wallet-key
       BUGGY_MODE: "true"
     ports:
       - "8001:8000"

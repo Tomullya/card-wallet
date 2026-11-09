@@ -1,5 +1,6 @@
 """gRPC client for the anti-fraud service (BR-FRD, BR-PAY-08)."""
 
+import logging
 import uuid
 from dataclasses import dataclass
 from decimal import Decimal
@@ -10,6 +11,8 @@ from fraudpb import fraud_pb2, fraud_pb2_grpc
 from grpc_health.v1 import health_pb2, health_pb2_grpc
 
 from app.config import get_settings
+
+logger = logging.getLogger("wallet.fraud")
 
 
 @dataclass(frozen=True)
@@ -24,11 +27,12 @@ class FraudUnavailableError(Exception):
 
 
 class FraudClient:
-    def __init__(self, address: str, timeout_seconds: float):
+    def __init__(self, address: str, timeout_seconds: float, api_key: str):
         self._channel = grpc.insecure_channel(address)
         self._stub = fraud_pb2_grpc.FraudServiceStub(self._channel)
         self._health = health_pb2_grpc.HealthStub(self._channel)
         self._timeout = timeout_seconds
+        self._api_key = api_key
 
     def check_payment(
         self,
@@ -50,8 +54,11 @@ class FraudClient:
             merchant_name=merchant_name,
             merchant_category=merchant_category,
         )
+        request_id = str(uuid.uuid4())
+        metadata = (("x-api-key", self._api_key), ("x-request-id", request_id))
+        logger.info("fraud check transaction=%s request_id=%s", transaction_id, request_id)
         try:
-            response = self._stub.CheckPayment(request, timeout=self._timeout)
+            response = self._stub.CheckPayment(request, timeout=self._timeout, metadata=metadata)
         except grpc.RpcError as exc:
             raise FraudUnavailableError(str(exc.code())) from exc
         return FraudDecision(
@@ -71,4 +78,6 @@ class FraudClient:
 @lru_cache
 def get_fraud_client() -> FraudClient:
     settings = get_settings()
-    return FraudClient(settings.fraud_address, settings.fraud_timeout_seconds)
+    return FraudClient(
+        settings.fraud_address, settings.fraud_timeout_seconds, settings.fraud_api_key
+    )
