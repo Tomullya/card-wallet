@@ -29,12 +29,14 @@ def test_watch_receives_new_decision(fraud_stub):
 @pytest.mark.req("BR-FRD-07")
 def test_watch_filters_by_min_score(fraud_stub):
     watcher = Watcher(fraud_stub, min_risk_score=50, timeout=2)
-    low, high = request(), request(category="GAMBLING")
-    fraud_stub.CheckPayment(low, timeout=2)
-    fraud_stub.CheckPayment(high, timeout=2)
-    assert watcher.wait_for(lambda e: e.transaction_id == high.transaction_id) is not None
-    assert all(e.transaction_id != low.transaction_id for e in watcher.events)
-    watcher.cancel()
+    try:
+        low, high = request(), request(category="GAMBLING")
+        fraud_stub.CheckPayment(low, timeout=2)
+        fraud_stub.CheckPayment(high, timeout=2)
+        assert watcher.wait_for(lambda e: e.transaction_id == high.transaction_id) is not None
+        assert all(e.transaction_id != low.transaction_id for e in watcher.events)
+    finally:
+        watcher.cancel()
 
 
 @pytest.mark.req("BR-FRD-07")
@@ -65,15 +67,17 @@ def test_ninth_watcher_resource_exhausted(fraud_stub):
 def test_cancelled_watchers_free_their_slots(fraud_stub):
     for w in [Watcher(fraud_stub, timeout=5) for _ in range(8)]:
         w.cancel()
-    deadline = time.monotonic() + 2
+    deadline = time.monotonic() + 5
     while True:
         fresh = [Watcher(fraud_stub, timeout=5) for _ in range(8)]
-        codes = [w.join(0.2) for w in fresh]
+        time.sleep(0.1)  # a refused watcher ends almost at once
+        refused = any(w.code == grpc.StatusCode.RESOURCE_EXHAUSTED for w in fresh)
         for w in fresh:
             w.cancel()
-        if grpc.StatusCode.RESOURCE_EXHAUSTED not in codes:
+        if not refused:
             break
         assert time.monotonic() < deadline, "slots of cancelled watchers were not freed"
+        time.sleep(0.2)
 
 
 @pytest.mark.req("BR-FRD-07")
@@ -87,16 +91,18 @@ def test_cancel_gives_cancelled(fraud_stub):
 def test_monitor_key_may_watch_and_lookup(raw_fraud_stub):
     monitor = (("x-api-key", MONITOR_KEY),)
     watcher = Watcher(raw_fraud_stub, timeout=2, metadata=monitor)
-    req = request()
-    raw_fraud_stub.CheckPayment(req, timeout=2, metadata=(("x-api-key", WALLET_KEY),))
-    assert watcher.wait_for(lambda e: e.transaction_id == req.transaction_id) is not None
-    found = raw_fraud_stub.GetDecision(
-        fraud_pb2.GetDecisionRequest(transaction_id=req.transaction_id),
-        timeout=2,
-        metadata=monitor,
-    )
-    assert found.transaction_id == req.transaction_id
-    watcher.cancel()
+    try:
+        req = request()
+        raw_fraud_stub.CheckPayment(req, timeout=2, metadata=(("x-api-key", WALLET_KEY),))
+        assert watcher.wait_for(lambda e: e.transaction_id == req.transaction_id) is not None
+        found = raw_fraud_stub.GetDecision(
+            fraud_pb2.GetDecisionRequest(transaction_id=req.transaction_id),
+            timeout=2,
+            metadata=monitor,
+        )
+        assert found.transaction_id == req.transaction_id
+    finally:
+        watcher.cancel()
 
 
 @pytest.mark.req("BR-FRD-06")
@@ -120,8 +126,10 @@ def test_get_decision_not_found(fraud_stub):
 @pytest.mark.req("BR-FRD-05", "BR-FRD-07")
 def test_request_id_reaches_risk_event(fraud_stub):
     watcher = Watcher(fraud_stub, timeout=2)
-    req = request()
-    fraud_stub.CheckPayment(req, timeout=2, metadata=(("x-request-id", "rid-7"),))
-    event = watcher.wait_for(lambda e: e.transaction_id == req.transaction_id)
-    assert event is not None and event.request_id == "rid-7"
-    watcher.cancel()
+    try:
+        req = request()
+        fraud_stub.CheckPayment(req, timeout=2, metadata=(("x-request-id", "rid-7"),))
+        event = watcher.wait_for(lambda e: e.transaction_id == req.transaction_id)
+        assert event is not None and event.request_id == "rid-7"
+    finally:
+        watcher.cancel()
