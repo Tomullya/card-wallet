@@ -10,8 +10,7 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 
 > All data is fictional. Card numbers use the fake prefix `400000`.
 
-<!-- After the first push, add the CI badge and the Allure report link here:
-[![CI](https://github.com/<user>/card-wallet/actions/workflows/ci.yml/badge.svg)](…)  ·  Allure report: https://<user>.github.io/card-wallet/ -->
+[![CI](https://github.com/Tomullya/card-wallet/actions/workflows/ci.yml/badge.svg)](https://github.com/Tomullya/card-wallet/actions/workflows/ci.yml)  ·  **Allure report:** https://tomullya.github.io/card-wallet/
 
 ## What this project demonstrates
 
