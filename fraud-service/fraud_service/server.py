@@ -2,6 +2,7 @@
 
 import logging
 import os
+import threading
 import time
 from concurrent import futures
 from datetime import UTC, datetime
@@ -25,6 +26,10 @@ TEST_TIMEOUT_MERCHANT = "TEST_TIMEOUT"
 TEST_ERROR_MERCHANT = "TEST_ERROR"
 TEST_TIMEOUT_SECONDS = 5
 MAX_BATCH = 1000
+# Every open stream holds one server thread. Watchers (max 8) and CheckBatch / ScorePayments
+# calls (max MAX_STREAMS) are capped, so unary calls such as wallet payments always get a thread.
+MAX_STREAMS = 16
+WORKERS = 64
 
 
 def parse_amount(request) -> Decimal:
@@ -42,6 +47,22 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
     def __init__(self, store: DecisionStore | None = None, hub: EventHub | None = None):
         self.store = store or DecisionStore()
         self.hub = hub or EventHub()
+        self._stream_slots = threading.BoundedSemaphore(MAX_STREAMS)
+
+    def _take_stream_slot(self, context) -> None:
+        """Reserve one of MAX_STREAMS slots for this call; freed when the call ends."""
+        if not self._stream_slots.acquire(blocking=False):
+            context.abort(
+                grpc.StatusCode.RESOURCE_EXHAUSTED, f"too many open streams (max {MAX_STREAMS})"
+            )
+        released = threading.Event()
+
+        def release():
+            if not released.is_set():
+                released.set()
+                self._stream_slots.release()
+
+        context.add_callback(release)
 
     def decide(self, request, context, index: int | None = None):
         """Score one payment: test merchants, rules, then store and publish the decision."""
@@ -96,6 +117,7 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
         return found
 
     def CheckBatch(self, request_iterator, context):  # noqa: N802
+        self._take_stream_slot(context)
         batch = []
         for request in request_iterator:
             batch.append(request)
@@ -123,6 +145,7 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
         return summary
 
     def ScorePayments(self, request_iterator, context):  # noqa: N802
+        self._take_stream_slot(context)
         for index, request in enumerate(request_iterator):
             yield self.decide(request, context, index)
         if buggy.enabled("BUG-18"):  # planted: response stream never ends on its own
@@ -153,7 +176,7 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
 
 def serve(port: int = 50051) -> None:
     server = grpc.server(
-        futures.ThreadPoolExecutor(max_workers=16), interceptors=[AuthInterceptor()]
+        futures.ThreadPoolExecutor(max_workers=WORKERS), interceptors=[AuthInterceptor()]
     )
     fraud_pb2_grpc.add_FraudServiceServicer_to_server(FraudServicer(), server)
 

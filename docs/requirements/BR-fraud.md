@@ -99,3 +99,6 @@ Acceptance criteria:
 - One answer per payment, in the same order, with `transaction_id` copied from the request.
 - The response stream ends as soon as the client closes its side.
 - An invalid payment → `INVALID_ARGUMENT` naming its index; answers already sent stay valid.
+- At most 16 `CheckBatch` and `ScorePayments` calls are open at a time; the next one →
+  `RESOURCE_EXHAUSTED`. Open streams and watchers never block single calls such as the
+  wallet's `CheckPayment`.
