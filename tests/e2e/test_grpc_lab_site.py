@@ -67,3 +67,36 @@ def test_site_works_without_storage(browser, lab_url):
     expect(page.get_by_test_id("lesson-title")).to_have_text("Server streaming")
     assert errors == []
     context.close()
+
+
+@pytest.mark.req("NFR-09")
+def test_comic_has_panels_and_bubbles(page, lab_url):
+    open_lab(page, lab_url, "#/05/comic")
+    panels = page.get_by_test_id("comic-panel")
+    expect(panels.first).to_be_visible()
+    assert panels.count() >= 3
+    for bubble in page.get_by_test_id("comic-bubble").all():
+        assert bubble.inner_text().strip()
+    for svg in page.locator("[data-testid=panel-comic] svg").all():
+        assert svg.get_attribute("aria-label")
+
+
+@pytest.mark.req("NFR-09")
+@pytest.mark.parametrize(
+    ("lesson", "steps"), [("01", 2), ("05", 4), ("06", 5), ("07", 6)]
+)
+def test_diagram_plays_for_each_call_type(page, lab_url, lesson, steps):
+    open_lab(page, lab_url, f"#/{lesson}/diagram")
+    expect(page.get_by_test_id("diagram-step")).to_have_count(steps)
+    expect(page.get_by_test_id("diagram-replay")).to_be_visible()
+    page.get_by_test_id("diagram-replay").click()
+    expect(page.get_by_test_id("diagram-step")).to_have_count(steps)
+
+
+@pytest.mark.req("NFR-09")
+def test_reduced_motion_shows_final_state(page, lab_url):
+    page.emulate_media(reduced_motion="reduce")
+    open_lab(page, lab_url, "#/07/diagram")
+    expect(page.get_by_test_id("diagram-step")).to_have_count(6)
+    for step in page.get_by_test_id("diagram-step").all():
+        assert step.evaluate("el => getComputedStyle(el).opacity") == "1"

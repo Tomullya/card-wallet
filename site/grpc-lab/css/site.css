@@ -202,3 +202,132 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
+
+/* ---------- buttons ---------- */
+.button {
+  font: 600 15px/1 var(--font-body);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 11px 18px;
+  cursor: pointer;
+  background: var(--post);
+  color: #fff;
+}
+.button--quiet { background: transparent; color: var(--ink); }
+
+/* ---------- comic ---------- */
+.comic {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+  padding: 12px;
+  background: #15233B;
+  border-radius: 10px;
+}
+.comic__panel {
+  position: relative;
+  margin: 0;
+  min-height: 300px;
+  border: 3px solid #15233B;
+  background-color: #FFF6E4;
+  background-image: radial-gradient(#EAD9B6 1.3px, transparent 1.5px);
+  background-size: 10px 10px;
+  overflow: hidden;
+  color: #15233B;
+}
+.comic__panel--tower { background-color: #E7ECF5; background-image: radial-gradient(#C9D4E6 1.3px, transparent 1.5px); }
+.comic__panel--sky {
+  background: radial-gradient(circle at 80% 18%, #F6F1E6 0 26px, transparent 27px),
+              radial-gradient(#3A4A75 1px, transparent 1.4px) 0 0 / 14px 14px,
+              #1F2A4A;
+}
+.comic__panel--hourglass { background-color: #FBEADF; background-image: radial-gradient(#F0CFB8 1.3px, transparent 1.5px); }
+
+.comic__caption {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  max-width: 75%;
+  z-index: 2;
+  padding: 5px 9px;
+  background: #E0B25C;
+  border: 2px solid #15233B;
+  font: 600 13px/1.3 var(--font-body);
+}
+.comic__bubble {
+  position: absolute;
+  z-index: 2;
+  top: 52px;
+  margin: 0;
+  max-width: 64%;
+  padding: 10px 12px;
+  background: #fff;
+  border: 2.5px solid #15233B;
+  border-radius: 18px;
+  font: 400 17px/1.25 var(--font-hand);
+}
+.comic__bubble--left { right: 10px; }
+.comic__bubble--right { left: 10px; }
+.comic__bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -14px;
+  width: 18px;
+  height: 14px;
+  background: #fff;
+  border: 2.5px solid #15233B;
+  border-top: 0;
+  clip-path: polygon(0 0, 100% 0, 30% 100%);
+}
+.comic__bubble--left::after { left: 22px; border-left: 0; }
+.comic__bubble--right::after { right: 22px; border-right: 0; }
+
+.comic__stage { position: absolute; inset: 0; }
+.comic__hero { position: absolute; bottom: 4px; width: 46%; }
+.comic__hero--left { left: 6px; }
+.comic__hero--right { right: 6px; }
+.comic__hero svg, .comic__owl svg { display: block; width: 100%; height: auto; }
+.comic__owl {
+  position: absolute;
+  width: 30%;
+  left: calc(8% + var(--i) * 28%);
+  bottom: calc(12% + var(--i) * 9%);
+  transform: rotate(calc(-8deg + var(--i) * 6deg));
+}
+.comic__stamp {
+  position: absolute;
+  z-index: 3;
+  right: 10px;
+  bottom: 14px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 2.5px solid #15233B;
+  font: 700 14px/1 var(--font-mono);
+  color: #fff;
+  transform: rotate(-5deg);
+}
+.comic__stamp--bad { background: #A8322D; }
+.comic__stamp--ok { background: #2F6B47; }
+
+/* ---------- diagram ---------- */
+.flow { max-width: 760px; }
+.flow__lead { font-size: 19px; margin: 0 0 18px; }
+.flow__actors { display: flex; justify-content: space-between; align-items: end; }
+.flow__actor { width: 140px; text-align: center; font-weight: 600; font-size: 14px; }
+.flow__actor svg { width: 96px; height: auto; display: block; margin: 0 auto 4px; }
+.flow__steps { list-style: none; margin: 10px 0 20px; padding: 0; display: grid; gap: 8px; }
+.flow__step {
+  display: grid;
+  gap: 4px;
+  padding: 8px 12px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+}
+.flow__track { position: relative; height: 44px; border-bottom: 2px dashed var(--line); }
+.flow__owl { position: absolute; top: 0; width: 44px; }
+.flow__step--out .flow__owl { left: calc(100% - 44px); }
+.flow__step--in .flow__owl { left: 0; transform: scaleX(-1); }
+.flow__owl svg { width: 44px; height: 44px; display: block; }
+.flow__label { font: 500 15px/1.35 var(--font-mono); }
+.flow__step--out .flow__label { text-align: right; }

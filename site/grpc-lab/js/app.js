@@ -3,6 +3,8 @@
 import { applyStatic, lang, loadI18n, setLang, t } from "./i18n.js";
 import * as progress from "./progress.js";
 import { renderTab } from "./tabs.js";
+import "./comic.js";
+import "./diagram.js";
 
 export const TABS = ["comic", "theory", "diagram", "sandbox", "quiz", "practice"];
 let lessons = [];
