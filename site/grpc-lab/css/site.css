@@ -497,3 +497,16 @@ code, .command, .code { font-family: var(--font-mono); }
 .compare__fields b { color: var(--post-text); }
 .compare > h2 { font: 700 20px/1.2 var(--font-display); margin: 0; }
 .compare > p { margin: -8px 0 0; }
+
+.buggy {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 2px dashed var(--seal);
+  border-radius: 12px;
+  font-weight: 600;
+}
+.buggy input { width: 20px; height: 20px; accent-color: var(--seal); }
+.buggy small { grid-column: 2; font-weight: 400; color: var(--ink-soft); }

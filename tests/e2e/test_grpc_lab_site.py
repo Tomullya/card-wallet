@@ -120,7 +120,9 @@ LESSONS = {
 def test_sandbox_presets_show_expected_rune(page, lab_url, preset):
     open_lab(page, lab_url, "#/05/sandbox")
     page.get_by_test_id(f"preset-{preset}").click()
-    expect(page.get_by_test_id("sandbox-rune-code")).to_have_text(SCENARIOS[preset]["expect"]["code"])
+    expect(page.get_by_test_id("sandbox-rune-code")).to_have_text(
+        SCENARIOS[preset]["expect"]["code"]
+    )
 
 
 @pytest.mark.req("NFR-09")
@@ -195,7 +197,7 @@ TABS = ["comic", "theory", "diagram", "sandbox", "quiz", "practice"]
 
 
 @pytest.mark.req("NFR-09")
-@pytest.mark.parametrize("lesson", ["00", "01", "02", "03", "04"])
+@pytest.mark.parametrize("lesson", ["00", "01", "02", "03", "04", "06", "07", "08"])
 @pytest.mark.parametrize("lang", ["ru", "en"])
 def test_lesson_tabs_are_filled(page, lab_url, lesson, lang):
     open_lab(page, lab_url, f"#/{lesson}/comic")
@@ -212,7 +214,7 @@ def test_lesson_tabs_are_filled(page, lab_url, lesson, lang):
 @pytest.mark.req("NFR-09", "NFR-10")
 @pytest.mark.parametrize(
     ("lesson", "preset"),
-    [(lid, p) for lid in ["01", "02", "03", "04"] for p in LESSONS[lid]["presets"]],
+    [(lid, p) for lid in ["01", "02", "03", "04", "06", "07"] for p in LESSONS[lid]["presets"]],
 )
 def test_lesson_presets_show_expected_rune(page, lab_url, lesson, preset):
     open_lab(page, lab_url, f"#/{lesson}/sandbox")
@@ -229,3 +231,22 @@ def test_lesson_00_compares_json_and_protobuf(page, lab_url):
     page.get_by_test_id("compare-amount").fill("123456.78")
     expect(page.get_by_test_id("compare-proto")).to_contain_text("123456.78")
     expect(page.get_by_test_id("compare-fields")).to_contain_text("4")  # amount is field 4
+
+
+@pytest.mark.req("NFR-09", "NFR-10")
+@pytest.mark.parametrize("preset", ["bug17-forged-seal", "bug18-bidi-hangs", "bug19-no-trailer"])
+def test_bug_hunt_switch_reveals_bugs(page, lab_url, preset):
+    open_lab(page, lab_url, "#/08/sandbox")
+    switch = page.get_by_test_id("buggy-switch")
+    expect(switch).not_to_be_checked()
+    page.get_by_test_id(f"preset-{preset}").click()
+    expect(page.get_by_test_id("buggy-switch")).to_be_checked()
+    expect(page.get_by_test_id("sandbox-rune-code")).to_have_text(SCENARIOS[preset]["expect"]["code"])
+    page.get_by_test_id("buggy-switch").uncheck()
+    page.get_by_test_id("sandbox-send").click()
+    healthy = {
+        "bug17-forged-seal": "UNAUTHENTICATED",
+        "bug18-bidi-hangs": "OK",
+        "bug19-no-trailer": "OK",
+    }
+    expect(page.get_by_test_id("sandbox-rune-code")).to_have_text(healthy[preset])

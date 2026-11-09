@@ -180,6 +180,14 @@ registerTab("sandbox", (lesson, { t }) => {
       form.append(list);
     }
 
+    if (lesson.bugHunt) {
+      const box = el("input", { type: "checkbox", testid: "buggy-switch" });
+      box.checked = Boolean(state.buggy);
+      box.addEventListener("change", () => { state.buggy = box.checked; });
+      form.append(el("label", { class: "buggy" }, box,
+        el("span", { text: t("sb.buggy") }), el("small", { text: t("sb.buggyHint") })));
+    }
+
     if (state.openWatchers || state.openStreams) {
       form.append(el("p", { class: "sandbox__setup", text: t("sb.setup", { watchers: state.openWatchers ?? 0, streams: state.openStreams ?? 0 }) }));
     }
@@ -205,6 +213,7 @@ registerTab("sandbox", (lesson, { t }) => {
       openStreams: state.openStreams,
       batchSize: state.batchSize,
       unknownTransaction: state.method === "GetDecision" ? true : undefined,
+      buggy: Boolean(state.buggy),
     };
     if (state.requestId) s.requestId = state.requestId;
     return s;
@@ -271,6 +280,7 @@ registerTab("sandbox", (lesson, { t }) => {
           ...state,
           ...scenario,
           seal: scenario.seal === undefined ? "wallet" : scenario.seal,
+          buggy: Boolean(scenario.buggy),
           deadline: scenario.deadline ?? 2,
           payments: scenario.batchSize ? [] : (scenario.payments ?? [{}]).map((p) => ({ amount: "10.00", category: "GROCERIES", merchant: "Shop", ...p })),
         };

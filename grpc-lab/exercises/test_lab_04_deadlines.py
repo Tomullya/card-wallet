@@ -5,6 +5,7 @@
 
 import grpc  # noqa: F401
 import pytest
+from fraudpb import fraud_pb2  # noqa: F401  (fraud_pb2.APPROVE)
 from lab import WALLET, Watch, payment  # noqa: F401
 
 
