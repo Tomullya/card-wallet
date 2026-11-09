@@ -193,6 +193,7 @@ body {
 }
 
 @media (max-width: 860px) {
+  .comic { grid-template-columns: 1fr; }
   .app { grid-template-columns: 1fr; }
   .rail { position: static; height: auto; border-right: 0; border-bottom: 2px solid var(--ink); }
   .lessons ol { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
@@ -218,7 +219,7 @@ body {
 /* ---------- comic ---------- */
 .comic {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
   gap: 12px;
   padding: 12px;
   background: #15233B;
@@ -478,3 +479,21 @@ code, .command, .code { font-family: var(--font-mono); }
   .timeline__text { grid-column: 1 / -1; }
   .sandbox__verdict { grid-template-columns: 1fr; }
 }
+
+.flow-all { display: grid; gap: 8px; }
+.flow-all__title { font: 700 20px/1.2 var(--font-display); margin: 26px 0 4px; }
+.flow-all__title:first-child { margin-top: 0; }
+
+/* ---------- compare (lesson 00) ---------- */
+.compare { display: grid; gap: 18px; max-width: 980px; }
+.compare__inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.compare__letters { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.compare__letter { border: 2px solid var(--ink); border-radius: 14px; background: var(--paper); padding: 14px 16px; }
+.compare__letter h3 { margin: 0 0 8px; font: 700 17px/1.2 var(--font-display); }
+.compare__size { font: 700 30px/1 var(--font-mono); color: var(--post-text); }
+.compare__size small { font-size: 14px; color: var(--ink-soft); font-weight: 400; }
+.compare pre { white-space: pre-wrap; word-break: break-all; font: 13px/1.55 var(--font-mono); margin: 10px 0 0; }
+.compare__fields { font: 14px/1.6 var(--font-mono); padding-left: 0; list-style: none; margin: 0; }
+.compare__fields b { color: var(--post-text); }
+.compare > h2 { font: 700 20px/1.2 var(--font-display); margin: 0; }
+.compare > p { margin: -8px 0 0; }

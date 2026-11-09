@@ -27,17 +27,9 @@ function play(rows) {
   });
 }
 
-export function renderDiagram(lesson, { t }) {
+function flowFor(type, t) {
   const wrap = document.createElement("div");
   wrap.className = "flow";
-  const type = lesson.callType;
-  if (!type) {
-    const note = document.createElement("p");
-    note.className = "placeholder-note";
-    note.textContent = t("ui.comingSoon");
-    wrap.append(note);
-    return wrap;
-  }
   const client = CLIENT_OF[type];
   wrap.innerHTML = `
     <p class="flow__lead">${t(`diagram.${type}.lead`)}</p>
@@ -67,6 +59,28 @@ export function renderDiagram(lesson, { t }) {
   wrap.append(list, replay);
   requestAnimationFrame(() => play(rows));
   return wrap;
+}
+
+export function renderDiagram(lesson, { t }) {
+  if (lesson.diagram === "all") {
+    const all = document.createElement("div");
+    all.className = "flow-all";
+    for (const type of Object.keys(FLOWS)) {
+      const h = document.createElement("h2");
+      h.className = "flow-all__title";
+      h.textContent = t(`diagram.${type}.title`);
+      all.append(h, flowFor(type, t));
+    }
+    return all;
+  }
+  const type = lesson.callType;
+  if (!type) {
+    const note = document.createElement("p");
+    note.className = "placeholder-note";
+    note.textContent = t("ui.comingSoon");
+    return note;
+  }
+  return flowFor(type, t);
 }
 
 registerTab("diagram", renderDiagram);

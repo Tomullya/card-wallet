@@ -189,3 +189,43 @@ def test_practice_explains_where_and_how(page, lab_url):
     expect(page.get_by_test_id("practice-example")).to_contain_text("Watch(stub")
     expect(page.get_by_test_id("practice-example")).to_contain_text("assert")
     expect(page.get_by_test_id("practice-helpers")).to_contain_text("lab.py")
+
+
+TABS = ["comic", "theory", "diagram", "sandbox", "quiz", "practice"]
+
+
+@pytest.mark.req("NFR-09")
+@pytest.mark.parametrize("lesson", ["00", "01", "02", "03", "04"])
+@pytest.mark.parametrize("lang", ["ru", "en"])
+def test_lesson_tabs_are_filled(page, lab_url, lesson, lang):
+    open_lab(page, lab_url, f"#/{lesson}/comic")
+    page.get_by_test_id(f"lang-{lang}").click()
+    for tab in TABS:
+        page.get_by_test_id(f"tab-{tab}").click()
+        panel = page.get_by_test_id(f"panel-{tab}")
+        expect(panel).to_be_visible()
+        assert panel.locator(".placeholder-note:not(.sandbox *)").count() == 0, f"{tab} is empty"
+    page.get_by_test_id("tab-quiz").click()
+    expect(page.get_by_test_id("quiz-question")).to_have_count(5)
+
+
+@pytest.mark.req("NFR-09", "NFR-10")
+@pytest.mark.parametrize(
+    ("lesson", "preset"),
+    [(lid, p) for lid in ["01", "02", "03", "04"] for p in LESSONS[lid]["presets"]],
+)
+def test_lesson_presets_show_expected_rune(page, lab_url, lesson, preset):
+    open_lab(page, lab_url, f"#/{lesson}/sandbox")
+    page.get_by_test_id(f"preset-{preset}").click()
+    expect(page.get_by_test_id("sandbox-rune-code")).to_have_text(SCENARIOS[preset]["expect"]["code"])
+
+
+@pytest.mark.req("NFR-09")
+def test_lesson_00_compares_json_and_protobuf(page, lab_url):
+    open_lab(page, lab_url, "#/00/sandbox")
+    json_size = int(page.get_by_test_id("compare-json-bytes").inner_text())
+    proto_size = int(page.get_by_test_id("compare-proto-bytes").inner_text())
+    assert 0 < proto_size < json_size
+    page.get_by_test_id("compare-amount").fill("123456.78")
+    expect(page.get_by_test_id("compare-proto")).to_contain_text("123456.78")
+    expect(page.get_by_test_id("compare-fields")).to_contain_text("4")  # amount is field 4

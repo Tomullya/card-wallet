@@ -55,6 +55,8 @@ export function renderComic(lesson, { t }) {
     wrap.append(note);
     return wrap;
   }
+  const n = lesson.comic.length;
+  wrap.style.setProperty("--cols", String(n === 4 ? 2 : Math.min(n, 3)));
   wrap.append(...lesson.comic.map((p) => panelEl(p, t)));
   return wrap;
 }

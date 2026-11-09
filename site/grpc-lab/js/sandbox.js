@@ -2,6 +2,7 @@
 // Answers come from sim.js, which CI checks against the real Fraud Service (NFR-10).
 
 import { character } from "./art.js";
+import { renderCompare } from "./compare.js";
 import { run } from "./sim.js";
 import { registerTab } from "./tabs.js";
 
@@ -110,6 +111,7 @@ function rowText(row, t) {
 }
 
 registerTab("sandbox", (lesson, { t }) => {
+  if (lesson.sandboxMode === "compare") return renderCompare(t);
   const root = el("div", { class: "sandbox" });
   let state = {
     method: DEFAULT_METHOD[lesson.callType] ?? "CheckPayment",
