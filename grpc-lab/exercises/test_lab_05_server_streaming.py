@@ -4,7 +4,7 @@
 """
 
 import pytest
-from lab import WALLET, Watch, payment  # noqa: F401
+from lab import MONITOR, WALLET, Watch, payment  # noqa: F401
 
 
 def test_watch_sees_my_payment(stub):

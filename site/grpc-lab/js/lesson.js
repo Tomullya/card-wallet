@@ -61,7 +61,7 @@ registerTab("practice", (lesson, { t }) => {
     hh.textContent = t("pr.helpers");
     const helpers = document.createElement("ul");
     helpers.dataset.testid = "practice-helpers";
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 0; i <= 4; i++) {
       const li = document.createElement("li");
       li.innerHTML = t(`pr.helper.${i}`);
       helpers.append(li);
