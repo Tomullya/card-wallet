@@ -17,6 +17,8 @@ Acceptance criteria:
 - Amount exactly `5000.00` is approved.
 - The wallet maps `HIGH_AMOUNT` → `FRAUD_HIGH_AMOUNT` and `BLOCKED_CATEGORY` →
   `FRAUD_BLOCKED_CATEGORY` decline reasons.
+- The same rules apply to every RPC that scores payments: `CheckPayment`, `CheckBatch` and
+  `ScorePayments` (BR-FRD-08, BR-FRD-09).
 
 ## BR-FRD-02 Test merchants
 
@@ -36,3 +38,64 @@ Acceptance criteria:
 - The service supports gRPC server reflection, so tools like Postman and grpcurl can
   list its methods without the `.proto` file.
 - The service has a standard gRPC health check.
+
+## BR-FRD-04 Authentication and roles
+
+Every `FraudService` method requires the metadata key `x-api-key`. Health check and
+reflection need no key.
+
+| Key (environment variable, local default) | Role | Allowed methods |
+|---|---|---|
+| `FRAUD_API_KEY_WALLET` (`dev-wallet-key`) | wallet | all |
+| `FRAUD_API_KEY_MONITOR` (`dev-monitor-key`) | monitoring | `WatchRiskEvents`, `GetDecision` |
+
+Acceptance criteria:
+- Missing or unknown key → `UNAUTHENTICATED`.
+- A known key calling a method its role may not use → `PERMISSION_DENIED`.
+- The wallet sends its key on every call; payments keep working.
+
+## BR-FRD-05 Request id
+
+Acceptance criteria:
+- The client may send `x-request-id`; if it does not, the service generates a UUID.
+- The id is always returned in trailing metadata `x-request-id`, on success and on error.
+- The id is written to the service log and copied into `RiskEvent.request_id`.
+
+## BR-FRD-06 Decision lookup
+
+Acceptance criteria:
+- `GetDecision(transaction_id)` returns the stored decision of any scoring RPC.
+- Unknown transaction id → `NOT_FOUND`.
+- The last 10 000 decisions are kept; older ones are evicted.
+
+## BR-FRD-07 Risk event stream
+
+`WatchRiskEvents` (server streaming) sends every decision made after the client subscribed.
+
+Acceptance criteria:
+- Only events with `risk_score >= min_risk_score` are sent; `min_risk_score` outside 0–100 →
+  `INVALID_ARGUMENT`.
+- The stream runs until the client cancels (`CANCELLED`) or its deadline expires
+  (`DEADLINE_EXCEEDED`).
+- At most 8 watchers at a time; the 9th → `RESOURCE_EXHAUSTED`. A watcher that disconnects
+  frees its slot.
+- Each watcher buffers up to 1000 events; on overflow new events are dropped for that watcher.
+
+## BR-FRD-08 Batch check
+
+`CheckBatch` (client streaming) scores every payment it receives and answers once, at the end.
+
+Acceptance criteria:
+- The answer has `total`, `approved`, `declined` and the declined transaction ids in order.
+- Empty batch → `INVALID_ARGUMENT`; more than 1000 payments → `RESOURCE_EXHAUSTED`.
+- One invalid payment → `INVALID_ARGUMENT` naming its index (0-based); nothing from that batch
+  is stored or published.
+
+## BR-FRD-09 Live scoring
+
+`ScorePayments` (bidirectional streaming) answers each payment as soon as it is scored.
+
+Acceptance criteria:
+- One answer per payment, in the same order, with `transaction_id` copied from the request.
+- The response stream ends as soon as the client closes its side.
+- An invalid payment → `INVALID_ARGUMENT` naming its index; answers already sent stay valid.
