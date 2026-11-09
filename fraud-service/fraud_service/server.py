@@ -12,6 +12,7 @@ from fraudpb import fraud_pb2, fraud_pb2_grpc
 from grpc_health.v1 import health, health_pb2, health_pb2_grpc
 from grpc_reflection.v1alpha import reflection
 
+from fraud_service import buggy
 from fraud_service.auth import AuthInterceptor, current_request_id
 from fraud_service.decisions import DecisionStore
 from fraud_service.events import EventHub, HubFullError
@@ -124,6 +125,9 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
     def ScorePayments(self, request_iterator, context):  # noqa: N802
         for index, request in enumerate(request_iterator):
             yield self.decide(request, context, index)
+        if buggy.enabled("BUG-18"):  # planted: response stream never ends on its own
+            while context.is_active():
+                time.sleep(0.1)
 
     def WatchRiskEvents(self, request, context):  # noqa: N802
         if not 0 <= request.min_risk_score <= 100:

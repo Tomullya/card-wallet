@@ -34,3 +34,15 @@ def test_connection_error_is_not_caught_even_with_assert_in_source():
 @pytest.mark.req("NFR-08")
 def test_passed():
     assert failure_kind(PASSED) == "passed"
+
+
+@pytest.mark.req("NFR-08")
+def test_every_planted_bug_names_its_target():
+    from verify_bugs_caught import PLANTED
+
+    assert {target for _, target in PLANTED.values()} == {"wallet", "fraud"}
+    assert PLANTED["BUG-17"] == (
+        "tests/grpc/test_metadata.py::test_unknown_key_unauthenticated", "fraud"
+    )
+    assert PLANTED["BUG-18"][0].endswith("test_stream_ends_after_client_closes")
+    assert PLANTED["BUG-19"][0].endswith("test_request_id_echoed_in_trailers")

@@ -63,3 +63,14 @@ services:
     depends_on:
       wallet:
         condition: service_started
+
+  # Fraud Service with planted gRPC defects (BUG-17…19). Not used by any wallet.
+  fraud-buggy:
+    build: ./fraud-service
+    profiles: ["buggy"]
+    environment:
+      FRAUD_API_KEY_WALLET: dev-wallet-key
+      FRAUD_API_KEY_MONITOR: dev-monitor-key
+      BUGGY_MODE: "true"
+    ports:
+      - "50052:50051"

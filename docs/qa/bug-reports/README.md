@@ -2,7 +2,7 @@
 
 | Group | Bugs | What it shows |
 |---|---|---|
-| Planted (BUGGY_MODE) | BUG-01 … BUG-04 | Each is caught by a specific automated test — `scripts/verify_bugs_caught.py` proves it |
+| Planted (BUGGY_MODE) | BUG-01 … BUG-04, BUG-17 … BUG-19 | Each is caught by a specific automated test — `scripts/verify_bugs_caught.py` proves it |
 | Found and fixed | BUG-05 … BUG-11 | Found by requirements review, contract tests and code review; each has a regression test |
 | Open (deferred) | BUG-12 … BUG-16 | Known minor issues, prioritised and documented |
 
@@ -26,10 +26,13 @@ Severity scale: see the [test plan](../test-plan.md#7-defect-management).
 | [BUG-14](BUG-14.md) | Lower-case 'bearer' authorization scheme is rejected | Minor | Open — deferred | BR-AUTH-03 |
 | [BUG-15](BUG-15.md) | Request duration is not logged | Trivial | Open — deferred | NFR-06 |
 | [BUG-16](BUG-16.md) | Slow fraud calls can starve the fraud service | Minor | Open — deferred | BR-PAY-08, BR-FRD-02 |
+| [BUG-17](BUG-17.md) | Unknown API key returns PERMISSION_DENIED instead of UNAUTHENTICATED | Minor | Planted (BUGGY_MODE) | BR-FRD-04 |
+| [BUG-18](BUG-18.md) | ScorePayments does not end its response stream after the client closes | Major | Planted (BUGGY_MODE) | BR-FRD-09 |
+| [BUG-19](BUG-19.md) | x-request-id is not returned in trailing metadata | Minor | Planted (BUGGY_MODE) | BR-FRD-05 |
 
 ## Try the planted defects yourself
 
 ```bash
-docker compose --profile buggy up -d      # wallet-buggy on port 8001
+docker compose --profile buggy up -d      # wallet-buggy :8001, fraud-buggy :50052
 .venv/bin/python scripts/verify_bugs_caught.py
 ```

@@ -10,6 +10,8 @@ import uuid
 
 import grpc
 
+from fraud_service import buggy
+
 FRAUD_METHOD_PREFIX = "/fraud.v1.FraudService/"
 
 _KEYS = {
@@ -39,6 +41,8 @@ def _check_access(key: str | None, method: str) -> tuple[grpc.StatusCode, str] |
     """None if allowed, else (status code, message)."""
     role = role_for_key(key)
     if role is None:
+        if key and buggy.enabled("BUG-17"):  # planted: wrong status code for an unknown key
+            return grpc.StatusCode.PERMISSION_DENIED, "unknown x-api-key"
         return grpc.StatusCode.UNAUTHENTICATED, "missing or unknown x-api-key"
     allowed = ROLE_METHODS[role]
     if allowed is not None and method not in allowed:
@@ -65,7 +69,8 @@ def _wrap(handler, request_id: str, denied):
 
     def prepare(context):
         _local.request_id = request_id
-        context.set_trailing_metadata((("x-request-id", request_id),))
+        if denied or not buggy.enabled("BUG-19"):  # planted: id lost on successful calls
+            context.set_trailing_metadata((("x-request-id", request_id),))
         if denied:
             context.abort(*denied)
 
