@@ -23,6 +23,7 @@ logger = logging.getLogger("fraud")
 TEST_TIMEOUT_MERCHANT = "TEST_TIMEOUT"
 TEST_ERROR_MERCHANT = "TEST_ERROR"
 TEST_TIMEOUT_SECONDS = 5
+MAX_BATCH = 1000
 
 
 def parse_amount(request) -> Decimal:
@@ -92,6 +93,33 @@ class FraudServicer(fraud_pb2_grpc.FraudServiceServicer):
         if found is None:
             context.abort(grpc.StatusCode.NOT_FOUND, "unknown transaction_id")
         return found
+
+    def CheckBatch(self, request_iterator, context):  # noqa: N802
+        batch = []
+        for request in request_iterator:
+            batch.append(request)
+            if len(batch) > MAX_BATCH:
+                context.abort(
+                    grpc.StatusCode.RESOURCE_EXHAUSTED, f"batch too large (max {MAX_BATCH})"
+                )
+        if not batch:
+            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "batch is empty")
+        # All or nothing: validate every item before scoring any (BR-FRD-08).
+        for index, request in enumerate(batch):
+            try:
+                parse_amount(request)
+            except ValueError as e:
+                context.abort(grpc.StatusCode.INVALID_ARGUMENT, f"{e} (index {index})")
+
+        summary = fraud_pb2.BatchSummary(total=len(batch))
+        for index, request in enumerate(batch):
+            answer = self.decide(request, context, index)
+            if answer.decision == fraud_pb2.APPROVE:
+                summary.approved += 1
+            else:
+                summary.declined += 1
+                summary.declined_transaction_ids.append(answer.transaction_id)
+        return summary
 
     def WatchRiskEvents(self, request, context):  # noqa: N802
         if not 0 <= request.min_risk_score <= 100:
