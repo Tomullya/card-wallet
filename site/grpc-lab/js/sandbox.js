@@ -132,7 +132,7 @@ registerTab("sandbox", (lesson, { t }) => {
     form.replaceChildren();
     const method = select(METHODS.map((m) => [m, m]), state.method);
     method.addEventListener("change", () => {
-      state = { ...state, method: method.value, openWatchers: 0, openStreams: 0 };
+      state = { ...state, method: method.value, openWatchers: 0, openStreams: 0, batchSize: undefined };
       drawForm();
     });
     const seal = select(
@@ -140,7 +140,7 @@ registerTab("sandbox", (lesson, { t }) => {
       state.seal ?? "none",
     );
     seal.addEventListener("change", () => { state.seal = seal.value === "none" ? null : seal.value; });
-    const rid = el("input", { type: "text", value: state.requestId ?? "", placeholder: "lab-1" });
+    const rid = el("input", { type: "text", value: state.requestId ?? "", placeholder: "lab-1", testid: "sandbox-request-id" });
     rid.addEventListener("input", () => { state.requestId = rid.value; });
     const out = el("output", { text: `${state.deadline}` });
     const deadline = el("input", { type: "range", min: "0.5", max: "8", step: "0.5", value: String(state.deadline) });
@@ -151,9 +151,15 @@ registerTab("sandbox", (lesson, { t }) => {
     form.append(top);
 
     if (state.method === "WatchRiskEvents") {
-      const min = el("input", { type: "number", value: String(state.minRiskScore ?? 0), step: "10" });
+      const min = el("input", { type: "number", value: String(state.minRiskScore ?? 0), step: "1", testid: "sandbox-min-risk" });
       min.addEventListener("input", () => { state.minRiskScore = Number(min.value); });
       form.append(field(t("sb.minRisk"), min));
+    }
+
+    if (state.method === "CheckBatch") {
+      const size = el("input", { type: "number", min: "0", step: "1", value: state.batchSize ? String(state.batchSize) : "", testid: "sandbox-batch-size" });
+      size.addEventListener("input", () => { state.batchSize = size.value ? Number(size.value) : undefined; });
+      form.append(field(t("sb.batchSize"), size));
     }
 
     if (state.method !== "GetDecision") {
@@ -169,12 +175,13 @@ registerTab("sandbox", (lesson, { t }) => {
         mer.setAttribute("aria-label", t("sb.merchant"));
         mer.addEventListener("change", () => { state.payments[i].merchant = mer.value; });
         const remove = el("button", { type: "button", class: "link", text: t("sb.remove") });
-        remove.addEventListener("click", () => { state.payments.splice(i, 1); drawForm(); });
+        remove.addEventListener("click", () => { state.payments.splice(i, 1); state.batchSize = undefined; drawForm(); });
         list.append(el("div", { class: "payment" }, el("span", { class: "payment__n", text: `${i + 1}` }), amount, cat, mer, remove));
       });
       const add = el("button", { type: "button", class: "button button--quiet", text: t("sb.addOwl") });
       add.addEventListener("click", () => {
         state.payments = [...(state.payments ?? []), { amount: "10.00", category: "GROCERIES", merchant: "Shop" }];
+        state.batchSize = undefined;
         drawForm();
       });
       list.append(add);
@@ -212,7 +219,7 @@ registerTab("sandbox", (lesson, { t }) => {
       minRiskScore: state.minRiskScore,
       openWatchers: state.openWatchers,
       openStreams: state.openStreams,
-      batchSize: state.batchSize,
+      batchSize: state.method === "CheckBatch" ? state.batchSize : undefined,
       unknownTransaction: state.method === "GetDecision" ? true : undefined,
       buggy: Boolean(state.buggy),
     };
@@ -220,7 +227,20 @@ registerTab("sandbox", (lesson, { t }) => {
     return s;
   }
 
+  /** Values a real gRPC client refuses before sending anything. */
+  function clientError(scenario) {
+    if (scenario.requestId && !/^[\x20-\x7E]*$/.test(scenario.requestId)) return t("sb.err.requestId");
+    if (scenario.method === "WatchRiskEvents" && !Number.isInteger(scenario.minRiskScore ?? 0)) return t("sb.err.minRisk");
+    if (scenario.batchSize !== undefined && (!Number.isInteger(scenario.batchSize) || scenario.batchSize < 0)) return t("sb.err.batchSize");
+    return null;
+  }
+
   function fire(scenario) {
+    const problem = clientError(scenario);
+    if (problem) {
+      result.replaceChildren(el("p", { class: "sandbox__error", testid: "sandbox-error", role: "alert", text: problem }));
+      return;
+    }
     const r = run(scenario);
     const timeline = el("ol", { class: "timeline", testid: "sandbox-timeline" });
     const rows = r.timeline.map((row) =>

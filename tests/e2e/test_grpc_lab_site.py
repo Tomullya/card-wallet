@@ -250,3 +250,96 @@ def test_bug_hunt_switch_reveals_bugs(page, lab_url, preset):
         "bug19-no-trailer": "OK",
     }
     expect(page.get_by_test_id("sandbox-rune-code")).to_have_text(healthy[preset])
+
+
+# --- found in final review ---------------------------------------------------
+
+
+def contrast(page, locator) -> float:
+    return locator.evaluate(
+        """el => {
+          const rgb = s => s.match(/\\d+(\\.\\d+)?/g).slice(0, 3).map(Number);
+          const lum = c => { const [r, g, b] = c.map(v => { v /= 255;
+            return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+          const cs = getComputedStyle(el);
+          const a = lum(rgb(cs.color)), b = lum(rgb(cs.backgroundColor));
+          return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        }"""
+    )
+
+
+@pytest.mark.req("NFR-09")
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_buttons_and_quiz_marks_have_enough_contrast(page, lab_url, theme):
+    open_lab(page, lab_url, "#/05/sandbox")
+    if theme == "dark":
+        page.get_by_test_id("theme-toggle").click()
+    assert contrast(page, page.get_by_test_id("sandbox-send")) >= 4.5
+    page.get_by_test_id("tab-quiz").click()
+    first = page.get_by_test_id("quiz-question").first
+    wrong = (LESSONS["05"]["quiz"][0]["answer"] + 1) % 3
+    first.get_by_test_id("quiz-option").nth(wrong).click()
+    assert contrast(page, first.locator("[data-state=wrong]")) >= 4.5
+    assert contrast(page, first.locator("[data-state=right]")) >= 4.5
+
+
+@pytest.mark.req("NFR-09")
+def test_arrow_keys_move_between_tabs(page, lab_url):
+    open_lab(page, lab_url, "#/05/comic")
+    page.get_by_test_id("tab-comic").focus()
+    page.keyboard.press("ArrowRight")
+    page.keyboard.press("ArrowRight")
+    expect(page).to_have_url(re.compile(r"#/05/diagram$"))
+    expect(page.get_by_test_id("tab-diagram")).to_be_focused()
+
+
+@pytest.mark.req("NFR-09")
+def test_skip_link_keeps_the_lesson(page, lab_url):
+    open_lab(page, lab_url, "#/05/sandbox")
+    page.keyboard.press("Tab")
+    page.keyboard.press("Enter")
+    expect(page).to_have_url(re.compile(r"#/05/sandbox$"))
+    expect(page.locator("#main")).to_be_focused()
+
+
+@pytest.mark.req("NFR-09")
+def test_preset_batch_size_does_not_leak_into_other_methods(page, lab_url):
+    open_lab(page, lab_url, "#/06/sandbox")
+    page.get_by_test_id("preset-batch-1001").click()
+    expect(page.get_by_test_id("sandbox-batch-size")).to_have_value("1001")
+    page.locator(".sandbox__form select").first.select_option("ScorePayments")
+    page.get_by_test_id("sandbox-send").click()
+    expect(page.get_by_test_id("sandbox-rune-code")).to_have_text("OK")
+
+
+@pytest.mark.req("NFR-09")
+def test_form_rejects_values_a_real_client_cannot_send(page, lab_url):
+    open_lab(page, lab_url, "#/05/sandbox")
+    page.get_by_test_id("sandbox-request-id").fill("лаб-1")
+    page.get_by_test_id("sandbox-send").click()
+    expect(page.get_by_test_id("sandbox-error")).to_be_visible()
+    expect(page.get_by_test_id("sandbox-rune-code")).to_have_count(0)
+    page.get_by_test_id("sandbox-request-id").fill("lab-1")
+    page.get_by_test_id("sandbox-min-risk").fill("79.5")
+    page.get_by_test_id("sandbox-send").click()
+    expect(page.get_by_test_id("sandbox-error")).to_be_visible()
+
+
+@pytest.mark.req("NFR-09")
+@pytest.mark.parametrize("tab", ["theory", "practice", "sandbox"])
+def test_no_horizontal_scroll_on_a_phone(page, lab_url, tab):
+    page.set_viewport_size({"width": 375, "height": 800})
+    open_lab(page, lab_url, f"#/05/{tab}")
+    overflow = page.evaluate("document.documentElement.scrollWidth - window.innerWidth")
+    assert overflow <= 1
+
+
+@pytest.mark.req("NFR-09")
+def test_theory_lists_official_sources(page, lab_url):
+    for lesson in ["00", "03", "05", "08"]:
+        open_lab(page, lab_url, f"#/{lesson}/theory")
+        links = page.get_by_test_id("theory-sources").locator("a")
+        assert links.count() >= 2
+        for href in links.evaluate_all("els => els.map(e => e.href)"):
+            assert href.startswith(("https://grpc.io/", "https://protobuf.dev/"))

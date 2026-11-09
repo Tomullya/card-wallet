@@ -6,7 +6,8 @@
   --parchment: #F6F1E6;
   --paper: #FFFDF8;
   --line: #DDD3BF;
-  --post: #C9551C;
+  --post: #B84A15;
+  --on-accent: #FFFFFF;
   --post-text: #A6461A;
   --seal: #A8322D;
   --gold: #E0B25C;
@@ -28,6 +29,7 @@
   --paper: #1B2540;
   --line: #2E3B5E;
   --post: #F0915A;
+  --on-accent: #121A2D;
   --post-text: #F2A271;
   --seal: #F07B72;
   --gold: #E8C26F;
@@ -212,7 +214,7 @@ body {
   padding: 11px 18px;
   cursor: pointer;
   background: var(--post);
-  color: #fff;
+  color: var(--on-accent);
 }
 .button--quiet { background: transparent; color: var(--ink); }
 
@@ -383,8 +385,8 @@ code, .command, .code { font-family: var(--font-mono); }
 }
 .quiz__option:hover:not(:disabled) { border-color: var(--ink); }
 .quiz__option:disabled { cursor: default; }
-.quiz__option[data-state="right"] { background: var(--rune-ok); border-color: var(--rune-ok); color: #fff; }
-.quiz__option[data-state="wrong"] { background: var(--seal); border-color: var(--seal); color: #fff; }
+.quiz__option[data-state="right"] { background: var(--rune-ok); border-color: var(--rune-ok); color: var(--on-accent); }
+.quiz__option[data-state="wrong"] { background: var(--seal); border-color: var(--seal); color: var(--on-accent); }
 .quiz__why { margin: 12px 0 0; }
 .quiz__score { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
 .quiz__score svg { width: 90px; height: auto; }
@@ -510,3 +512,19 @@ code, .command, .code { font-family: var(--font-mono); }
 }
 .buggy input { width: 20px; height: 20px; accent-color: var(--seal); }
 .buggy small { grid-column: 2; font-weight: 400; color: var(--ink-soft); }
+
+/* phones: nothing may push the page sideways */
+.lesson, .lesson > *, .panel > * { min-width: 0; }
+.theory code, .practice code, .practice li, .files a { overflow-wrap: anywhere; }
+.command, .code, .compare pre { max-width: 100%; }
+.sandbox__error {
+  margin: 0;
+  padding: 10px 14px;
+  border: 2px solid var(--seal);
+  border-radius: 10px;
+  color: var(--seal);
+  font-weight: 600;
+}
+.theory__sources { margin-top: 28px; font-size: 16px; }
+.theory__sources h2 { font: 700 18px/1.2 var(--font-display); margin: 0 0 8px; }
+.theory__sources a { color: var(--post-text); }

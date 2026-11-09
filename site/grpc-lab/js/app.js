@@ -20,10 +20,11 @@ function route() {
   return known ? { lesson, tab } : { lesson: "00", tab: "comic" };
 }
 
-function go(lesson, tab) {
+function go(lesson, tab, { focus = false } = {}) {
   const target = `#/${lesson}/${tab}`;
-  if (location.hash === target) render();
-  else location.hash = target;
+  if (location.hash !== target) history.pushState(null, "", target);
+  render();
+  if (focus) $(`tab-${tab}`)?.focus();
 }
 
 function renderMenu(current) {
@@ -76,8 +77,7 @@ function renderTabs(lesson, current) {
         const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
         if (!step) return;
         const next = TABS[(TABS.indexOf(name) + step + TABS.length) % TABS.length];
-        go(lesson, next);
-        requestAnimationFrame(() => $(`tab-${next}`)?.focus());
+        go(lesson, next, { focus: true });
       });
       return b;
     }),
@@ -134,6 +134,11 @@ async function start() {
     applyTheme(next);
   });
   window.addEventListener("hashchange", render);
+  window.addEventListener("popstate", render);
+  document.querySelector(".skip").addEventListener("click", (e) => {
+    e.preventDefault(); // "#main" is not a route: keep the lesson, just move focus
+    $("main").focus();
+  });
   render();
 }
 

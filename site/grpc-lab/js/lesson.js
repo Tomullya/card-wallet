@@ -20,6 +20,26 @@ registerTab("theory", (lesson, { t }) => {
     p.innerHTML = t(`l${lesson.id}.theory.${i}`);
     article.append(p);
   }
+  if (lesson.sources?.length) {
+    const box = document.createElement("section");
+    box.className = "theory__sources";
+    const h = document.createElement("h2");
+    h.textContent = t("theory.sources");
+    const ul = document.createElement("ul");
+    ul.dataset.testid = "theory-sources";
+    for (const [title, url] of lesson.sources) {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = title;
+      li.append(a);
+      ul.append(li);
+    }
+    box.append(h, ul);
+    article.append(box);
+  }
   return article;
 });
 

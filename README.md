@@ -20,7 +20,7 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 | Test design: boundaries, decision tables, state transitions, concurrency | [Test cases](docs/qa/test-cases/), [checklists](docs/qa/checklists/) |
 | REST API testing (positive, negative, boundary, auth, IDOR) | [`tests/api/`](tests/api/) — pytest + httpx |
 | gRPC testing: all 4 call types (unary, server / client / bidirectional streaming), metadata auth, request ids, deadlines, every status code | [`tests/grpc/`](tests/grpc/), [`tests/integration/`](tests/integration/) |
-| **Interactive gRPC trainer (RU/EN):** comics, a sandbox proven equal to the real service in CI, quizzes | **[tomullya.github.io/card-wallet/grpc-lab](https://tomullya.github.io/card-wallet/grpc-lab/)** · source [`site/grpc-lab/`](site/grpc-lab/) |
+| **Interactive gRPC trainer (RU/EN):** comics, a sandbox checked against the real service for every scenario in CI, quizzes | **[tomullya.github.io/card-wallet/grpc-lab](https://tomullya.github.io/card-wallet/grpc-lab/)** · source [`site/grpc-lab/`](site/grpc-lab/) |
 | gRPC exercises: 9 lessons with auto-checked tests | [`docs/grpc-lab/`](docs/grpc-lab/README.md), [`grpc-lab/`](grpc-lab/) |
 | SQL checks on stored data | [`tests/db/`](tests/db/) |
 | Contract testing against OpenAPI | [`tests/contract/`](tests/contract/) — schemathesis |

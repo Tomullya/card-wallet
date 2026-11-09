@@ -380,7 +380,7 @@
   "l04.quiz.1.b": "The client",
   "l04.quiz.1.c": "The network",
   "l04.quiz.2.q": "The merchant answers in 5 s, the deadline is 7 s. What happens?",
-  "l04.quiz.2.why": "The client is willing to wait longer than the service thinks.",
+  "l04.quiz.2.why": "The client is willing to wait longer than the service needs to answer.",
   "l04.quiz.2.a": "OK",
   "l04.quiz.2.b": "DEADLINE_EXCEEDED",
   "l04.quiz.2.c": "CANCELLED",
@@ -555,5 +555,10 @@
   "preset.bug19-no-trailer": "Bug 3: where are the trailers?",
   "sb.buggy": "Broken service (fraud-buggy :50052)",
   "sb.buggyHint": "Switch it on, repeat the call and compare with it off.",
-  "sb.row.notPublished": "not published: the call failed"
+  "sb.row.notPublished": "not published: the call failed",
+  "theory.sources": "Sources (official documentation)",
+  "sb.batchSize": "Batch size (empty = owls from the list)",
+  "sb.err.requestId": "x-request-id must be plain ASCII: a gRPC client refuses such metadata before it reaches the server.",
+  "sb.err.minRisk": "min_risk_score is a whole number: the client cannot put a fraction into an int32 field.",
+  "sb.err.batchSize": "The batch size is a whole number from 0."
 }
