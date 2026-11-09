@@ -34,3 +34,18 @@ The whole system (database, wallet API, anti-fraud service, frontend) starts loc
 
 ## NFR-08 Automated quality checks
 All automated tests run in CI on every push, and the test report is published online.
+
+## NFR-09 Interactive trainer site
+The gRPC lessons are also published as a public, interactive site
+(`https://tomullya.github.io/card-wallet/grpc-lab/`).
+
+Acceptance criteria:
+- Nine lessons (00–08), each with comic, theory, diagram, sandbox, quiz and practice tabs.
+- Russian and English with identical content keys; light and dark themes.
+- Progress is kept in the browser; the site still works when browser storage is blocked.
+- Keyboard-operable; animations respect reduced-motion settings.
+
+## NFR-10 Sandbox matches the service
+The site's sandbox simulates the Fraud Service. Every sandbox scenario
+(`site/grpc-lab/scenarios.json`) gives the same status code and key fields in the simulator and
+in the real service (planted-defect scenarios against `fraud-buggy`).
