@@ -5,6 +5,9 @@ import * as progress from "./progress.js";
 import { renderTab } from "./tabs.js";
 import "./comic.js";
 import "./diagram.js";
+import "./lesson.js";
+import "./quiz.js";
+import "./sandbox.js";
 
 export const TABS = ["comic", "theory", "diagram", "sandbox", "quiz", "practice"];
 let lessons = [];
@@ -98,7 +101,15 @@ function render() {
   const panel = $("panel");
   panel.setAttribute("aria-labelledby", `tab-${tab}`);
   panel.dataset.testid = `panel-${tab}`;
-  panel.replaceChildren(renderTab(tab, data, { t, lang: lang(), progress, rerender: render }));
+  const ctx = {
+    t,
+    lang: lang(),
+    progress,
+    rerender: render,
+    refreshMenu: () => renderMenu(lesson),
+    render: (name) => renderTab(name, data, ctx),
+  };
+  panel.replaceChildren(renderTab(tab, data, ctx));
 }
 
 function applyTheme(theme) {

@@ -18,6 +18,10 @@ def referenced_keys(lessons) -> set[str]:
         keys |= {f"lesson.{lesson['id']}.title", f"lesson.{lesson['id']}.subtitle"}
         for item in lesson.get("quiz", []):
             keys |= {item["q"], item["why"], *item["options"]}
+        lid = lesson["id"]
+        keys |= {f"l{lid}.theory.{i}" for i in range(1, lesson.get("theory", 0) + 1)}
+        keys |= {f"l{lid}.postman.{i}" for i in range(1, lesson.get("postman", 0) + 1)}
+        keys |= {f"preset.{p}" for p in lesson.get("presets", [])}
         for panel in lesson.get("comic", []):
             keys |= {panel["text"], *([panel["caption"]] if panel.get("caption") else [])}
     return keys

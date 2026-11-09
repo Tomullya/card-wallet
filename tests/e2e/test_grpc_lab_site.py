@@ -100,3 +100,78 @@ def test_reduced_motion_shows_final_state(page, lab_url):
     expect(page.get_by_test_id("diagram-step")).to_have_count(6)
     for step in page.get_by_test_id("diagram-step").all():
         assert step.evaluate("el => getComputedStyle(el).opacity") == "1"
+
+
+SITE = __import__("pathlib").Path(__file__).resolve().parents[2] / "site/grpc-lab"
+SCENARIOS = {
+    s["id"]: s
+    for s in __import__("json").loads((SITE / "scenarios.json").read_text(encoding="utf-8"))
+}
+LESSONS = {
+    lesson["id"]: lesson
+    for lesson in __import__("json").loads(
+        (SITE / "content/lessons.json").read_text(encoding="utf-8")
+    )
+}
+
+
+@pytest.mark.req("NFR-09", "NFR-10")
+@pytest.mark.parametrize("preset", LESSONS["05"]["presets"])
+def test_sandbox_presets_show_expected_rune(page, lab_url, preset):
+    open_lab(page, lab_url, "#/05/sandbox")
+    page.get_by_test_id(f"preset-{preset}").click()
+    expect(page.get_by_test_id("sandbox-rune-code")).to_have_text(SCENARIOS[preset]["expect"]["code"])
+
+
+@pytest.mark.req("NFR-09")
+def test_sandbox_timeline_rows(page, lab_url):
+    open_lab(page, lab_url, "#/05/sandbox")
+    page.get_by_test_id("preset-watch-sees-payment").click()
+    rows = page.get_by_test_id("sandbox-row")
+    expect(rows.first).to_be_visible()
+    assert rows.count() >= 3  # call, subscription confirmed, event (+ the status row)
+    expect(page.get_by_test_id("sandbox-timeline")).to_contain_text("80")
+
+
+@pytest.mark.req("NFR-09")
+def test_sandbox_code_view_toggle(page, lab_url):
+    open_lab(page, lab_url, "#/05/sandbox")
+    page.get_by_test_id("preset-watch-filter-50").click()
+    page.get_by_test_id("sandbox-code-toggle").click()
+    code = page.get_by_test_id("sandbox-code")
+    expect(code).to_contain_text("WatchRiskEvents")
+    expect(code).to_contain_text("x-api-key")
+    expect(code).to_contain_text("min_risk_score")
+
+
+@pytest.mark.req("NFR-09")
+def test_quiz_scoring_marks_lesson_done(page, lab_url):
+    open_lab(page, lab_url, "#/05/quiz")
+    questions = page.get_by_test_id("quiz-question")
+    expect(questions).to_have_count(5)
+    for i, item in enumerate(LESSONS["05"]["quiz"]):
+        questions.nth(i).get_by_test_id("quiz-option").nth(item["answer"]).click()
+    expect(page.get_by_test_id("quiz-score")).to_contain_text("5")
+    page.reload()
+    expect(page.get_by_test_id("done-05")).to_be_visible()
+
+
+@pytest.mark.req("NFR-09")
+def test_quiz_explains_wrong_answer(page, lab_url):
+    open_lab(page, lab_url, "#/05/quiz")
+    first = page.get_by_test_id("quiz-question").first
+    wrong = (LESSONS["05"]["quiz"][0]["answer"] + 1) % len(LESSONS["05"]["quiz"][0]["options"])
+    first.get_by_test_id("quiz-option").nth(wrong).click()
+    expect(first.get_by_test_id("quiz-option").nth(wrong)).to_have_attribute("data-state", "wrong")
+    expect(first.get_by_test_id("quiz-why")).to_be_visible()
+
+
+@pytest.mark.req("NFR-09")
+def test_theory_and_practice_have_content(page, lab_url):
+    open_lab(page, lab_url, "#/05/theory")
+    assert len(page.get_by_test_id("panel-theory").inner_text()) > 400
+    page.get_by_test_id("tab-practice").click()
+    expect(page.get_by_test_id("practice-check")).to_contain_text("grpc_lab_check.py 5")
+    expect(page.get_by_test_id("practice-link").first).to_have_attribute(
+        "href", re.compile(r"^https://github.com/Tomullya/card-wallet/blob/main/")
+    )
