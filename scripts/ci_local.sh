@@ -35,6 +35,10 @@ step "All automated tests incl. browser E2E (Allure results)"
 rm -rf reports/allure-results
 "$PY" -m pytest -q --alluredir reports/allure-results --junitxml reports/pytest.xml
 
+step "gRPC trainer: reference solutions pass, exercises import cleanly"
+"$PY" -m pytest -q -p no:cacheprovider grpc-lab/solutions
+"$PY" -m pytest -q -p no:cacheprovider --collect-only grpc-lab/exercises > /dev/null
+
 step "Postman collection (Newman)"
 scripts/run_newman.sh
 
