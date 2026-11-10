@@ -26,15 +26,16 @@ export function fraudDecision(cents, category) {
 }
 
 /**
- * Card status model (BR-CARD-04…06, wallet-api/app/services/cards.py).
- * Events: wrongCvv3 = third wrong CVV in a row; blockByClient; expiryPassed = the date passes
- * the expiry date. A blocked card stays BLOCKED after its expiry date (effective_status).
+ * Card status model from the requirements (BR-CARD-04…06). Events: wrongCvv3 = third wrong CVV
+ * in a row; blockByClient; expiryPassed = the date passes the expiry date. A blocked card stays
+ * BLOCKED after its expiry date. Only an ACTIVE card may be blocked by its owner — the code also
+ * lets an EXPIRED card be blocked, which is the open defect BUG-13 (an invalid transition that
+ * the system wrongly accepts).
  */
 export const cardTransitions = [
   { from: "ACTIVE", event: "wrongCvv3", to: "BLOCKED" },
   { from: "ACTIVE", event: "blockByClient", to: "BLOCKED" },
   { from: "ACTIVE", event: "expiryPassed", to: "EXPIRED" },
-  { from: "EXPIRED", event: "blockByClient", to: "BLOCKED" },
   { from: "BLOCKED", event: "expiryPassed", to: "BLOCKED" },
 ];
 

@@ -78,7 +78,10 @@ def test_question_shape(qid):
     los = all_los()
     assert q["lo"] in los, "unknown learning objective"
     assert los[q["lo"]][0] == q["section"], "section does not match the objective"
-    assert q["k"] == los[q["lo"]][1]["k"]
+    if q.get("exam", True):  # exam questions have the K-level of their objective
+        assert q["k"] == los[q["lo"]][1]["k"]
+    else:  # quiz-only warm-up questions may be easier, never harder
+        assert q["k"] <= los[q["lo"]][1]["k"]
     assert both(q["q"]) and both(q["why"])
     ru, en = q["options"]["ru"], q["options"]["en"]
     assert len(ru) == len(en) >= 3, "RU and EN must have the same options"
@@ -116,6 +119,7 @@ def test_section_files(path):
 def test_every_lo_has_two_questions():
     count = {lo: 0 for lo in all_los()}
     for q in questions():
-        count[q["lo"]] += 1
+        if q.get("exam", True):
+            count[q["lo"]] += 1
     assert [lo for lo, n in count.items() if n < 2] == []
     assert len(questions()) >= 130

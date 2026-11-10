@@ -92,3 +92,105 @@ def test_footer_disclaimer(page, istqb_url):
 def test_unknown_route_falls_back_home(page, istqb_url):
     open_site(page, istqb_url, "#/s/9.9/theory")
     expect(page.get_by_test_id("chapter-card")).to_have_count(6)
+
+
+# ---------- section 4.2 ----------
+
+
+@pytest.mark.req("NFR-11")
+def test_theory_shows_lo_quote_and_wallet_example(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/theory")
+    page.get_by_test_id("lang-ru").click()
+    objectives = page.get_by_test_id("objective")
+    expect(objectives).to_have_count(4)
+    first = objectives.first
+    expect(first.get_by_test_id("lo-badge")).to_have_text("K3")
+    expect(first.get_by_test_id("lo-quote")).to_contain_text("эквивалентного разбиения")
+    expect(first.get_by_test_id("lo-source")).to_contain_text("§4.2.1")
+    expect(first.get_by_test_id("wallet-example")).to_be_visible()
+    links = page.get_by_test_id("syllabus-link")
+    expect(links).to_have_count(2)
+    expect(links.first).to_have_attribute("href", re.compile(r"ISTQB_CTFL_Syllabus"))
+
+
+@pytest.mark.req("NFR-11")
+def test_terms_show_both_languages(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/terms")
+    first = page.get_by_test_id("term").first
+    expect(first).to_contain_text("эквивалентное разбиение")
+    expect(first).to_contain_text("equivalence partitioning")
+    page.get_by_test_id("lang-en").click()
+    expect(page.get_by_test_id("term-name").first).to_have_text(re.compile(r"^equivalence partitioning \("))
+
+
+@pytest.mark.req("NFR-11")
+def test_section_quiz_marks_done(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/quiz")
+    questions = page.get_by_test_id("quiz-question")
+    expect(questions).to_have_count(5)
+    for i in range(5):
+        q = questions.nth(i)
+        q.locator('[data-correct="true"]').first.click()
+        if q.locator('[data-testid="quiz-check"]').count():  # select-TWO questions
+            q.locator('[data-correct="true"]').nth(1).click()
+            q.get_by_test_id("quiz-check").click()
+        expect(q.get_by_test_id("quiz-why")).to_be_visible()
+    expect(page.get_by_test_id("quiz-score")).to_contain_text("5")
+    expect(page.get_by_test_id("done-4.2")).to_be_visible()
+
+
+@pytest.mark.req("NFR-11")
+def test_quiz_retake_shows_other_questions(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/quiz")
+    first = page.get_by_test_id("quiz-question").first.locator("legend").inner_text()
+    questions = page.get_by_test_id("quiz-question")
+    for i in range(5):
+        questions.nth(i).get_by_test_id("quiz-option").first.click()
+        if questions.nth(i).get_by_test_id("quiz-check").count():
+            questions.nth(i).get_by_test_id("quiz-option").nth(1).click()
+            questions.nth(i).get_by_test_id("quiz-check").click()
+    page.get_by_test_id("quiz-retake").click()
+    expect(page.get_by_test_id("quiz-question").first.locator("legend")).not_to_have_text(first)
+
+
+@pytest.mark.req("NFR-11", "NFR-12")
+def test_ep_trainer_reports_missing_partition(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/trainer")
+    trainer = page.get_by_test_id("trainer-ep")
+    trainer.get_by_test_id("trainer-input").fill("100; 6000; -5")
+    trainer.get_by_test_id("trainer-check").click()
+    result = trainer.get_by_test_id("trainer-result")
+    expect(result).to_contain_text("75%")
+    expect(result.get_by_test_id("missing")).to_contain_text("10000")
+
+
+@pytest.mark.req("NFR-11", "NFR-12")
+def test_ep_trainer_accepts_russian_number_format(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/trainer")
+    trainer = page.get_by_test_id("trainer-ep")
+    trainer.get_by_test_id("trainer-input").fill("-1; 2 500,50; 7 500,00; 10 000,01")
+    trainer.get_by_test_id("trainer-check").click()
+    expect(trainer.get_by_test_id("trainer-result")).to_contain_text("100%")
+
+
+@pytest.mark.req("NFR-11", "NFR-12")
+def test_trainer_explains_garbage_input(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/trainer")
+    trainer = page.get_by_test_id("trainer-ep")
+    trainer.get_by_test_id("trainer-input").fill("abc")
+    trainer.get_by_test_id("trainer-check").click()
+    expect(trainer.get_by_test_id("trainer-invalid")).to_contain_text("abc")
+
+
+@pytest.mark.req("NFR-11", "NFR-12")
+def test_bva_trainer_variant_switch(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/trainer")
+    trainer = page.get_by_test_id("trainer-bva")
+    trainer.get_by_test_id("trainer-input").fill("5000; 5000,01")
+    trainer.get_by_test_id("trainer-check").click()
+    expect(trainer.get_by_test_id("trainer-result")).to_contain_text("100%")
+    trainer.get_by_test_id("bva-variant-3").check()
+    trainer.get_by_test_id("trainer-check").click()
+    expect(trainer.get_by_test_id("trainer-result")).to_contain_text("50%")
+    expect(trainer.get_by_test_id("missing")).to_contain_text("4999.99")
+    expect(trainer.get_by_test_id("missing")).to_contain_text("5000.02")

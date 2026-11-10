@@ -44,6 +44,10 @@
       "ru": "Что такое тестирование?",
       "en": "What is Testing?"
      },
+     "pages": {
+      "en": 15,
+      "ru": 15
+     },
      "los": [
       {
        "id": "FL-1.1.1",
@@ -68,6 +72,10 @@
      "title": {
       "ru": "Почему тестирование необходимо?",
       "en": "Why is Testing Necessary?"
+     },
+     "pages": {
+      "en": 16,
+      "ru": 16
      },
      "los": [
       {
@@ -102,6 +110,10 @@
       "ru": "Принципы тестирования",
       "en": "Testing Principles"
      },
+     "pages": {
+      "en": 17,
+      "ru": 18
+     },
      "los": [
       {
        "id": "FL-1.3.1",
@@ -118,6 +130,10 @@
      "title": {
       "ru": "Активности тестирования, тестовое обеспечение и роли в тестировании",
       "en": "Test Activities, Testware and Test Roles"
+     },
+     "pages": {
+      "en": 18,
+      "ru": 19
      },
      "los": [
       {
@@ -168,6 +184,10 @@
       "ru": "Основные навыки и передовой опыт в тестировании",
       "en": "Essential Skills and Good Practices in Testing"
      },
+     "pages": {
+      "en": 21,
+      "ru": 23
+     },
      "los": [
       {
        "id": "FL-1.5.1",
@@ -210,6 +230,10 @@
      "title": {
       "ru": "Тестирование в контексте жизненного цикла разработки ПО",
       "en": "Testing in the Context of a Software Development Lifecycle"
+     },
+     "pages": {
+      "en": 25,
+      "ru": 26
      },
      "los": [
       {
@@ -268,6 +292,10 @@
       "ru": "Уровни тестирования и типы тестирования",
       "en": "Test Levels and Test Types"
      },
+     "pages": {
+      "en": 28,
+      "ru": 29
+     },
      "los": [
       {
        "id": "FL-2.2.1",
@@ -301,6 +329,10 @@
       "ru": "Тестирование в период сопровождения",
       "en": "Maintenance Testing"
      },
+     "pages": {
+      "en": 31,
+      "ru": 33
+     },
      "los": [
       {
        "id": "FL-2.3.1",
@@ -327,6 +359,10 @@
      "title": {
       "ru": "Основы статического тестирования",
       "en": "Static Testing Basics"
+     },
+     "pages": {
+      "en": 33,
+      "ru": 35
      },
      "los": [
       {
@@ -360,6 +396,10 @@
      "title": {
       "ru": "Обратная связь и процесс рецензирования",
       "en": "Feedback and Review Process"
+     },
+     "pages": {
+      "en": 35,
+      "ru": 37
      },
      "los": [
       {
@@ -420,6 +460,10 @@
       "ru": "Методы тестирования. Общие сведения",
       "en": "Test Techniques Overview"
      },
+     "pages": {
+      "en": 39,
+      "ru": 42
+     },
      "los": [
       {
        "id": "FL-4.1.1",
@@ -436,6 +480,10 @@
      "title": {
       "ru": "Методы черного ящика",
       "en": "Black-box Test Techniques"
+     },
+     "pages": {
+      "en": 39,
+      "ru": 42
      },
      "los": [
       {
@@ -478,6 +526,10 @@
       "ru": "Методы белого ящика",
       "en": "White-box Test Techniques"
      },
+     "pages": {
+      "en": 42,
+      "ru": 46
+     },
      "los": [
       {
        "id": "FL-4.3.1",
@@ -511,6 +563,10 @@
       "ru": "Тестирование на основе опыта",
       "en": "Experience-based Test Techniques"
      },
+     "pages": {
+      "en": 43,
+      "ru": 47
+     },
      "los": [
       {
        "id": "FL-4.4.1",
@@ -543,6 +599,10 @@
      "title": {
       "ru": "Подходы к тестированию на основе совместной работы",
       "en": "Collaboration-based Test Approaches"
+     },
+     "pages": {
+      "en": 45,
+      "ru": 49
      },
      "los": [
       {
@@ -586,6 +646,10 @@
      "title": {
       "ru": "Планирование тестирования",
       "en": "Test Planning"
+     },
+     "pages": {
+      "en": 48,
+      "ru": 53
      },
      "los": [
       {
@@ -652,6 +716,10 @@
       "ru": "Управление рисками",
       "en": "Risk Management"
      },
+     "pages": {
+      "en": 51,
+      "ru": 57
+     },
      "los": [
       {
        "id": "FL-5.2.1",
@@ -693,6 +761,10 @@
       "ru": "Контроль и мониторинг тестирования. Завершение тестирования",
       "en": "Test Monitoring, Test Control and Test Completion"
      },
+     "pages": {
+      "en": 53,
+      "ru": 59
+     },
      "los": [
       {
        "id": "FL-5.3.1",
@@ -726,6 +798,10 @@
       "ru": "Управление конфигурацией",
       "en": "Configuration Management"
      },
+     "pages": {
+      "en": 56,
+      "ru": 62
+     },
      "los": [
       {
        "id": "FL-5.4.1",
@@ -742,6 +818,10 @@
      "title": {
       "ru": "Управление дефектами",
       "en": "Defect Management"
+     },
+     "pages": {
+      "en": 56,
+      "ru": 62
      },
      "los": [
       {
@@ -770,6 +850,10 @@
       "ru": "Инструменты поддержки тестирования",
       "en": "Tool Support for Testing"
      },
+     "pages": {
+      "en": 59,
+      "ru": 65
+     },
      "los": [
       {
        "id": "FL-6.1.1",
@@ -786,6 +870,10 @@
      "title": {
       "ru": "Преимущества и риски автоматизации тестирования",
       "en": "Benefits and Risks of Test Automation"
+     },
+     "pages": {
+      "en": 59,
+      "ru": 65
      },
      "los": [
       {

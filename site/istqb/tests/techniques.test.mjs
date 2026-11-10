@@ -104,14 +104,18 @@ test("state coverage of card statuses", () => {
   assert.deepEqual(one.states, { covered: 2, total: 3 });
   assert.deepEqual(one.valid, { covered: 1, total: cardTransitions.length });
   assert.deepEqual(one.invalid.tried, []);
-  const r = stateCoverage(cardTransitions, [["expiryPassed", "blockByClient", "blockByClient"]]);
+  const r = stateCoverage(cardTransitions, [["blockByClient", "blockByClient"], ["expiryPassed"]]);
   assert.deepEqual(r.states, { covered: 3, total: 3 });
   assert.equal(r.valid.covered, 2);
   assert.deepEqual(r.invalid.tried, [{ from: "BLOCKED", event: "blockByClient" }]);
 });
 
-test("expired card can still be blocked by its owner (BR-CARD-04 code path)", () => {
-  assert.ok(cardTransitions.some((x) => x.from === "EXPIRED" && x.event === "blockByClient" && x.to === "BLOCKED"));
+test("model follows the requirements: blocking an expired card is invalid (BUG-13)", () => {
+  // BR-CARD-04 allows blocking only an ACTIVE card; the code allows it anyway — that is BUG-13.
+  assert.ok(!cardTransitions.some((x) => x.from === "EXPIRED" && x.event === "blockByClient"));
+  const r = stateCoverage(cardTransitions, [["expiryPassed", "blockByClient"]]);
+  assert.deepEqual(r.invalid.tried, [{ from: "EXPIRED", event: "blockByClient" }]);
+  assert.equal(cardTransitions.length, 4);
 });
 
 test("commission: one small payment gives 100 % statements but 50 % branches", () => {

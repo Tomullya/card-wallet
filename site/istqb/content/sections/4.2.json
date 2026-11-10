@@ -1,0 +1,105 @@
+{
+ "id": "4.2",
+ "trainers": ["ep", "bva"],
+ "objectives": [
+  {
+   "lo": "FL-4.2.1",
+   "explain": {
+    "ru": [
+     "Эквивалентное разбиение экономит тесты. Мы делим все возможные значения на группы — классы эквивалентности — так, чтобы система обрабатывала все значения одной группы одинаково. Тогда достаточно проверить одно значение из каждого класса: если 2 500,00 € обрабатывается неправильно, то и 3 000,00 € почти наверняка тоже.",
+     "Классы бывают позитивные (значения, которые система должна принять и обработать) и негативные (значения, которые она должна отклонить). Точные определения различаются в разных командах — например, позитивными можно считать значения, обработка которых описана в спецификации. Классы не пересекаются и не бывают пустыми. Разбивать можно не только входные данные, но и выходные, настройки, время, параметры интерфейса.",
+     "Элемент покрытия здесь — класс. Покрытие = сколько классов проверено хотя бы одним тестом ÷ сколько классов всего × 100%. Негативные классы тоже считаются. Если параметров несколько (сумма и категория), простейший критерий — «покрытие каждого варианта» (Each Choice): каждый класс каждого параметра встречается хотя бы в одном тесте, комбинации не важны.",
+     "Совет для экзамена: сначала выпишите все классы (вместе с негативными), потом подбирайте значения. Частая ловушка — два значения из одного класса: тестов больше, а покрытие то же."
+    ],
+    "en": [
+     "Equivalence partitioning saves tests. We split all possible values into groups — equivalence partitions — so that the system treats every value in one group the same way. Then one value per partition is enough: if 2,500.00 € is processed wrongly, 3,000.00 € almost certainly is too.",
+     "Partitions are valid (values the system must accept and process) or invalid (values it must reject). Exact definitions vary between teams — for example, valid can also mean \"the specification defines how it is processed\". Partitions never overlap and are never empty. You can partition not only inputs but also outputs, configuration, time-related values and interface parameters.",
+     "The coverage item is the partition. Coverage = partitions exercised by at least one test ÷ all partitions × 100%. Invalid partitions count too. With several parameters (amount and category) the simplest criterion is Each Choice coverage: every partition of every parameter appears in at least one test; combinations do not matter.",
+     "Exam tip: first list all partitions (including invalid ones), then pick values. A common trap is two values from the same partition: more tests, same coverage."
+    ]
+   },
+   "wallet": {
+    "ru": "Сумма платежа в Card Wallet по значению даёт 4 класса (ошибки формата, например 3 знака после запятой, — ещё негативные классы): ≤ 0 (негативный, ответ 422), 0,01–5000,00 (позитивный, фрод-сервис одобряет), 5000,01–10000,00 (позитивный ввод, но фрод-сервис отклоняет HIGH_AMOUNT) и > 10000,00 (негативный, 422). Для категории — 3 класса: пять обычных категорий, GAMBLING (отклоняется) и любая неизвестная строка (422). Четыре теста −5 / 100 / 6000 / 12000 дают 100% покрытия суммы.",
+    "en": "By value, the Card Wallet payment amount has 4 partitions (format errors such as 3 decimal places are further invalid partitions): ≤ 0 (invalid, 422), 0.01–5000.00 (valid, fraud service approves), 5000.01–10000.00 (valid input, but the fraud service declines HIGH_AMOUNT) and > 10000.00 (invalid, 422). The category has 3: the five ordinary categories, GAMBLING (declined) and any unknown string (422). Four tests −5 / 100 / 6000 / 12000 give 100% amount coverage.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/requirements/BR-payments.md"
+   }
+  },
+  {
+   "lo": "FL-4.2.2",
+   "explain": {
+    "ru": [
+     "Анализ граничных значений проверяет края классов эквивалентности, потому что именно там разработчики чаще всего ошибаются: пишут > вместо ≥, ставят границу на копейку выше или забывают её совсем. Метод работает только для упорядоченных классов (числа, даты, длины строк), а не для, например, списка категорий.",
+     "Граничные значения класса — его минимум и максимум. В силлабусе два варианта. Вариант с двумя значениями (2-value): для каждого граничного значения — оно само и ближайший сосед из соседнего класса; на практике это просто все граничные значения. Вариант с тремя значениями (3-value): каждое граничное значение и оба его соседа.",
+     "Покрытие = проверенные элементы покрытия ÷ все элементы × 100%. Вариант с тремя значениями строже: если условие «x ≤ 10» по ошибке написано как «x = 10», значения 10 и 11 (2-value) ошибку не покажут, а значение 9 (3-value) скорее всего покажет.",
+     "Как считать соседей: шаг зависит от данных. Для денег с копейками шаг 0,01, для целых чисел — 1, для дат — 1 день."
+    ],
+    "en": [
+     "Boundary value analysis tests the edges of equivalence partitions, because that is where developers make mistakes most often: > instead of ≥, a boundary one cent too high, or a missing boundary. It only works for ordered partitions (numbers, dates, string lengths), not, for example, for a list of categories.",
+     "The boundary values of a partition are its minimum and maximum. The syllabus has two versions. 2-value BVA: for each boundary value, the value itself and its closest neighbour in the adjacent partition — in practice simply all boundary values. 3-value BVA: each boundary value and both of its neighbours.",
+     "Coverage = exercised coverage items ÷ all coverage items × 100%. 3-value BVA is stricter: if \"x ≤ 10\" is wrongly coded as \"x = 10\", the values 10 and 11 (2-value) do not reveal it, but 9 (3-value) is likely to.",
+     "How to find neighbours: the step depends on the data. For money with cents it is 0.01, for integers 1, for dates 1 day."
+    ]
+   },
+   "wallet": {
+    "ru": "Фрод-сервис отклоняет платежи больше 5000,00. Граница лежит между 5000,00 (ещё одобряем) и 5000,01 (уже отклоняем). 2-value: 5000,00 и 5000,01. 3-value: 4999,99 / 5000,00 / 5000,01 / 5000,02. Ещё один живой пример, на другой границе (дневной лимит), — BUG-02: платёж, после которого сумма за день ровно равна лимиту, отклонялся — проверка вела себя как ≥ вместо >. Его поймал тест ровно на границе.",
+    "en": "The fraud service declines payments above 5000.00. The boundary lies between 5000.00 (still approved) and 5000.01 (declined). 2-value: 5000.00 and 5000.01. 3-value: 4999.99 / 5000.00 / 5000.01 / 5000.02. Another real example, on a different boundary (the daily limit), is BUG-02: a payment that made the day's total exactly equal to the limit was declined — the check behaved like ≥ instead of >. A test exactly on the boundary caught it.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-02.md"
+   }
+  },
+  {
+   "lo": "FL-4.2.3",
+   "explain": {
+    "ru": [
+     "Таблица решений нужна, когда результат зависит от комбинации условий — типичные бизнес-правила. Строки таблицы — условия и действия, столбцы — правила: одна уникальная комбинация условий и что при ней должна сделать система.",
+     "Обозначения: T — условие выполнено, F — не выполнено, «–» — значение условия не влияет на результат, N/A — комбинация невозможна. Для действий: X — действие происходит, пусто — не происходит.",
+     "Полная таблица содержит все комбинации: при n логических условиях это 2ⁿ столбцов. Её можно упростить, удалив невозможные комбинации, и минимизировать, объединив столбцы, где какое-то условие не влияет на результат (там ставят «–»).",
+     "Элемент покрытия — столбец с выполнимой комбинацией условий. Покрытие = проверенные столбцы ÷ все выполнимые столбцы × 100%. Бонус метода: при составлении таблицы видны пробелы и противоречия в требованиях — комбинации, о которых аналитик не подумал."
+    ],
+    "en": [
+     "A decision table helps when the outcome depends on a combination of conditions — typical business rules. The rows are conditions and actions; the columns are rules: one unique combination of conditions and what the system must do for it.",
+     "Notation: T — condition met, F — not met, \"–\" — the value does not affect the outcome, N/A — the combination is infeasible. For actions: X — the action happens, blank — it does not.",
+     "A full table has every combination: with n Boolean conditions that is 2ⁿ columns. You can simplify it by deleting infeasible combinations and minimise it by merging columns in which a condition does not affect the outcome (marked \"–\").",
+     "The coverage item is a column with a feasible combination of conditions. Coverage = exercised columns ÷ all feasible columns × 100%. A bonus: building the table reveals gaps and contradictions in the requirements — combinations nobody thought about."
+    ]
+   },
+   "wallet": {
+    "ru": "Правила фрод-сервиса: условие 1 — сумма > 5000,00, условие 2 — категория GAMBLING. Полная таблица: 4 столбца (TT, TF, FT, FF). Правила проверяются по порядку, и большая сумма отклоняется при любой категории, поэтому TT и TF объединяются в один столбец «T, –» → DECLINE HIGH_AMOUNT. Минимизированная таблица — 3 столбца.",
+    "en": "Fraud service rules: condition 1 — amount > 5000.00, condition 2 — category GAMBLING. Full table: 4 columns (TT, TF, FT, FF). Rules are checked in order and a high amount is declined whatever the category, so TT and TF merge into one column \"T, –\" → DECLINE HIGH_AMOUNT. The minimised table has 3 columns.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/fraud-service/fraud_service/rules.py"
+   }
+  },
+  {
+   "lo": "FL-4.2.4",
+   "explain": {
+    "ru": [
+     "Тестирование переходов состояний подходит системам, поведение которых зависит от того, что было раньше: статус заказа, карты, учётной записи. Диаграмма состояний показывает состояния и разрешённые переходы между ними. Переход вызывается событием, иногда с ограничением (guard) и действием: «событие [ограничение] / действие».",
+     "Таблица переходов — та же модель в виде таблицы: строки — состояния, столбцы — события, ячейки — куда переходим. Важное отличие: в таблице видны недопустимые переходы — это пустые ячейки. На диаграмме их не видно.",
+     "Тест — последовательность событий, и один тест обычно проходит несколько переходов. Три критерия покрытия: все состояния (самый слабый); все разрешённые переходы («одношаговое» покрытие, 0-switch; самый популярный — гарантирует и покрытие всех состояний); все переходы — разрешённые плюс попытки недопустимых (самый сильный, минимум для ПО с критически важными функциями и повышенными требованиями к безопасности).",
+     "Недопустимые переходы лучше проверять по одному в тесте: иначе один дефект может замаскировать другой."
+    ],
+    "en": [
+     "State transition testing suits systems whose behaviour depends on what happened before: an order, card or account status. A state diagram shows states and valid transitions. A transition is triggered by an event, sometimes with a guard condition and an action: \"event [guard] / action\".",
+     "A state table is the same model as a table: rows are states, columns are events, cells say where we go. The key difference: the table shows invalid transitions — empty cells. The diagram does not.",
+     "A test case is a sequence of events, and one test usually covers several transitions. Three coverage criteria: all states (weakest); valid transitions, also called 0-switch (most popular, and it guarantees all states coverage); all transitions — valid ones plus attempts at invalid ones (strongest, a minimum for mission- and safety-critical software).",
+     "Test invalid transitions one per test case: otherwise one defect can mask another."
+    ]
+   },
+   "wallet": {
+    "ru": "Статусы карты по требованиям: ACTIVE, BLOCKED, EXPIRED. Разрешённые переходы: ACTIVE → BLOCKED (третий неверный CVV подряд), ACTIVE → BLOCKED (блокировка владельцем), ACTIVE → EXPIRED (прошла дата), BLOCKED → BLOCKED (дата прошла, но карта остаётся заблокированной). Недопустимые: заблокировать уже заблокированную карту (409) и заблокировать просроченную. Попытка последнего нашла настоящий дефект BUG-13: система разрешает блокировать карту с истёкшим сроком.",
+    "en": "Card statuses from the requirements: ACTIVE, BLOCKED, EXPIRED. Valid transitions: ACTIVE → BLOCKED (third wrong CVV in a row), ACTIVE → BLOCKED (blocked by the owner), ACTIVE → EXPIRED (the date passed), BLOCKED → BLOCKED (the date passed, but the card stays blocked). Invalid: blocking an already blocked card (409) and blocking an expired card. Attempting the last one found a real defect, BUG-13: the system lets you block an expired card.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-13.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "эквивалентное разбиение", "en": "equivalence partitioning", "explain": {"ru": "Метод черного ящика: значения делятся на классы, которые система обрабатывает одинаково; проверяется по одному значению из класса.", "en": "Black-box technique: values are split into partitions the system treats the same way; one value per partition is tested."}},
+  {"ru": "класс эквивалентности", "en": "equivalence partition", "explain": {"ru": "Группа значений, которые объект тестирования обрабатывает одинаково. Бывает позитивным и негативным.", "en": "A group of values the test object processes in the same way. Can be valid or invalid."}},
+  {"ru": "покрытие каждого варианта", "en": "Each Choice coverage", "explain": {"ru": "Каждый класс каждого параметра проверен хотя бы одним тестом; комбинации не учитываются.", "en": "Every partition of every parameter is exercised at least once; combinations are ignored."}},
+  {"ru": "анализ граничных значений", "en": "boundary value analysis", "explain": {"ru": "Метод черного ящика, проверяющий минимумы и максимумы упорядоченных классов (варианты с двумя и тремя значениями).", "en": "Black-box technique that tests the minimum and maximum of ordered partitions (2-value and 3-value versions)."}},
+  {"ru": "граничное значение", "en": "boundary value", "explain": {"ru": "Минимальное или максимальное значение класса эквивалентности.", "en": "The minimum or maximum value of an equivalence partition."}},
+  {"ru": "тестирование с помощью таблицы решений", "en": "decision table testing", "explain": {"ru": "Метод черного ящика: тесты по столбцам таблицы, где каждый столбец — комбинация условий и ожидаемые действия.", "en": "Black-box technique: tests follow the columns of a table, each column being a combination of conditions and the expected actions."}},
+  {"ru": "тестирование таблицы переходов", "en": "state transition testing", "explain": {"ru": "Метод черного ящика: тесты по модели состояний и переходов между ними (диаграмма или таблица переходов).", "en": "Black-box technique: tests follow a model of states and transitions (state diagram or state table)."}},
+  {"ru": "элемент покрытия", "en": "coverage item", "explain": {"ru": "То, что считаем при измерении покрытия: класс, граничное значение, столбец таблицы, переход.", "en": "What we count when measuring coverage: a partition, a boundary value, a table column, a transition."}},
+  {"ru": "покрытие", "en": "coverage", "explain": {"ru": "Доля элементов покрытия, проверенных тестами, в процентах.", "en": "The share of coverage items exercised by tests, as a percentage."}}
+ ]
+}

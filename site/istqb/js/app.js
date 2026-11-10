@@ -5,9 +5,14 @@ import { applyStatic, lang, loadI18n, pick, setLang, t } from "./i18n.js";
 import * as progress from "./progress.js";
 import { renderPage, renderTab } from "./tabs.js";
 import "./pages.js";
+import "./theory.js";
+import "./terms.js";
+import "./quiz.js";
+import "./trainers.js";
 
 export const BASE_TABS = ["theory", "terms", "quiz"];
 let syllabus = null;
+let questions = [];
 const sectionCache = new Map();
 let renderId = 0;
 
@@ -139,6 +144,7 @@ async function render() {
     lang: lang(),
     progress,
     syllabus,
+    questions,
     go,
     rerender: render,
     refreshMenu: () => renderMenu(r),
@@ -196,7 +202,11 @@ function applyTheme(theme) {
 
 async function start() {
   await loadI18n();
-  syllabus = await fetch(new URL("../content/syllabus.json", import.meta.url)).then((r) => r.json());
+  [syllabus, questions] = await Promise.all(
+    ["syllabus", "questions"].map((name) =>
+      fetch(new URL(`../content/${name}.json`, import.meta.url)).then((r) => r.json()),
+    ),
+  );
   applyTheme(progress.getPref("theme", "light"));
   document.querySelectorAll("[data-lang]").forEach((b) => {
     b.addEventListener("click", () => {
