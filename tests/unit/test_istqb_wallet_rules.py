@@ -21,7 +21,9 @@ JS = Path(__file__).resolve().parents[2] / "site/istqb/js/wallet-rules.js"
 
 
 def js_rules() -> dict:
-    body = re.search(r"export const RULES = \{(.*?)\n\};", JS.read_text(encoding="utf-8"), re.S).group(1)
+    body = re.search(
+        r"export const RULES = \{(.*?)\n\};", JS.read_text(encoding="utf-8"), re.S
+    ).group(1)
     body = re.sub(r"//[^\n]*", "", body)  # comments
     body = re.sub(r"(\w+):", r'"\1":', body)  # keys
     body = re.sub(r",\s*$", "", body.strip())  # trailing comma

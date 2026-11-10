@@ -120,7 +120,9 @@ def test_terms_show_both_languages(page, istqb_url):
     expect(first).to_contain_text("эквивалентное разбиение")
     expect(first).to_contain_text("equivalence partitioning")
     page.get_by_test_id("lang-en").click()
-    expect(page.get_by_test_id("term-name").first).to_have_text(re.compile(r"^equivalence partitioning \("))
+    expect(page.get_by_test_id("term-name").first).to_have_text(
+        re.compile(r"^equivalence partitioning \(")
+    )
 
 
 @pytest.mark.req("NFR-11")
@@ -270,7 +272,6 @@ def test_section_43_theory_and_quiz(page, istqb_url):
     expect(page.get_by_test_id("quiz-question")).to_have_count(5)
 
 
-
 # ---------- chapter pages ----------
 
 
@@ -316,7 +317,9 @@ def test_official_samples_links(page, istqb_url):
     links = page.get_by_test_id("sample-link")
     assert links.count() >= 4
     for i in range(links.count()):
-        expect(links.nth(i)).to_have_attribute("href", re.compile(r"^https://(www\.)?(istqb\.org|rstqb\.org)/"))
+        expect(links.nth(i)).to_have_attribute(
+            "href", re.compile(r"^https://(www\.)?(istqb\.org|rstqb\.org)/")
+        )
 
 
 @pytest.mark.req("NFR-11")

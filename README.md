@@ -10,7 +10,7 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 
 > All data is fictional. Card numbers use the fake prefix `400000`.
 
-[![CI](https://github.com/Tomullya/card-wallet/actions/workflows/ci.yml/badge.svg)](https://github.com/Tomullya/card-wallet/actions/workflows/ci.yml)  ·  **Allure report:** https://tomullya.github.io/card-wallet/  ·  **gRPC trainer:** https://tomullya.github.io/card-wallet/grpc-lab/
+[![CI](https://github.com/Tomullya/card-wallet/actions/workflows/ci.yml/badge.svg)](https://github.com/Tomullya/card-wallet/actions/workflows/ci.yml)  ·  **Allure report:** https://tomullya.github.io/card-wallet/  ·  **gRPC trainer:** https://tomullya.github.io/card-wallet/grpc-lab/  ·  **ISTQB trainer:** https://tomullya.github.io/card-wallet/istqb/
 
 ## What this project demonstrates
 
@@ -21,6 +21,7 @@ AI assistant; I drove the scope, requirements and review, and the QA design is m
 | REST API testing (positive, negative, boundary, auth, IDOR) | [`tests/api/`](tests/api/) — pytest + httpx |
 | gRPC testing: all 4 call types (unary, server / client / bidirectional streaming), metadata auth, request ids, deadlines, every status code | [`tests/grpc/`](tests/grpc/), [`tests/integration/`](tests/integration/) |
 | **Interactive gRPC trainer (RU/EN):** comics, a sandbox checked against the real service for every scenario in CI, quizzes | **[tomullya.github.io/card-wallet/grpc-lab](https://tomullya.github.io/card-wallet/grpc-lab/)** · source [`site/grpc-lab/`](site/grpc-lab/) |
+| **ISTQB Foundation (CTFL v4.0.1) trainer (RU/EN):** all 64 learning objectives explained on this project's own requirements and bugs, 186 original questions, technique trainers on the real wallet rules (pinned to the code by tests), 40-question mock exam | **[tomullya.github.io/card-wallet/istqb](https://tomullya.github.io/card-wallet/istqb/)** · source [`site/istqb/`](site/istqb/) |
 | gRPC exercises: 9 lessons with auto-checked tests | [`docs/grpc-lab/`](docs/grpc-lab/README.md), [`grpc-lab/`](grpc-lab/) |
 | SQL checks on stored data | [`tests/db/`](tests/db/) |
 | Contract testing against OpenAPI | [`tests/contract/`](tests/contract/) — schemathesis |
@@ -79,17 +80,17 @@ Postman: import `postman/card-wallet.postman_collection.json` and
 gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection); add metadata
 `x-api-key: dev-wallet-key`. Step-by-step lessons: [`docs/grpc-lab/`](docs/grpc-lab/README.md).
 
-## Automated tests — 409 (+41 simulator tests in Node)
+## Automated tests — 662 (+64 Node tests: gRPC simulator and ISTQB trainer logic)
 
 | Level | Folder | Tests | What it checks |
 |---|---|---|---|
-| Unit | `tests/unit` | 67 | Commission, Luhn, expiry, money rounding, fraud rules, API-key roles, event hub, trainer texts RU/EN, QA tooling |
+| Unit | `tests/unit` | 287 | Commission, Luhn, expiry, money rounding, fraud rules, API-key roles, event hub, trainer texts RU/EN, QA tooling; ISTQB content (every learning objective covered, question shape) and trainer rules pinned to the wallet code |
 | API | `tests/api` | 138 | Every endpoint: positive, negative, boundaries, auth, other clients' data, idempotency, parallel payments |
 | Integration | `tests/integration` | 5 | Wallet ↔ Fraud Service: approve, decline, timeout, error; REST payment appears in the gRPC event stream |
 | gRPC | `tests/grpc` | 87 | Fraud Service directly: 4 call types, metadata, deadlines, cancellation, limits, every status code, reflection, health; every trainer-sandbox scenario against the real service |
 | Database | `tests/db` | 9 | Stored data, no plaintext card data, balance = sum of transactions |
 | Contract | `tests/contract` | 1 (14 endpoints) | Generated requests never cause 5xx; responses and status codes match OpenAPI |
-| E2E (browser) | `tests/e2e` | 102 | Wallet: register → account → top-up → card → pay → statement; errors, session expiry, double click. gRPC trainer site: lessons, RU/EN, themes, sandbox presets, quizzes, progress |
+| E2E (browser) | `tests/e2e` | 135 | Wallet: register → account → top-up → card → pay → statement; errors, session expiry, double click. gRPC trainer site: lessons, RU/EN, themes, sandbox presets, quizzes, progress. ISTQB trainer: navigation, technique trainers, quizzes, glossary, full mock exam, reload and language switch mid-exam |
 
 Counts include parametrized cases. Every test is tagged with the requirements it covers
 (`@pytest.mark.req("BR-PAY-03")`); `scripts/traceability.py` builds the matrix and fails CI

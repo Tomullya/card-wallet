@@ -22,8 +22,8 @@ step "Frontend type check and build"
 npm --prefix frontend ci --no-audit --no-fund --silent
 npm --prefix frontend run build --silent
 
-step "gRPC Lab site: simulator tests (Node)"
-node --test "site/grpc-lab/tests/*.test.mjs"
+step "Trainer sites: logic tests (Node)"
+node --test "site/grpc-lab/tests/*.test.mjs" "site/istqb/tests/*.test.mjs"
 
 step "Unit tests (no services needed)"
 "$PY" -m pytest tests/unit -q
@@ -61,5 +61,10 @@ step "gRPC Lab site next to the Allure report (published on GitHub Pages)"
 mkdir -p reports/allure-report/grpc-lab
 cp -R site/grpc-lab/. reports/allure-report/grpc-lab/
 rm -rf reports/allure-report/grpc-lab/tests
+
+step "ISTQB Lab site next to the Allure report (published on GitHub Pages)"
+mkdir -p reports/allure-report/istqb
+cp -R site/istqb/. reports/allure-report/istqb/
+rm -rf reports/allure-report/istqb/tests
 
 printf '\nCI OK\n'

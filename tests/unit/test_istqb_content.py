@@ -12,12 +12,28 @@ CONTENT = SITE / "content"
 # Learning objectives counted in ISTQB_CTFL_Syllabus_v4.0.1.pdf (and the RSTQB RU v4.0.1 PDF).
 LO_COUNT = 64
 SECTIONS = [
-    "1.1", "1.2", "1.3", "1.4", "1.5",
-    "2.1", "2.2", "2.3",
-    "3.1", "3.2",
-    "4.1", "4.2", "4.3", "4.4", "4.5",
-    "5.1", "5.2", "5.3", "5.4", "5.5",
-    "6.1", "6.2",
+    "1.1",
+    "1.2",
+    "1.3",
+    "1.4",
+    "1.5",
+    "2.1",
+    "2.2",
+    "2.3",
+    "3.1",
+    "3.2",
+    "4.1",
+    "4.2",
+    "4.3",
+    "4.4",
+    "4.5",
+    "5.1",
+    "5.2",
+    "5.3",
+    "5.4",
+    "5.5",
+    "6.1",
+    "6.2",
 ]
 
 
@@ -30,7 +46,12 @@ def syllabus():
 
 
 def all_los():
-    return {lo["id"]: (s["id"], lo) for c in syllabus()["chapters"] for s in c["sections"] for lo in s["los"]}
+    return {
+        lo["id"]: (s["id"], lo)
+        for c in syllabus()["chapters"]
+        for s in c["sections"]
+        for lo in s["los"]
+    }
 
 
 def questions():

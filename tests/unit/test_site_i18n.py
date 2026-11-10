@@ -48,9 +48,7 @@ def test_lessons_reference_existing_keys():
 
 @pytest.mark.req("NFR-09")
 def test_nine_lessons():
-    assert [lesson["id"] for lesson in load("content/lessons.json")] == [
-        f"0{i}" for i in range(9)
-    ]
+    assert [lesson["id"] for lesson in load("content/lessons.json")] == [f"0{i}" for i in range(9)]
 
 
 # ---------- ISTQB Lab (NFR-11) ----------
@@ -70,7 +68,11 @@ def istqb_used_keys() -> set[str]:
     for path in (ISTQB / "js").glob("*.js"):
         keys |= set(re.findall(r'\bt\("([\w.]+)"', path.read_text(encoding="utf-8")))
     keys |= {f"tab.{n}" for n in ("theory", "terms", "quiz", "trainer")}
-    keys |= {f"page.{p}.{part}" for p in ("home", "glossary", "exam") for part in ("kicker", "title", "subtitle")}
+    keys |= {
+        f"page.{p}.{part}"
+        for p in ("home", "glossary", "exam")
+        for part in ("kicker", "title", "subtitle")
+    }
     return keys
 
 
