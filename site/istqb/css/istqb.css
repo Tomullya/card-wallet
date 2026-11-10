@@ -1,0 +1,108 @@
+/* ISTQB Lab: parts that the gRPC Lab does not have. */
+
+.brand__home { color: inherit; text-decoration: none; }
+
+/* ---------- chapter menu ---------- */
+.chapters ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.chapters__link,
+.sections__link {
+  display: grid;
+  align-items: center;
+  gap: 8px;
+  border-radius: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+.chapters__link { grid-template-columns: 26px 1fr; padding: 8px 8px; font-weight: 600; margin-top: 8px; }
+.sections__link { grid-template-columns: 34px 1fr auto; padding: 5px 8px; font-size: 15px; }
+.chapters__link:hover, .sections__link:hover { border-color: var(--line); }
+.chapters__link[aria-current="page"],
+.sections__link[aria-current="page"] { border-color: var(--ink); background: var(--parchment); }
+.chapters__num {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 13px/1 var(--font-display);
+}
+.chapters__name { line-height: 1.25; }
+.chapters__sections { padding-left: 14px !important; }
+.sections__num { font: 600 13px/1 var(--font-mono); color: var(--post-text); }
+.sections__name { line-height: 1.3; }
+.sections__done {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #15233B;
+  font-weight: 700;
+  font-size: 12px;
+}
+.extras { list-style: none; margin: 14px 0 0; padding: 12px 0 0; border-top: 2px solid var(--line); display: grid; gap: 6px; }
+.extras a { color: var(--ink); font-weight: 600; }
+
+/* ---------- home ---------- */
+.home__lead, .home__how { max-width: 64ch; }
+.home__how { color: var(--ink-soft); margin-top: 26px; }
+.map { list-style: none; margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.map__card {
+  display: grid;
+  gap: 8px;
+  height: 100%;
+  padding: 18px;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.map__card:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.map__num { font: 700 34px/1 var(--font-display); color: var(--post-text); }
+.map__title { font: 600 19px/1.25 var(--font-body); }
+.map__meta { font-size: 14px; color: var(--ink-soft); }
+.map__bar { height: 8px; border-radius: 999px; background: var(--halftone); position: relative; overflow: hidden; align-self: end; }
+.map__bar::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--done, 0%); background: var(--rune-ok); }
+
+/* ---------- chapter page ---------- */
+.chapter__h { font: 700 20px/1.2 var(--font-display); margin: 26px 0 12px; }
+.chapter__sections { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-width: 760px; }
+.chapter__section {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+}
+.chapter__section:hover { border-color: var(--ink); }
+.chapter__num { font: 600 15px/1 var(--font-mono); color: var(--post-text); }
+.chapter__name { font-weight: 600; }
+.chapter__meta { font-size: 14px; color: var(--ink-soft); }
+
+/* ---------- footer ---------- */
+.site-footer {
+  margin-top: 56px;
+  padding-top: 16px;
+  border-top: 2px solid var(--line);
+  font-size: 13px;
+  color: var(--ink-soft);
+  max-width: 80ch;
+}
+.site-footer p { margin: 0 0 6px; }
+
+@media (max-width: 860px) {
+  .chapters li:not(:has([aria-current])) > .chapters__sections { display: none; }
+  .chapter__section { grid-template-columns: 40px 1fr; }
+  .chapter__meta { grid-column: 2; }
+}

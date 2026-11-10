@@ -51,3 +51,40 @@ def test_nine_lessons():
     assert [lesson["id"] for lesson in load("content/lessons.json")] == [
         f"0{i}" for i in range(9)
     ]
+
+
+# ---------- ISTQB Lab (NFR-11) ----------
+
+ISTQB = SITE.parent / "istqb"
+
+
+def istqb_texts(lang: str) -> dict:
+    return json.loads((ISTQB / f"i18n/{lang}.json").read_text(encoding="utf-8"))
+
+
+def istqb_used_keys() -> set[str]:
+    """Literal t("...") keys in the code, plus keys built from route and tab names."""
+    import re
+
+    keys = set()
+    for path in (ISTQB / "js").glob("*.js"):
+        keys |= set(re.findall(r'\bt\("([\w.]+)"', path.read_text(encoding="utf-8")))
+    keys |= {f"tab.{n}" for n in ("theory", "terms", "quiz", "trainer")}
+    keys |= {f"page.{p}.{part}" for p in ("home", "glossary", "exam") for part in ("kicker", "title", "subtitle")}
+    return keys
+
+
+@pytest.mark.req("NFR-11")
+def test_istqb_same_keys_in_both_languages():
+    assert set(istqb_texts("ru")) == set(istqb_texts("en"))
+
+
+@pytest.mark.req("NFR-11")
+@pytest.mark.parametrize("lang", ["ru", "en"])
+def test_istqb_no_empty_texts(lang):
+    assert [k for k, v in istqb_texts(lang).items() if not str(v).strip()] == []
+
+
+@pytest.mark.req("NFR-11")
+def test_istqb_code_uses_existing_keys():
+    assert sorted(istqb_used_keys() - set(istqb_texts("ru"))) == []

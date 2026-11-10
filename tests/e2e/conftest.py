@@ -28,8 +28,8 @@ def signed_in(app, api):
 
 
 @pytest.fixture(scope="session")
-def lab_url():
-    """Serve site/ locally (ES modules need http://, not file://) and return the trainer URL."""
+def site_base():
+    """Serve site/ locally (ES modules need http://, not file://) and return its base URL."""
     import socket
     import subprocess
     import sys
@@ -52,6 +52,16 @@ def lab_url():
             break
         except OSError:
             time.sleep(0.1)
-    yield f"http://127.0.0.1:{port}/grpc-lab/index.html"
+    yield f"http://127.0.0.1:{port}"
     server.terminate()
     server.wait(5)
+
+
+@pytest.fixture(scope="session")
+def lab_url(site_base):
+    return f"{site_base}/grpc-lab/index.html"
+
+
+@pytest.fixture(scope="session")
+def istqb_url(site_base):
+    return f"{site_base}/istqb/index.html"

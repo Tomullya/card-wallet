@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ISTQB Lab — Card Wallet</title>
+  <meta name="description" content="ISTQB Foundation Level (CTFL v4.0.1) trainer with Card Wallet examples: theory, terms, quizzes, technique trainers, mock exam. RU/EN.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Pangolin&family=Unbounded:wght@500;700&display=swap">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/istqb.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315233B'/%3E%3Cpath d='M9 17l5 5 9-11' stroke='%23E0B25C' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="ui.skip">Skip to content</a>
+  <div class="app">
+    <aside class="rail">
+      <header class="brand">
+        <a class="brand__home" href="#/" data-testid="home-link">
+          <p class="brand__name" data-i18n="ui.brand">ISTQB Lab</p>
+        </a>
+        <p class="brand__tagline" data-i18n="ui.tagline"></p>
+      </header>
+      <div class="switches">
+        <div class="lang" role="group" data-i18n-aria="ui.language">
+          <button type="button" data-lang="ru" data-testid="lang-ru">RU</button>
+          <button type="button" data-lang="en" data-testid="lang-en">EN</button>
+        </div>
+        <button type="button" class="theme" data-testid="theme-toggle" aria-pressed="false">
+          <span class="theme__icon" aria-hidden="true"></span><span data-i18n="ui.theme"></span>
+        </button>
+      </div>
+      <nav class="chapters" data-i18n-aria="ui.chapters">
+        <ol id="chapter-list"></ol>
+        <ul class="extras">
+          <li><a href="#/glossary" data-testid="glossary-link" data-i18n="ui.glossary"></a></li>
+          <li><a href="#/exam" data-testid="exam-link" data-i18n="ui.exam"></a></li>
+        </ul>
+      </nav>
+      <p class="progress" id="progress-note"></p>
+    </aside>
+    <main id="main" class="lesson" tabindex="-1">
+      <header class="lesson__head">
+        <p class="lesson__number" id="page-kicker"></p>
+        <h1 class="lesson__title" data-testid="page-title" id="page-title"></h1>
+        <p class="lesson__subtitle" id="page-subtitle"></p>
+      </header>
+      <div class="tabs" role="tablist" id="tab-list" data-i18n-aria="ui.tabs"></div>
+      <section class="panel" id="panel" tabindex="0"></section>
+      <footer class="site-footer" data-testid="disclaimer">
+        <p id="disclaimer"></p>
+        <p id="syllabus-note"></p>
+      </footer>
+    </main>
+  </div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
