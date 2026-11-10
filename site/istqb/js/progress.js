@@ -3,8 +3,10 @@
 
 const KEY = "istqb-lab";
 let memory = {};
+let memoryOnly = false; // set once a write fails: storage can no longer be trusted
 
 function readAll() {
+  if (memoryOnly) return structuredClone(memory);
   try {
     return JSON.parse(window.localStorage.getItem(KEY) || "{}");
   } catch {
@@ -17,7 +19,7 @@ function writeAll(data) {
   try {
     window.localStorage.setItem(KEY, JSON.stringify(data));
   } catch {
-    /* storage blocked: keep the in-memory copy for this visit */
+    memoryOnly = true; // blocked or full: keep the in-memory copy for this visit
   }
 }
 

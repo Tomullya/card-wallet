@@ -80,7 +80,7 @@ Postman: import `postman/card-wallet.postman_collection.json` and
 gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection); add metadata
 `x-api-key: dev-wallet-key`. Step-by-step lessons: [`docs/grpc-lab/`](docs/grpc-lab/README.md).
 
-## Automated tests — 662 (+64 Node tests: gRPC simulator and ISTQB trainer logic)
+## Automated tests — 665 (+66 Node tests: gRPC simulator and ISTQB trainer logic)
 
 | Level | Folder | Tests | What it checks |
 |---|---|---|---|
@@ -90,7 +90,7 @@ gRPC in Postman: New → gRPC → `localhost:50051` (methods load via reflection
 | gRPC | `tests/grpc` | 87 | Fraud Service directly: 4 call types, metadata, deadlines, cancellation, limits, every status code, reflection, health; every trainer-sandbox scenario against the real service |
 | Database | `tests/db` | 9 | Stored data, no plaintext card data, balance = sum of transactions |
 | Contract | `tests/contract` | 1 (14 endpoints) | Generated requests never cause 5xx; responses and status codes match OpenAPI |
-| E2E (browser) | `tests/e2e` | 135 | Wallet: register → account → top-up → card → pay → statement; errors, session expiry, double click. gRPC trainer site: lessons, RU/EN, themes, sandbox presets, quizzes, progress. ISTQB trainer: navigation, technique trainers, quizzes, glossary, full mock exam, reload and language switch mid-exam |
+| E2E (browser) | `tests/e2e` | 138 | Wallet: register → account → top-up → card → pay → statement; errors, session expiry, double click. gRPC trainer site: lessons, RU/EN, themes, sandbox presets, quizzes, progress. ISTQB trainer: navigation, technique trainers, quizzes, glossary, full mock exam, reload and language switch mid-exam |
 
 Counts include parametrized cases. Every test is tagged with the requirements it covers
 (`@pytest.mark.req("BR-PAY-03")`); `scripts/traceability.py` builds the matrix and fails CI

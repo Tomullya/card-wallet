@@ -232,3 +232,4 @@
 .exam__samples { margin-top: 18px; padding-top: 12px; border-top: 2px solid var(--line); }
 .exam__samples h2 { font: 700 20px/1.2 var(--font-display); margin: 0 0 6px; }
 .exam__samples a { color: var(--post-text); font-weight: 600; }
+.exam__bar .exam__confirm { flex-basis: 100%; }

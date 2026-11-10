@@ -7,7 +7,10 @@ const MAX = toCents(RULES.amountMax);
 
 /** "5 000,00" → 500000 cents. Spaces (also non-breaking) are ignored, comma = decimal point. */
 export function parseAmount(text) {
-  const clean = String(text).replace(/[\s  ]/g, "").replace(",", ".");
+  const clean = String(text)
+    .replace(/[\s\u00a0\u202f]/g, "")
+    .replace(/^[\u2212\u2013]/, "-") // the site prints "−0.01"; let it be pasted back
+    .replace(",", ".");
   const m = clean.match(/^(-?)(\d+)(?:\.(\d{1,2}))?$/);
   if (!m) return { ok: false, error: "format" };
   const cents = Number(m[2]) * 100 + Number((m[3] ?? "").padEnd(2, "0"));

@@ -130,7 +130,10 @@ function inProgress(ctx, state) {
     className: "button",
     textContent: t("exam.submit"),
     dataset: { testid: "exam-submit" },
-    onclick: () => (confirm.hidden = false),
+    onclick: () => {
+      confirm.hidden = false;
+      confirm.querySelector("[data-testid=exam-confirm]").focus(); // right under the button
+    },
   });
 
   const tick = () => {
@@ -147,9 +150,8 @@ function inProgress(ctx, state) {
   return el(
     "div",
     { className: "exam" },
-    el("div", { className: "exam__bar" }, el("span", {}, "⏳ ", timer), answered, submitButton),
+    el("div", { className: "exam__bar" }, el("span", {}, "⏳ ", timer), answered, submitButton, confirm),
     list,
-    el("div", { className: "trainer__actions" }, confirm),
   );
 }
 

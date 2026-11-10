@@ -360,3 +360,41 @@ def test_exam_survives_reload(page, istqb_url):
     page.reload()
     expect(page.get_by_test_id("exam-question")).to_have_count(40)
     expect(page.get_by_test_id("exam-question").nth(2).locator("input").nth(0)).to_be_checked()
+
+
+@pytest.mark.req("NFR-11")
+def test_submit_confirmation_is_visible(page, istqb_url):
+    start_exam(page, istqb_url)
+    page.get_by_test_id("exam-question").nth(5).scroll_into_view_if_needed()
+    page.get_by_test_id("exam-submit").click()
+    expect(page.get_by_test_id("exam-confirm")).to_be_in_viewport()
+    expect(page.get_by_test_id("exam-confirm")).to_be_focused()
+
+
+@pytest.mark.req("NFR-11")
+def test_exam_submits_itself_when_time_runs_out(page, istqb_url):
+    start_exam(page, istqb_url)
+    page.get_by_test_id("exam-question").first.locator("input").nth(0).check()
+    page.evaluate(
+        """() => {
+          const data = JSON.parse(localStorage.getItem("istqb-lab"));
+          data.exam.startedAt = Date.now() - data.exam.minutes * 60000 + 1500;
+          localStorage.setItem("istqb-lab", JSON.stringify(data));
+        }"""
+    )
+    expect(page.get_by_test_id("exam-score")).to_be_visible(timeout=6000)
+    expect(page.get_by_test_id("exam-score")).to_contain_text("/ 40")
+
+
+@pytest.mark.req("NFR-11")
+def test_reload_keeps_remaining_time(page, istqb_url):
+    start_exam(page, istqb_url)
+    page.evaluate(
+        """() => {
+          const data = JSON.parse(localStorage.getItem("istqb-lab"));
+          data.exam.startedAt -= 15 * 60000;
+          localStorage.setItem("istqb-lab", JSON.stringify(data));
+        }"""
+    )
+    page.reload()
+    expect(page.get_by_test_id("exam-timer")).to_have_text(re.compile(r"^(4[0-4]|45):\d\d$"))

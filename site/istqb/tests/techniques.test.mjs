@@ -130,3 +130,8 @@ test("fraud function coverage", () => {
   assert.deepEqual(codeCoverage("fraud", ["6000|OTHER"]), { statement: 40, branch: 25 });
   assert.deepEqual(codeCoverage("fraud", ["6000|OTHER", "10|GAMBLING", "10|OTHER"]), { statement: 100, branch: 100 });
 });
+
+test("parseAmount accepts the minus sign the site itself prints (U+2212) and en dash", () => {
+  assert.deepEqual(parseAmount("−0,01"), { ok: true, cents: -1 });
+  assert.deepEqual(parseAmount("–5"), { ok: true, cents: -500 });
+});
