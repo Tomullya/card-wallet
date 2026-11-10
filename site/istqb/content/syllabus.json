@@ -1,0 +1,804 @@
+{
+ "version": "4.0.1",
+ "links": {
+  "en": "https://www.istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf",
+  "ru": "https://www.rstqb.org/ru/istqb-downloads.html?file=files/content/rstqb/downloads/ISTQB%20Downloads/ISTQB_CTFL_Syllabus-v4.0.1-RU-1.pdf&cid=13629",
+  "glossary": "https://glossary.istqb.org/",
+  "official": "https://www.istqb.com/certifications/certified-tester-foundation-level/",
+  "rstqb": "https://www.rstqb.org/ru/istqb-downloads.html",
+  "samples": [
+   {
+    "name": "A",
+    "en": "https://www.istqb.org/wp-content/uploads/sdm-uploads/ISTQB_CTFL_v4.0_Sample-Exam-A-Questions_v1.7.pdf",
+    "ru": "https://www.rstqb.org/ru/istqb-downloads.html?file=files/content/rstqb/downloads/ISTQB%20Downloads/ISTQB_CTFL_v4.0_Sample-Exam-A-Questions_v1.2_RU.pdf&cid=13629"
+   },
+   {
+    "name": "B",
+    "en": "https://www.istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_v4.0_Sample-Exam-B-Questions_v1.6.pdf",
+    "ru": null
+   },
+   {
+    "name": "C",
+    "en": "https://www.istqb.org/wp-content/uploads/sdm-uploads/ISTQB_CTFL_v4.0_Sample-Exam-C-Questions_v1.6.pdf",
+    "ru": null
+   },
+   {
+    "name": "D",
+    "en": "https://www.istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_v4.0_Sample-Exam-D-Questions_v1.4.pdf",
+    "ru": "https://www.rstqb.org/ru/istqb-downloads.html?file=files/content/rstqb/downloads/ISTQB%20Downloads/ISTQB_CTFL_v4.0_Sample-Exam-D-Questions_v1.2_RU.pdf&cid=13629"
+   }
+  ]
+ },
+ "chapters": [
+  {
+   "id": "1",
+   "minutes": 180,
+   "title": {
+    "ru": "Основы тестирования",
+    "en": "Fundamentals of Testing"
+   },
+   "sections": [
+    {
+     "id": "1.1",
+     "title": {
+      "ru": "Что такое тестирование?",
+      "en": "What is Testing?"
+     },
+     "los": [
+      {
+       "id": "FL-1.1.1",
+       "k": "K1",
+       "quote": {
+        "ru": "Определить типичные цели тестирования",
+        "en": "Identify typical test objectives"
+       }
+      },
+      {
+       "id": "FL-1.1.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Различить тестирование и отладку",
+        "en": "Differentiate testing from debugging"
+       }
+      }
+     ]
+    },
+    {
+     "id": "1.2",
+     "title": {
+      "ru": "Почему тестирование необходимо?",
+      "en": "Why is Testing Necessary?"
+     },
+     "los": [
+      {
+       "id": "FL-1.2.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить на примерах, почему тестирование необходимо",
+        "en": "Exemplify why testing is necessary"
+       }
+      },
+      {
+       "id": "FL-1.2.2",
+       "k": "K1",
+       "quote": {
+        "ru": "Запомнить связь между тестированием и обеспечением качества",
+        "en": "Recall the relation between testing and quality assurance"
+       }
+      },
+      {
+       "id": "FL-1.2.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Выделить различия между первопричиной, ошибкой, дефектом и отказом",
+        "en": "Distinguish between root cause, error, defect, and failure"
+       }
+      }
+     ]
+    },
+    {
+     "id": "1.3",
+     "title": {
+      "ru": "Принципы тестирования",
+      "en": "Testing Principles"
+     },
+     "los": [
+      {
+       "id": "FL-1.3.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить семь принципов тестирования",
+        "en": "Explain the seven testing principles"
+       }
+      }
+     ]
+    },
+    {
+     "id": "1.4",
+     "title": {
+      "ru": "Активности тестирования, тестовое обеспечение и роли в тестировании",
+      "en": "Test Activities, Testware and Test Roles"
+     },
+     "los": [
+      {
+       "id": "FL-1.4.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить различные активности и задачи тестирования",
+        "en": "Explain the different test activities and related tasks"
+       }
+      },
+      {
+       "id": "FL-1.4.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить влияние контекста на процесс тестирования",
+        "en": "Explain the impact of context on the test process"
+       }
+      },
+      {
+       "id": "FL-1.4.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Различить тестовое обеспечение, поддерживающее активности тестирования",
+        "en": "Differentiate the testware that supports the test activities"
+       }
+      },
+      {
+       "id": "FL-1.4.4",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить ценность обеспечения трассируемости",
+        "en": "Explain the value of maintaining traceability"
+       }
+      },
+      {
+       "id": "FL-1.4.5",
+       "k": "K2",
+       "quote": {
+        "ru": "Сравнить различные роли в тестировании",
+        "en": "Compare the different roles in testing"
+       }
+      }
+     ]
+    },
+    {
+     "id": "1.5",
+     "title": {
+      "ru": "Основные навыки и передовой опыт в тестировании",
+      "en": "Essential Skills and Good Practices in Testing"
+     },
+     "los": [
+      {
+       "id": "FL-1.5.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Привести примеры основных навыков, необходимых для тестирования",
+        "en": "Give examples of the generic skills required for testing"
+       }
+      },
+      {
+       "id": "FL-1.5.2",
+       "k": "K1",
+       "quote": {
+        "ru": "Запомнить преимущества командного подхода",
+        "en": "Recall the advantages of the whole team approach"
+       }
+      },
+      {
+       "id": "FL-1.5.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Выделить преимущества и недостатки независимости тестирования",
+        "en": "Distinguish the benefits and drawbacks of independence of testing"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "2",
+   "minutes": 130,
+   "title": {
+    "ru": "Тестирование в жизненном цикле разработки ПО",
+    "en": "Testing Throughout the Software Development Lifecycle"
+   },
+   "sections": [
+    {
+     "id": "2.1",
+     "title": {
+      "ru": "Тестирование в контексте жизненного цикла разработки ПО",
+      "en": "Testing in the Context of a Software Development Lifecycle"
+     },
+     "los": [
+      {
+       "id": "FL-2.1.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить влияние выбранного жизненного цикла разработки программного обеспечения на тестирование",
+        "en": "Explain the impact of the chosen software development lifecycle on testing"
+       }
+      },
+      {
+       "id": "FL-2.1.2",
+       "k": "K1",
+       "quote": {
+        "ru": "Запомнить эффективные практики тестирования, применяющиеся во всех жизненных циклах разработки программного обеспечения",
+        "en": "Recall good testing practices that apply to all software development lifecycles"
+       }
+      },
+      {
+       "id": "FL-2.1.3",
+       "k": "K1",
+       "quote": {
+        "ru": "Запомнить примеры подходов опережающего проектирования тестов в разработке программного обеспечения",
+        "en": "Recall the examples of test-first approaches to development"
+       }
+      },
+      {
+       "id": "FL-2.1.4",
+       "k": "K2",
+       "quote": {
+        "ru": "Обобщить как DevOps может влиять на тестирование",
+        "en": "Summarize how DevOps might have an impact on testing"
+       }
+      },
+      {
+       "id": "FL-2.1.5",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить подход сдвига влево",
+        "en": "Explain shift left"
+       }
+      },
+      {
+       "id": "FL-2.1.6",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, как ретроспективы могут быть использованы в качестве механизма для улучшения процесса",
+        "en": "Explain how retrospectives can be used as a mechanism for process improvement"
+       }
+      }
+     ]
+    },
+    {
+     "id": "2.2",
+     "title": {
+      "ru": "Уровни тестирования и типы тестирования",
+      "en": "Test Levels and Test Types"
+     },
+     "los": [
+      {
+       "id": "FL-2.2.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Выделить различные уровни тестирования",
+        "en": "Distinguish the different test levels"
+       }
+      },
+      {
+       "id": "FL-2.2.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Выделить различные типы тестирования",
+        "en": "Distinguish the different test types"
+       }
+      },
+      {
+       "id": "FL-2.2.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Различать подтверждающее тестирование и регрессионное тестирование",
+        "en": "Distinguish confirmation testing from regression testing"
+       }
+      }
+     ]
+    },
+    {
+     "id": "2.3",
+     "title": {
+      "ru": "Тестирование в период сопровождения",
+      "en": "Maintenance Testing"
+     },
+     "los": [
+      {
+       "id": "FL-2.3.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Обобщить тестирование в период сопровождения и его предпосылки",
+        "en": "Summarize maintenance testing and its triggers"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "3",
+   "minutes": 80,
+   "title": {
+    "ru": "Статическое тестирование",
+    "en": "Static Testing"
+   },
+   "sections": [
+    {
+     "id": "3.1",
+     "title": {
+      "ru": "Основы статического тестирования",
+      "en": "Static Testing Basics"
+     },
+     "los": [
+      {
+       "id": "FL-3.1.1",
+       "k": "K1",
+       "quote": {
+        "ru": "Узнавать типы продуктов, которые можно проанализировать с помощью методов статического тестирования",
+        "en": "Recognize types of work products that can be examined by static testing"
+       }
+      },
+      {
+       "id": "FL-3.1.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить ценность статического тестирования",
+        "en": "Explain the value of static testing"
+       }
+      },
+      {
+       "id": "FL-3.1.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Сравнить и противопоставить статическое и динамическое тестирование",
+        "en": "Compare and contrast static testing and dynamic testing"
+       }
+      }
+     ]
+    },
+    {
+     "id": "3.2",
+     "title": {
+      "ru": "Обратная связь и процесс рецензирования",
+      "en": "Feedback and Review Process"
+     },
+     "los": [
+      {
+       "id": "FL-3.2.1",
+       "k": "K1",
+       "quote": {
+        "ru": "Выявить преимущества ранней и частой обратной связи от заинтересованных сторон",
+        "en": "Identify the benefits of early and frequent stakeholder feedback"
+       }
+      },
+      {
+       "id": "FL-3.2.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Обобщить мероприятия процесса рецензирования",
+        "en": "Summarize the activities of the review process"
+       }
+      },
+      {
+       "id": "FL-3.2.3",
+       "k": "K1",
+       "quote": {
+        "ru": "Запомнить обязанности основных участников процесса рецензирования",
+        "en": "Recall which responsibilities are assigned to the principal roles when performing reviews"
+       }
+      },
+      {
+       "id": "FL-3.2.4",
+       "k": "K2",
+       "quote": {
+        "ru": "Сравнить и противопоставить разные типы рецензирования",
+        "en": "Compare and contrast the different review types"
+       }
+      },
+      {
+       "id": "FL-3.2.5",
+       "k": "K1",
+       "quote": {
+        "ru": "Запомнить факторы, способствующие успешному рецензированию",
+        "en": "Recall the factors that contribute to a successful review"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "4",
+   "minutes": 390,
+   "title": {
+    "ru": "Анализ и проектирование тестов",
+    "en": "Test Analysis and Design"
+   },
+   "sections": [
+    {
+     "id": "4.1",
+     "title": {
+      "ru": "Методы тестирования. Общие сведения",
+      "en": "Test Techniques Overview"
+     },
+     "los": [
+      {
+       "id": "FL-4.1.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Выделить различие между тестированием методом черного ящика, тестированием методом белого ящика и тестированием на основе опыта",
+        "en": "Distinguish black-box test techniques, white-box test techniques and experience-based test techniques"
+       }
+      }
+     ]
+    },
+    {
+     "id": "4.2",
+     "title": {
+      "ru": "Методы черного ящика",
+      "en": "Black-box Test Techniques"
+     },
+     "los": [
+      {
+       "id": "FL-4.2.1",
+       "k": "K3",
+       "quote": {
+        "ru": "Использовать метод эквивалентного разбиения для создания сценариев тестирования",
+        "en": "Use equivalence partitioning to derive test cases"
+       }
+      },
+      {
+       "id": "FL-4.2.2",
+       "k": "K3",
+       "quote": {
+        "ru": "Использовать метод анализа граничных значений для создания сценариев тестирования",
+        "en": "Use boundary value analysis to derive test cases"
+       }
+      },
+      {
+       "id": "FL-4.2.3",
+       "k": "K3",
+       "quote": {
+        "ru": "Использовать метод таблицы решений для создания сценариев тестирования",
+        "en": "Use decision table testing to derive test cases"
+       }
+      },
+      {
+       "id": "FL-4.2.4",
+       "k": "K3",
+       "quote": {
+        "ru": "Использовать метод таблицы переходов для создания сценариев тестирования",
+        "en": "Use state transition testing to derive test cases"
+       }
+      }
+     ]
+    },
+    {
+     "id": "4.3",
+     "title": {
+      "ru": "Методы белого ящика",
+      "en": "White-box Test Techniques"
+     },
+     "los": [
+      {
+       "id": "FL-4.3.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, в чем заключается метод тестирования операторов",
+        "en": "Explain statement testing"
+       }
+      },
+      {
+       "id": "FL-4.3.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, в чем заключается метод тестирования ветвей",
+        "en": "Explain branch testing"
+       }
+      },
+      {
+       "id": "FL-4.3.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить важность тестирования методом белого ящика",
+        "en": "Explain the value of white-box testing"
+       }
+      }
+     ]
+    },
+    {
+     "id": "4.4",
+     "title": {
+      "ru": "Тестирование на основе опыта",
+      "en": "Experience-based Test Techniques"
+     },
+     "los": [
+      {
+       "id": "FL-4.4.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, в чем заключается метод предположения об ошибках",
+        "en": "Explain error guessing"
+       }
+      },
+      {
+       "id": "FL-4.4.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, в чем заключается метод исследовательского тестирования",
+        "en": "Explain exploratory testing"
+       }
+      },
+      {
+       "id": "FL-4.4.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, в чем заключается метод тестирования на основе чек-листов",
+        "en": "Explain checklist-based testing"
+       }
+      }
+     ]
+    },
+    {
+     "id": "4.5",
+     "title": {
+      "ru": "Подходы к тестированию на основе совместной работы",
+      "en": "Collaboration-based Test Approaches"
+     },
+     "los": [
+      {
+       "id": "FL-4.5.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, как создавать пользовательские истории через совместную работу с разработчиками и представителями заказчика",
+        "en": "Explain how to write user stories in collaboration with developers and business representatives"
+       }
+      },
+      {
+       "id": "FL-4.5.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Классифицировать различные способы по созданию критериев приемки",
+        "en": "Classify the different options for writing acceptance criteria"
+       }
+      },
+      {
+       "id": "FL-4.5.3",
+       "k": "K3",
+       "quote": {
+        "ru": "Использовать разработку через приемочное тестирование для создания сценариев тестирования",
+        "en": "Use acceptance test-driven development (ATDD) to derive test cases"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "5",
+   "minutes": 335,
+   "title": {
+    "ru": "Управление тестированием",
+    "en": "Managing the Test Activities"
+   },
+   "sections": [
+    {
+     "id": "5.1",
+     "title": {
+      "ru": "Планирование тестирования",
+      "en": "Test Planning"
+     },
+     "los": [
+      {
+       "id": "FL-5.1.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Привести примеры цели и содержания плана тестирования",
+        "en": "Exemplify the purpose and content of a test plan"
+       }
+      },
+      {
+       "id": "FL-5.1.2",
+       "k": "K1",
+       "quote": {
+        "ru": "Узнать, как тестировщик повышает ценность итерации и планирования выпуска",
+        "en": "Recognize how a tester adds value to iteration and release planning"
+       }
+      },
+      {
+       "id": "FL-5.1.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Сравнить и сопоставить критерии входа и выхода",
+        "en": "Compare and contrast entry criteria and exit criteria"
+       }
+      },
+      {
+       "id": "FL-5.1.4",
+       "k": "K3",
+       "quote": {
+        "ru": "Использовать методы оценки для определения необходимых трудозатрат для тестирования",
+        "en": "Use estimation techniques to calculate the required test effort"
+       }
+      },
+      {
+       "id": "FL-5.1.5",
+       "k": "K3",
+       "quote": {
+        "ru": "Применять определение приоритетов сценариев тестирования",
+        "en": "Apply test case prioritization"
+       }
+      },
+      {
+       "id": "FL-5.1.6",
+       "k": "K1",
+       "quote": {
+        "ru": "Запомнить концепцию пирамиды тестирования",
+        "en": "Recall the concepts of the test pyramid"
+       }
+      },
+      {
+       "id": "FL-5.1.7",
+       "k": "K2",
+       "quote": {
+        "ru": "Обобщить квадранты тестирования и их взаимосвязь с уровнями и типами тестирования",
+        "en": "Summarize the testing quadrants and their relationships with test levels and test types"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5.2",
+     "title": {
+      "ru": "Управление рисками",
+      "en": "Risk Management"
+     },
+     "los": [
+      {
+       "id": "FL-5.2.1",
+       "k": "K1",
+       "quote": {
+        "ru": "Определить уровень рисков, используя вероятность и влияние рисков",
+        "en": "Identify risk level by using risk likelihood and risk impact"
+       }
+      },
+      {
+       "id": "FL-5.2.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Выделить риски проекта и риски продукта",
+        "en": "Distinguish between project risks and product risks"
+       }
+      },
+      {
+       "id": "FL-5.2.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, как анализ рисков может повлиять на тщательность и объем тестирования",
+        "en": "Explain how product risk analysis may influence thoroughness and test scope"
+       }
+      },
+      {
+       "id": "FL-5.2.4",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, какие меры могут быть приняты по результатам анализа рисков продукта",
+        "en": "Explain what measures can be taken in response to analyzed product risks"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5.3",
+     "title": {
+      "ru": "Контроль и мониторинг тестирования. Завершение тестирования",
+      "en": "Test Monitoring, Test Control and Test Completion"
+     },
+     "los": [
+      {
+       "id": "FL-5.3.1",
+       "k": "K1",
+       "quote": {
+        "ru": "Запомнить метрики, используемые для тестирования",
+        "en": "Recall metrics used for testing"
+       }
+      },
+      {
+       "id": "FL-5.3.2",
+       "k": "K2",
+       "quote": {
+        "ru": "Обобщить цель, содержание и целевые аудитории отчетов о тестировании",
+        "en": "Summarize the purposes, content, and audiences for test reports"
+       }
+      },
+      {
+       "id": "FL-5.3.3",
+       "k": "K2",
+       "quote": {
+        "ru": "Привести примеры как сообщать о статусе тестирования",
+        "en": "Exemplify how to communicate the status of testing"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5.4",
+     "title": {
+      "ru": "Управление конфигурацией",
+      "en": "Configuration Management"
+     },
+     "los": [
+      {
+       "id": "FL-5.4.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Обобщить, как управление конфигурацией поддерживает тестирование",
+        "en": "Summarize how configuration management supports testing"
+       }
+      }
+     ]
+    },
+    {
+     "id": "5.5",
+     "title": {
+      "ru": "Управление дефектами",
+      "en": "Defect Management"
+     },
+     "los": [
+      {
+       "id": "FL-5.5.1",
+       "k": "K3",
+       "quote": {
+        "ru": "Подготовить отчет о дефекте",
+        "en": "Prepare a defect report"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "6",
+   "minutes": 20,
+   "title": {
+    "ru": "Инструменты тестирования",
+    "en": "Test Tools"
+   },
+   "sections": [
+    {
+     "id": "6.1",
+     "title": {
+      "ru": "Инструменты поддержки тестирования",
+      "en": "Tool Support for Testing"
+     },
+     "los": [
+      {
+       "id": "FL-6.1.1",
+       "k": "K2",
+       "quote": {
+        "ru": "Объяснить, как различные типы инструментов поддерживают тестирование",
+        "en": "Explain how different types of test tools support testing"
+       }
+      }
+     ]
+    },
+    {
+     "id": "6.2",
+     "title": {
+      "ru": "Преимущества и риски автоматизации тестирования",
+      "en": "Benefits and Risks of Test Automation"
+     },
+     "los": [
+      {
+       "id": "FL-6.2.1",
+       "k": "K1",
+       "quote": {
+        "ru": "Выявить преимущества и риски автоматизации тестирования",
+        "en": "Recall the benefits and risks of test automation"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

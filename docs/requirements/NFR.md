@@ -49,3 +49,23 @@ Acceptance criteria:
 The site's sandbox simulates the Fraud Service. Every sandbox scenario
 (`site/grpc-lab/scenarios.json`) gives the same status code and key fields in the simulator and
 in the real service (planted-defect scenarios against `fraud-buggy`).
+
+## NFR-11 ISTQB trainer site
+An ISTQB Certified Tester Foundation Level (CTFL v4.0.1) trainer is published as a public site
+(`https://tomullya.github.io/card-wallet/istqb/`).
+
+Acceptance criteria:
+- 6 chapters and 22 sections of the syllabus; every learning objective has an own explanation,
+  a Card Wallet example and at least two own questions.
+- Section tabs: theory, terms, quiz; technique trainers for sections 4.2 and 4.3.
+- Russian and English with identical UI keys; terms always shown in both languages.
+- Glossary with search; mock exam of 40 questions (8/6/4/11/9/2 by chapter), 60 minutes
+  (75 with the non-native option), pass mark 26.
+- Only learning-objective wording and short definitions are quoted, each with its source;
+  official sample exams are linked, never reproduced. A disclaimer is on every page.
+- Progress is kept in the browser; the site still works when browser storage is blocked.
+
+## NFR-12 Trainer rules match the wallet
+Numbers and rules used by the ISTQB technique trainers (fraud threshold, amount and daily-limit
+ranges, wrong-CVV attempts, currencies, categories, card states) equal the constants in the
+wallet and fraud-service code.
