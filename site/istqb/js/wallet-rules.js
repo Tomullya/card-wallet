@@ -43,7 +43,8 @@ export const cardEvents = ["wrongCvv3", "blockByClient", "expiryPassed"];
 
 /**
  * Small programs for statement and branch coverage, written as pseudo-code of real wallet
- * functions. run(input) returns the executed line numbers and the decision outcomes taken.
+ * functions. Lines are numbered from 1. edges = the branches of the control flow graph
+ * (§4.3.2: unconditional and conditional). run(input) returns the executed lines and edges.
  */
 export const PROGRAMS = {
   commission: {
@@ -54,16 +55,17 @@ export const PROGRAMS = {
       "    commission = 0.50",
       "return commission",
     ],
-    decisions: ["d1"],
+    edges: ["1→2", "2→3", "2→4", "3→4"],
+    inputHint: "10.00",
     run(input) {
-      const cents = toCents(input);
-      const commission = Math.round(cents / 100);
-      const small = commission < toCents(RULES.minCommission);
-      return { lines: small ? [1, 2, 3, 4] : [1, 2, 4], branches: [`d1:${small}`] };
+      const small = Math.round(toCents(input) / 100) < toCents(RULES.minCommission);
+      return small
+        ? { lines: [1, 2, 3, 4], edges: ["1→2", "2→3", "3→4"] }
+        : { lines: [1, 2, 4], edges: ["1→2", "2→4"] };
     },
   },
   fraud: {
-    // fraud-service/fraud_service/rules.py evaluate
+    // fraud-service/fraud_service/rules.py evaluate; each return ends the function
     lines: [
       "if amount > 5000.00:",
       "    return DECLINE, HIGH_AMOUNT",
@@ -71,12 +73,13 @@ export const PROGRAMS = {
       "    return DECLINE, BLOCKED_CATEGORY",
       "return APPROVE",
     ],
-    decisions: ["d1", "d2"],
+    edges: ["1→2", "1→3", "3→4", "3→5"],
+    inputHint: "6000|OTHER",
     run(input) {
       const [amount, category] = input.split("|");
-      if (toCents(amount) > THRESHOLD) return { lines: [1, 2], branches: ["d1:true"] };
-      if (category === "GAMBLING") return { lines: [1, 3, 4], branches: ["d1:false", "d2:true"] };
-      return { lines: [1, 3, 5], branches: ["d1:false", "d2:false"] };
+      if (toCents(amount) > THRESHOLD) return { lines: [1, 2], edges: ["1→2"] };
+      if ((category ?? "").trim() === "GAMBLING") return { lines: [1, 3, 4], edges: ["1→3", "3→4"] };
+      return { lines: [1, 3, 5], edges: ["1→3", "3→5"] };
     },
   },
 };

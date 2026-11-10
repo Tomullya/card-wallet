@@ -1,0 +1,75 @@
+{
+ "id": "4.3",
+ "trainers": ["coverage"],
+ "objectives": [
+  {
+   "lo": "FL-4.3.1",
+   "explain": {
+    "ru": [
+     "Тестирование операторов — метод белого ящика: мы смотрим в код и подбираем тесты так, чтобы выполнилась каждая исполнимая строка (оператор). Элемент покрытия — исполнимый оператор.",
+     "Покрытие операторов = выполненные операторы ÷ все исполнимые операторы × 100%. 100% означает, что каждая строка выполнилась хотя бы раз, значит, строка с дефектом тоже выполнится и, возможно, вызовет отказ.",
+     "Но 100% покрытия операторов не гарантирует, что дефект найден. Дефекты, зависящие от данных, могут не проявиться: деление на ноль падает только когда делитель равен нулю. И самое важное для экзамена: 100% операторов не означает, что проверена вся логика решений — некоторые ветви могут остаться непройденными."
+    ],
+    "en": [
+     "Statement testing is a white-box technique: we look at the code and design tests so that every executable statement runs. The coverage item is an executable statement.",
+     "Statement coverage = executed statements ÷ all executable statements × 100%. 100% means every statement ran at least once, so a statement with a defect also runs and may cause a failure.",
+     "But 100% statement coverage does not guarantee that a defect is found. Data-dependent defects may stay hidden: division by zero fails only when the denominator is zero. Most important for the exam: 100% statements does not mean all decision logic was tested — some branches may never be taken."
+    ]
+   },
+   "wallet": {
+    "ru": "Функция комиссии кошелька: «комиссия = 1% от суммы; если комиссия < 0,50 — комиссия = 0,50; вернуть комиссию». Один тест с суммой 10,00 выполняет все 4 строки — 100% покрытия операторов. При этом случай «комиссия ≥ 0,50» (например, 100,00) не проверен ни разу. Проверьте во вкладке «Тренажёр».",
+    "en": "The wallet's commission function: \"commission = 1% of the amount; if commission < 0.50 — commission = 0.50; return commission\". One test with 10.00 runs all 4 lines — 100% statement coverage. Yet the \"commission ≥ 0.50\" case (e.g. 100.00) is never tested. Try it in the Trainer tab.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/wallet-api/app/services/money.py"
+   }
+  },
+  {
+   "lo": "FL-4.3.2",
+   "explain": {
+    "ru": [
+     "Ветвь — это передача управления между двумя узлами графа потока управления (схемы, в каком порядке могут выполняться операторы). Ветви бывают безусловные (код идёт подряд) и условные (исход решения: истина или ложь в if, вариант switch/case, выход из цикла или продолжение).",
+     "В тестировании ветвей элемент покрытия — ветвь. Покрытие ветвей = пройденные ветви ÷ все ветви × 100%. При 100% пройдены все ветви — и безусловные, и условные.",
+     "Покрытие ветвей включает в себя покрытие операторов: любые тесты со 100% ветвей дают и 100% операторов, но не наоборот. И даже 100% ветвей не находит всё: например, дефекты, для которых нужен определённый путь через код."
+    ],
+    "en": [
+     "A branch is a transfer of control between two nodes of the control flow graph (a picture of the possible orders in which statements run). Branches are unconditional (straight-line code) or conditional (a decision outcome: true or false of an if, a switch/case outcome, exiting or continuing a loop).",
+     "In branch testing the coverage item is a branch. Branch coverage = exercised branches ÷ all branches × 100%. At 100% every branch, unconditional and conditional, has been exercised.",
+     "Branch coverage subsumes statement coverage: any tests with 100% branches also have 100% statements, but not vice versa. Even 100% branches does not find everything — e.g. defects that need a specific path through the code."
+    ]
+   },
+   "wallet": {
+    "ru": "В функции комиссии 4 ветви: 1→2 и 3→4 (безусловные), 2→3 (условие истинно) и 2→4 (условие ложно). Тест 10,00 проходит 3 из 4 — 75%. Добавляем тест 100,00 — ветвь 2→4 пройдена, 100%. Ветвь 2→3 важна: в «багованной» сборке кошелька её выкинули, и минимальная комиссия 0,50 перестала работать — это BUG-01, его ловит тест с маленькой суммой.",
+    "en": "The commission function has 4 branches: 1→2 and 3→4 (unconditional), 2→3 (condition true) and 2→4 (condition false). The 10.00 test takes 3 of 4 — 75%. Adding a 100.00 test takes 2→4 — 100%. Branch 2→3 matters: the buggy build of the wallet dropped it and the 0.50 minimum commission stopped working — that is BUG-01, caught by a test with a small amount.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-01.md"
+   }
+  },
+  {
+   "lo": "FL-4.3.3",
+   "explain": {
+    "ru": [
+     "Главная сила методов белого ящика — при тестировании учитывается вся программная реализация. Поэтому они помогают находить дефекты, даже когда спецификация расплывчатая, устаревшая или неполная.",
+     "Обратная сторона: если какое-то требование вообще не реализовано, в коде нечего покрывать — белый ящик такой дефект «упущения» может не заметить.",
+     "Методы белого ящика применимы и в статическом тестировании: например, при «сухом прогоне» кода (выполнении в уме), при рецензировании кода, который ещё нельзя запустить, псевдокода и другой логики, которую можно нарисовать графом потока управления.",
+     "Одно лишь тестирование черным ящиком не позволяет измерить фактическое покрытие кода. Метрики белого ящика дают объективную оценку покрытия и подсказывают, какие тесты добавить, чтобы повысить уверенность в коде."
+    ],
+    "en": [
+     "The key strength of white-box techniques is that the whole software implementation is taken into account. So they help find defects even when the specification is vague, outdated or incomplete.",
+     "The flip side: if a requirement is not implemented at all, there is no code to cover — white-box testing may miss such defects of omission.",
+     "White-box techniques also work in static testing: e.g. dry runs of code, reviewing code not yet ready to run, pseudocode and other logic that can be drawn as a control flow graph.",
+     "Black-box testing alone gives no measure of actual code coverage. White-box coverage measures are objective and show which tests to add to increase coverage and confidence in the code."
+    ]
+   },
+   "wallet": {
+    "ru": "BUG-10 в Card Wallet нашли именно чтением кода: независимое ревью заметило, что полный номер карты можно восстановить из хранимого хеша. Тесты черного ящика по требованиям вряд ли показали бы это — и это пример белого ящика в статическом тестировании. А пример упущения: в требованиях сказано «разблокировка не поддерживается» — если бы она требовалась, но её не написали, покрытие существующего кода этого бы не выявило.",
+    "en": "BUG-10 in Card Wallet was found by reading the code: an independent review noticed that the full card number could be recovered from its stored hash. Black-box tests from the requirements would hardly have shown it — and it is white-box thinking applied in static testing. An omission example: the requirements say \"unblocking is not supported\" — had it been required but never written, coverage of the existing code would not reveal it.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-10.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "метод тестирования белого ящика", "en": "white-box test technique", "explain": {"ru": "Метод, основанный на анализе внутренней структуры объекта тестирования (кода).", "en": "A technique based on the internal structure of the test object (its code)."}},
+  {"ru": "покрытие операторов", "en": "statement coverage", "explain": {"ru": "Доля исполнимых операторов, выполненных тестами, в процентах.", "en": "The percentage of executable statements exercised by tests."}},
+  {"ru": "покрытие ветвей", "en": "branch coverage", "explain": {"ru": "Доля ветвей графа потока управления (безусловных и условных), пройденных тестами.", "en": "The percentage of control-flow-graph branches (unconditional and conditional) exercised by tests."}},
+  {"ru": "граф потока управления", "en": "control flow graph", "explain": {"ru": "Схема возможных последовательностей выполнения операторов; рёбра графа — ветви.", "en": "A picture of the possible sequences in which statements run; its edges are the branches."}},
+  {"ru": "дефект упущения, недоработка", "en": "defect of omission", "explain": {"ru": "Нереализованное требование: кода нет, поэтому покрытие кода его не покажет.", "en": "A requirement that was never implemented: there is no code, so code coverage cannot reveal it."}}
+ ]
+}

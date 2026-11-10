@@ -9,7 +9,7 @@ import {
   parseAmount,
   stateCoverage,
 } from "../js/techniques.js";
-import { RULES, cardTransitions, fraudDecision } from "../js/wallet-rules.js";
+import { PROGRAMS, RULES, cardTransitions, fraudDecision } from "../js/wallet-rules.js";
 
 test("parseAmount accepts comma and spaces", () => {
   assert.deepEqual(parseAmount("5 000,00"), { ok: true, cents: 500000 });
@@ -118,10 +118,12 @@ test("model follows the requirements: blocking an expired card is invalid (BUG-1
   assert.equal(cardTransitions.length, 4);
 });
 
-test("commission: one small payment gives 100 % statements but 50 % branches", () => {
-  assert.deepEqual(codeCoverage("commission", ["10.00"]), { statement: 100, branch: 50 });
-  assert.deepEqual(codeCoverage("commission", ["10.00", "100.00"]), { statement: 100, branch: 100 });
+test("commission: branches include unconditional ones (control flow graph, §4.3.2)", () => {
+  // edges: 1→2 (straight), 2→3 (if true), 2→4 (if false), 3→4 (straight) = 4 branches
+  assert.equal(PROGRAMS.commission.edges.length, 4);
+  assert.deepEqual(codeCoverage("commission", ["10.00"]), { statement: 100, branch: 75 });
   assert.deepEqual(codeCoverage("commission", ["100.00"]), { statement: 75, branch: 50 });
+  assert.deepEqual(codeCoverage("commission", ["10.00", "100.00"]), { statement: 100, branch: 100 });
 });
 
 test("fraud function coverage", () => {

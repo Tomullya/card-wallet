@@ -165,19 +165,27 @@ export function stateCoverage(transitions, testCases, start = "ACTIVE") {
   };
 }
 
-/** Statement and branch coverage (whole percent) of one of the PROGRAMS for the inputs. */
-export function codeCoverage(programId, inputs) {
+/** Statement and branch coverage of one of the PROGRAMS, plus the exercised lines and edges. */
+export function codeTrace(programId, inputs) {
   const program = PROGRAMS[programId];
   const lines = new Set();
-  const branches = new Set();
+  const edges = new Set();
   for (const input of inputs) {
     const trace = program.run(input);
     trace.lines.forEach((l) => lines.add(l));
-    trace.branches.forEach((b) => branches.add(b));
+    trace.edges.forEach((e) => edges.add(e));
   }
   const pct = (n, total) => Math.round((100 * n) / total);
   return {
     statement: pct(lines.size, program.lines.length),
-    branch: pct(branches.size, program.decisions.length * 2),
+    branch: pct(edges.size, program.edges.length),
+    lines: [...lines].sort((a, b) => a - b),
+    edges: program.edges.filter((e) => edges.has(e)),
   };
+}
+
+/** Statement and branch coverage (whole percent) of one of the PROGRAMS for the inputs. */
+export function codeCoverage(programId, inputs) {
+  const { statement, branch } = codeTrace(programId, inputs);
+  return { statement, branch };
 }

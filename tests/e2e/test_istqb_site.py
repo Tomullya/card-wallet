@@ -194,3 +194,78 @@ def test_bva_trainer_variant_switch(page, istqb_url):
     expect(trainer.get_by_test_id("trainer-result")).to_contain_text("50%")
     expect(trainer.get_by_test_id("missing")).to_contain_text("4999.99")
     expect(trainer.get_by_test_id("missing")).to_contain_text("5000.02")
+
+
+# ---------- trainers: decision table, state transitions, code coverage ----------
+
+
+@pytest.mark.req("NFR-11", "NFR-12")
+def test_decision_table_trainer_finds_missing_column(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/trainer")
+    trainer = page.get_by_test_id("trainer-decision")
+    selects = trainer.get_by_test_id("dt-action")
+    expect(selects).to_have_count(4)
+    selects.nth(0).select_option("DECLINE_HIGH")
+    selects.nth(1).select_option("DECLINE_HIGH")
+    selects.nth(2).select_option("DECLINE_CATEGORY")
+    trainer.get_by_test_id("trainer-check").click()
+    result = trainer.get_by_test_id("trainer-result")
+    expect(result).to_contain_text("75%")
+    expect(result.get_by_test_id("missing")).to_be_visible()
+    expect(result.get_by_test_id("dt-minimised")).to_be_visible()
+
+
+@pytest.mark.req("NFR-11", "NFR-12")
+def test_decision_table_trainer_flags_wrong_action(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/trainer")
+    trainer = page.get_by_test_id("trainer-decision")
+    selects = trainer.get_by_test_id("dt-action")
+    for i, action in enumerate(["DECLINE_CATEGORY", "DECLINE_HIGH", "DECLINE_CATEGORY", "APPROVE"]):
+        selects.nth(i).select_option(action)
+    trainer.get_by_test_id("trainer-check").click()
+    expect(trainer.get_by_test_id("dt-wrong")).to_be_visible()
+
+
+@pytest.mark.req("NFR-11", "NFR-12")
+def test_state_trainer_counts_transitions(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.2/trainer")
+    trainer = page.get_by_test_id("trainer-state")
+    trainer.get_by_test_id("event-blockByClient").click()
+    trainer.get_by_test_id("event-expiryPassed").click()
+    result = trainer.get_by_test_id("trainer-result")
+    expect(result.get_by_test_id("state-valid")).to_contain_text("50%")
+    expect(result.get_by_test_id("state-states")).to_contain_text("67%")
+    trainer.get_by_test_id("state-new-test").click()
+    trainer.get_by_test_id("event-expiryPassed").click()
+    trainer.get_by_test_id("event-blockByClient").click()
+    expect(result.get_by_test_id("state-invalid")).to_contain_text("BUG-13")
+    steps = trainer.get_by_test_id("state-test")
+    expect(steps.nth(0)).to_contain_text("BLOCKED")
+    expect(steps.nth(1)).to_contain_text("EXPIRED")
+    expect(steps.nth(1)).to_contain_text("✗")
+    expect(result.get_by_test_id("state-states")).to_contain_text("100%")
+
+
+@pytest.mark.req("NFR-11", "NFR-12")
+def test_coverage_trainer_statement_vs_branch(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.3/trainer")
+    trainer = page.get_by_test_id("trainer-coverage")
+    trainer.get_by_test_id("trainer-input").fill("10")
+    trainer.get_by_test_id("trainer-check").click()
+    result = trainer.get_by_test_id("trainer-result")
+    expect(result.get_by_test_id("cov-statement")).to_contain_text("100%")
+    expect(result.get_by_test_id("cov-branch")).to_contain_text("75%")
+    expect(trainer.locator('[data-testid="code-line"][data-hit="true"]')).to_have_count(4)
+    trainer.get_by_test_id("cov-program-fraud").check()
+    trainer.get_by_test_id("trainer-input").fill("6000 OTHER\n10 GAMBLING\n10 OTHER")
+    trainer.get_by_test_id("trainer-check").click()
+    expect(result.get_by_test_id("cov-branch")).to_contain_text("100%")
+
+
+@pytest.mark.req("NFR-11")
+def test_section_43_theory_and_quiz(page, istqb_url):
+    open_site(page, istqb_url, "#/s/4.3/theory")
+    expect(page.get_by_test_id("objective")).to_have_count(3)
+    page.get_by_test_id("tab-quiz").click()
+    expect(page.get_by_test_id("quiz-question")).to_have_count(5)
+

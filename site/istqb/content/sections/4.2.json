@@ -1,6 +1,6 @@
 {
  "id": "4.2",
- "trainers": ["ep", "bva"],
+ "trainers": ["ep", "bva", "decision", "state"],
  "objectives": [
   {
    "lo": "FL-4.2.1",

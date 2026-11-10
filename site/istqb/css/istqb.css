@@ -177,3 +177,20 @@
 @media (max-width: 700px) {
   .trainer__verdict { grid-template-columns: 1fr; }
 }
+
+/* ---------- decision table, state, coverage trainers ---------- */
+.dt-wrap { overflow-x: auto; }
+.dt { border-collapse: collapse; margin: 6px 0; font-size: 15px; }
+.dt th, .dt td { border: 2px solid var(--line); padding: 8px 10px; text-align: center; }
+.dt th[scope="row"] { text-align: left; font-weight: 600; }
+.dt td { font: 600 15px/1 var(--font-mono); }
+.dt select { font: 500 14px/1.2 var(--font-body); color: var(--ink); background: var(--paper); border: 2px solid var(--ink); border-radius: 8px; padding: 6px; }
+.dt--small td { font-size: 14px; }
+.state__diagram { max-width: 560px; }
+.state__svg { width: 100%; height: auto; }
+.state__events, .state__controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.state__tests { margin: 4px 0; padding-left: 22px; font: 400 14px/1.6 var(--font-mono); }
+.code-listing { margin: 10px 0; padding: 12px 12px 12px 44px; background: var(--parchment); border: 2px solid var(--line); border-radius: 10px; font: 400 14px/1.7 var(--font-mono); }
+.code-listing li { padding: 0 6px; border-radius: 4px; }
+.code-listing li[data-hit="true"] { background: color-mix(in srgb, var(--rune-ok) 22%, transparent); }
+.code-listing code { white-space: pre-wrap; }
