@@ -1,0 +1,59 @@
+{
+ "id": "6.1",
+ "objectives": [
+  {
+   "lo": "FL-6.1.1",
+   "explain": {
+    "ru": [
+     "Инструменты поддерживают многие работы тестирования. Основные типы: управления тестированием (требования, тесты, дефекты, конфигурация, жизненный цикл); статического тестирования (помогают в рецензировании и статическом анализе); проектирования и реализации тестов (генерируют сценарии, тестовые данные, процедуры); выполнения тестов и измерения покрытия; нефункционального тестирования (то, что вручную трудно или невозможно — например, нагрузка).",
+     "Ещё: инструменты DevOps (конвейер доставки, отслеживание работ, автоматическая сборка, CI/CD); совместной работы (общение); масштабируемости и стандартизации развертывания (виртуальные машины, контейнеры). И любой другой инструмент, который помогает тестированию — даже электронная таблица.",
+     "На экзамене обычно дают описание инструмента и спрашивают его тип. Ориентируйтесь на то, какую работу он облегчает: «анализирует код без запуска» — статическое тестирование; «генерирует тесты из спецификации» — проектирование тестов; «одинаково разворачивает окружение» — масштабируемость и стандартизация."
+    ],
+    "en": [
+     "Tools support many test activities. Main types: test management (requirements, tests, defects, configuration, lifecycle); static testing (help with reviews and static analysis); test design and implementation (generate test cases, test data, procedures); test execution and coverage measurement; non-functional testing (what is hard or impossible by hand — e.g. load).",
+     "Also: DevOps tools (delivery pipeline, workflow tracking, automated builds, CI/CD); collaboration tools (communication); tools for scalability and deployment standardisation (virtual machines, containers). And any other tool that helps testing — even a spreadsheet.",
+     "In the exam you usually get a tool description and must name its type. Look at which activity it makes easier: \"analyses code without running it\" — static testing; \"generates tests from a specification\" — test design; \"sets up the same environment every time\" — scalability and deployment standardisation."
+    ]
+   },
+   "wallet": {
+    "ru": "Инструменты Card Wallet по типам: ruff и проверка типов фронтенда — статическое тестирование; schemathesis генерирует запросы из OpenAPI — проектирование и реализация тестов; pytest, Playwright и Newman — выполнение тестов; GitHub Actions — DevOps (CI/CD); Docker Compose — стандартизация развертывания; Allure и скрипт трассируемости — информация для управления тестированием.",
+    "en": "Card Wallet's tools by type: ruff and the frontend type check — static testing; schemathesis generates requests from OpenAPI — test design and implementation; pytest, Playwright and Newman — test execution; GitHub Actions — DevOps (CI/CD); Docker Compose — deployment standardisation; Allure and the traceability script — information for test management.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/.github/workflows/ci.yml"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "автоматизация тестирования",
+   "en": "test automation",
+   "explain": {
+    "ru": "Использование программ для выполнения или поддержки работ тестирования.",
+    "en": "Using software to perform or support test activities."
+   }
+  },
+  {
+   "ru": "инструмент управления тестированием",
+   "en": "test management tool",
+   "explain": {
+    "ru": "Помогает управлять требованиями, тестами, дефектами и отчётностью.",
+    "en": "Helps manage requirements, tests, defects and reporting."
+   }
+  },
+  {
+   "ru": "инструмент статического тестирования",
+   "en": "static testing tool",
+   "explain": {
+    "ru": "Поддерживает рецензирование и статический анализ без запуска кода.",
+    "en": "Supports reviews and static analysis without running the code."
+   }
+  },
+  {
+   "ru": "инструмент выполнения тестов",
+   "en": "test execution tool",
+   "explain": {
+    "ru": "Запускает автоматизированные тесты и сравнивает результаты с ожидаемыми.",
+    "en": "Runs automated tests and compares results with expected ones."
+   }
+  }
+ ]
+}

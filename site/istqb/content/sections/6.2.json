@@ -1,0 +1,53 @@
+{
+ "id": "6.2",
+ "objectives": [
+  {
+   "lo": "FL-6.2.1",
+   "explain": {
+    "ru": [
+     "Купить инструмент — ещё не успех: внедрение, сопровождение и обучение требуют усилий, а риски надо анализировать и смягчать.",
+     "Преимущества автоматизации: экономия времени на повторяющейся ручной работе (регрессия, ввод одних и тех же данных, сравнение ожидаемого и фактического, проверка стандартов кода); меньше простых человеческих ошибок благодаря единообразию и повторяемости; более объективная оценка (например, покрытие) и метрики, слишком сложные для человека; проще получить данные о тестировании для управления и отчётов; быстрее выполнение — раньше находим дефекты, быстрее обратная связь и выход на рынок; у тестировщиков больше времени на новые, более глубокие тесты.",
+     "Риски: нереалистичные ожидания; неточная оценка времени и стоимости внедрения и сопровождения скриптов; автоматизация там, где лучше ручное тестирование; чрезмерное доверие инструменту без критического мышления; зависимость от поставщика (уйдёт с рынка, перестанет поддерживать); заброшенный open-source или слишком частые обновления его компонентов; несовместимость с платформой разработки; инструмент не соответствует регуляторным требованиям или стандартам безопасности.",
+     "Ловушка: «автоматизация находит больше дефектов, чем ручное тестирование» или «полностью заменяет тестировщика» — не входит в список преимуществ."
+    ],
+    "en": [
+     "Buying a tool is not success yet: introducing it, maintaining it and training people take effort, and its risks must be analysed and mitigated.",
+     "Benefits of automation: time saved on repetitive manual work (regression, re-entering the same data, comparing expected vs actual, checking coding standards); fewer simple human errors thanks to consistency and repeatability; more objective assessment (e.g. coverage) and measures too complex for humans; easier access to test information for management and reporting; faster execution — earlier defect detection, faster feedback and time to market; more time for testers to design new, deeper tests.",
+     "Risks: unrealistic expectations; inaccurate estimates of the time and cost to introduce the tool and maintain scripts; automating where manual testing is better; relying on the tool too much, without critical thinking; vendor dependency (goes out of business, drops support); abandoned open-source or too-frequent updates of its components; incompatibility with the development platform; a tool that does not meet regulatory or safety standards.",
+     "Trap: \"automation finds more defects than manual testing\" or \"fully replaces the tester\" is not in the list of benefits."
+    ]
+   },
+   "wallet": {
+    "ru": "Польза в Card Wallet: весь набор тестов и проверка 7 внесённых дефектов (scripts/verify_bugs_caught.py) повторяются на каждый push одинаково. Риски тоже видны: тесты параллельности могли оказаться нестабильными — их прогоняли 5 раз подряд (--count=5); Allure требует Java — вопрос совместимости. А BUG-05 и BUG-10 нашли не автотесты, а рецензирование требований и код-ревью — без критического мышления не обойтись.",
+    "en": "Benefits in Card Wallet: the whole suite and the check of 7 planted defects (scripts/verify_bugs_caught.py) repeat identically on every push. The risks show too: concurrency tests could be flaky — they were run 5 times in a row (--count=5); Allure needs Java — a compatibility point. And BUG-05 and BUG-10 were found not by automated tests but by requirements review and code review — critical thinking is still needed.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/scripts/verify_bugs_caught.py"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "автоматизация тестирования",
+   "en": "test automation",
+   "explain": {
+    "ru": "Использование программ для выполнения или поддержки работ тестирования.",
+    "en": "Using software to perform or support test activities."
+   }
+  },
+  {
+   "ru": "регрессионное тестирование",
+   "en": "regression testing",
+   "explain": {
+    "ru": "Повторная проверка, что изменения не сломали то, что работало; главный кандидат на автоматизацию.",
+    "en": "Re-checking that changes did not break what worked; the main candidate for automation."
+   }
+  },
+  {
+   "ru": "автоматизированный сценарий тестирования",
+   "en": "test script",
+   "explain": {
+    "ru": "Последовательность инструкций для выполнения теста инструментом.",
+    "en": "A sequence of instructions that a tool runs to perform a test."
+   }
+  }
+ ]
+}

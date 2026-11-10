@@ -115,7 +115,6 @@ def test_section_files(path):
 
 
 @pytest.mark.req("NFR-11")
-@pytest.mark.xfail(strict=False, reason="filled chapter by chapter")
 def test_every_lo_has_two_questions():
     count = {lo: 0 for lo in all_los()}
     for q in questions():

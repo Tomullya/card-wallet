@@ -1,0 +1,69 @@
+{
+ "id": "5.5",
+ "objectives": [
+  {
+   "lo": "FL-5.5.1",
+   "explain": {
+    "ru": [
+     "Управление дефектами — процесс от обнаружения аномалии до её закрытия: зарегистрировать, проанализировать и классифицировать, решить, что делать (исправить или оставить как есть), закрыть. Аномалия может оказаться не дефектом, а ложноположительным результатом или запросом на изменение — это выясняется в процессе. Дефекты статического тестирования обрабатывают так же.",
+     "Цели отчёта о дефекте: дать исправляющим достаточно информации; дать средство отслеживания качества рабочего продукта; дать идеи для улучшения процессов разработки и тестирования.",
+     "Типичные поля: уникальный идентификатор; заголовок с кратким описанием; дата, организация, автор и его роль; объект и окружение тестирования; контекст (какой тест выполнялся, этап, метод, чек-лист, тестовые данные); описание отказа для воспроизведения — шаги, логи, дампы БД, скриншоты, записи; ожидаемый и фактический результаты; критичность (степень влияния); приоритет исправления; статус (открыт, отложен, дубликат, ожидает исправления, ожидает подтверждающего тестирования, открыт повторно, закрыт, отклонён); ссылки (например, на тест).",
+     "Как готовить отчёт на экзамене: один дефект — один отчёт; точные шаги и данные; ожидаемый результат со ссылкой на требование; критичность — про влияние, приоритет — про срочность (они могут не совпадать: опечатка в логотипе перед показом инвестору — низкая критичность, высокий приоритет)."
+    ],
+    "en": [
+     "Defect management is the process from discovering an anomaly to closing it: log it, analyse and classify it, decide the response (fix it or keep it as is), close it. An anomaly may turn out not to be a defect but a false positive or a change request — this is resolved along the way. Defects from static testing are handled the same way.",
+     "Objectives of a defect report: give the people who fix it enough information; provide a way to track the quality of the work product; give ideas to improve the development and test processes.",
+     "Typical fields: unique identifier; title with a short summary; date, organisation, author and their role; test object and test environment; context (which test was running, phase, technique, checklist, test data); description of the failure for reproduction — steps, logs, database dumps, screenshots, recordings; expected and actual results; severity (degree of impact); priority to fix; status (open, deferred, duplicate, waiting to be fixed, awaiting confirmation testing, re-opened, closed, rejected); references (e.g. to the test case).",
+     "How to prepare one in the exam: one defect — one report; exact steps and data; the expected result citing the requirement; severity is about impact, priority is about urgency (they can differ: a typo in the logo before an investor demo — low severity, high priority)."
+    ]
+   },
+   "wallet": {
+    "ru": "BUG-02 в Card Wallet — образец: ID, заголовок «Payment that reaches the daily limit exactly is declined», критичность Major, приоритет High, статус, требование BR-PAY-04, окружение (wallet-buggy, порт 8001), контекст (каким тестом найден), шаги с точными суммами (лимит 100.00, платёж 60.00, затем 40.00), ожидаемый APPROVED, фактический DECLINED DAILY_LIMIT_EXCEEDED и доказательство. Не хватает только даты и автора — в трекере они добавляются автоматически.",
+    "en": "Card Wallet's BUG-02 is a model: ID, title \"Payment that reaches the daily limit exactly is declined\", severity Major, priority High, status, requirement BR-PAY-04, environment (wallet-buggy, port 8001), context (which test found it), steps with exact amounts (limit 100.00, pay 60.00, then 40.00), expected APPROVED, actual DECLINED DAILY_LIMIT_EXCEEDED, and evidence. Only date and author are missing — a defect tracker fills those in automatically.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-02.md"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "управление дефектами",
+   "en": "defect management",
+   "explain": {
+    "ru": "Процесс регистрации, классификации, решения и закрытия дефектов.",
+    "en": "The process of logging, classifying, resolving and closing defects."
+   }
+  },
+  {
+   "ru": "отчет о дефекте",
+   "en": "defect report",
+   "explain": {
+    "ru": "Документ с описанием аномалии, достаточным для её воспроизведения и исправления.",
+    "en": "A document describing an anomaly well enough to reproduce and fix it."
+   }
+  },
+  {
+   "ru": "критичность (серьезность)",
+   "en": "severity",
+   "explain": {
+    "ru": "Степень влияния дефекта на заинтересованные стороны или требования.",
+    "en": "The degree of impact a defect has on stakeholders or requirements."
+   }
+  },
+  {
+   "ru": "приоритет",
+   "en": "priority",
+   "explain": {
+    "ru": "Насколько срочно нужно исправить дефект.",
+    "en": "How urgently a defect should be fixed."
+   }
+  },
+  {
+   "ru": "ложноположительный результат",
+   "en": "false positive",
+   "explain": {
+    "ru": "Тест сообщает о дефекте, которого на самом деле нет.",
+    "en": "A test reports a defect that does not actually exist."
+   }
+  }
+ ]
+}

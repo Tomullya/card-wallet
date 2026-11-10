@@ -1,0 +1,53 @@
+{
+ "id": "5.4",
+ "objectives": [
+  {
+   "lo": "FL-5.4.1",
+   "explain": {
+    "ru": [
+     "Управление конфигурацией (CM) — дисциплина идентификации, контроля и отслеживания рабочих продуктов как элементов конфигурации. В тестировании это планы, стратегии, тестовые условия, сценарии, скрипты, результаты, журналы и отчёты.",
+     "Для сложного элемента (например, тестового окружения) CM записывает, из каких частей он состоит, как они связаны и какие у них версии. Утверждённый для тестирования элемент становится базовой версией (baseline) и меняется только через формальный контроль изменений. Можно вернуться к прошлой базовой версии и воспроизвести прошлые результаты.",
+     "Что CM даёт тестированию: каждый элемент (включая элементы тестирования — части объекта тестирования) однозначно идентифицирован, под контролем версий, изменения отслеживаются, связи с другими элементами сохранены — значит, сохраняется трассируемость. И в тестовом обеспечении все документы и программы указаны однозначно.",
+     "В конвейере DevOps (CI/CD) управление конфигурацией обычно автоматизировано. Ловушка: CM — не про исправление дефектов, а про то, чтобы точно знать, что именно тестировали."
+    ],
+    "en": [
+     "Configuration management (CM) is the discipline of identifying, controlling and tracking work products as configuration items. In testing these are plans, strategies, test conditions, test cases, scripts, results, logs and reports.",
+     "For a complex item (e.g. a test environment) CM records its parts, how they relate and their versions. An item approved for testing becomes a baseline and changes only through formal change control. You can go back to an earlier baseline and reproduce earlier results.",
+     "What CM gives testing: every item (including test items — parts of the test object) is uniquely identified, version-controlled, tracked for changes and linked to other items — so traceability is kept. And all documents and software are referenced unambiguously in the testware.",
+     "In a DevOps (CI/CD) pipeline CM is usually automated. Trap: CM is not about fixing defects; it is about knowing exactly what was tested."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet всё — код, тесты, требования BR-*/NFR-*, тест-план и баг-репорты — хранится в git, и каждый прогон CI привязан к конкретному коммиту. Окружение описано в docker-compose.yml с образом postgres:16. Слабое место: в requirements-dev.txt версии заданы как «>=», поэтому прогон через год может взять другую версию pytest — для полной воспроизводимости версии нужно зафиксировать.",
+    "en": "In Card Wallet everything — code, tests, BR-*/NFR-* requirements, the test plan and bug reports — lives in git, and every CI run is tied to a specific commit. The environment is described in docker-compose.yml with the postgres:16 image. A weak spot: requirements-dev.txt uses \">=\" versions, so a run a year later may pick a different pytest — for full reproducibility the versions should be pinned.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/requirements-dev.txt"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "управление конфигурацией",
+   "en": "configuration management",
+   "explain": {
+    "ru": "Дисциплина идентификации, контроля версий и отслеживания изменений рабочих продуктов.",
+    "en": "The discipline of identifying, version-controlling and tracking changes of work products."
+   }
+  },
+  {
+   "ru": "элемент конфигурации",
+   "en": "configuration item",
+   "explain": {
+    "ru": "Рабочий продукт, которым управляют как единым целым: тест-план, скрипт, окружение и т. п.",
+    "en": "A work product managed as a single unit: a test plan, a script, an environment, etc."
+   }
+  },
+  {
+   "ru": "базовая (опорная) версия",
+   "en": "baseline",
+   "explain": {
+    "ru": "Утверждённая версия элементов, которую меняют только через контроль изменений.",
+    "en": "An approved version of items that is changed only through change control."
+   }
+  }
+ ]
+}

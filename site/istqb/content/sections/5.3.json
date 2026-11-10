@@ -1,0 +1,107 @@
+{
+ "id": "5.3",
+ "objectives": [
+  {
+   "lo": "FL-5.3.1",
+   "explain": {
+    "ru": [
+     "Мониторинг тестирования собирает информацию о ходе работ, контроль тестирования по ней принимает корректирующие меры (например, меняет приоритеты, сдвигает график, добавляет ресурсы). Метрики — топливо для обоих и для завершения тестирования.",
+     "Группы метрик: хода проекта (выполнение задач, использование ресурсов, трудозатраты); хода тестирования (готовность тестов и окружения, сколько тестов выполнено/не выполнено, прошло/упало, время выполнения); качества продукта (доступность, время отклика, среднее время наработки на отказ); дефектов (число и приоритеты найденных и исправленных, плотность дефектов, процент обнаружения дефектов); рисков (остаточный уровень риска); покрытия (требований, кода); стоимости (стоимость тестирования, стоимость качества).",
+     "Совет: на экзамене просят отнести метрику к группе. «Время отклика» — качество продукта, а не ход тестирования; «плотность дефектов» — метрика дефектов."
+    ],
+    "en": [
+     "Test monitoring gathers information about progress; test control uses it to take corrective actions (e.g. reprioritise, shift the schedule, add resources). Metrics fuel both, and test completion too.",
+     "Metric groups: project progress (task completion, resource usage, test effort); test progress (test and environment readiness, tests run/not run, passed/failed, execution time); product quality (availability, response time, mean time to failure); defects (number and priorities found/fixed, defect density, defect detection percentage); risk (residual risk level); coverage (requirements, code); cost (cost of testing, cost of quality).",
+     "Tip: exam questions ask you to put a metric into its group. \"Response time\" is product quality, not test progress; \"defect density\" is a defect metric."
+    ]
+   },
+   "wallet": {
+    "ru": "Allure-отчёт Card Wallet показывает метрики хода тестирования: прошло, упало, пропущено, длительность. Матрица трассируемости — метрика покрытия требований (каждое требование имеет тест). Таблица в README баг-репортов — метрики дефектов: 19 дефектов с критичностью и статусом, из них 5 открытых отложенных.",
+    "en": "Card Wallet's Allure report shows test progress metrics: passed, failed, skipped, duration. The traceability matrix is a requirements coverage metric (every requirement has a test). The table in the bug-reports README gives defect metrics: 19 defects with severity and status, 5 of them open and deferred.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/traceability-matrix.md"
+   }
+  },
+  {
+   "lo": "FL-5.3.2",
+   "explain": {
+    "ru": [
+     "Отчёт о ходе тестирования выпускают регулярно (ежедневно, еженедельно) во время работ. Его цель — поддержать контроль: дать достаточно информации, чтобы при отклонениях поменять график, ресурсы или план. Содержание: период; ход (опережаем или отстаём) и заметные отклонения; препятствия и обходные пути; метрики; новые и изменившиеся риски; что планируется на следующий период.",
+     "Итоговый отчёт о тестировании готовят один раз, при завершении (проекта, уровня, типа тестирования, итерации), в идеале когда критерии выхода выполнены. Он опирается на отчёты о ходе. Содержание: резюме; оценка тестирования и качества продукта относительно плана (цели, критерии выхода); отклонения от плана; препятствия; метрики; несмягчённые риски и неисправленные дефекты; извлечённые уроки.",
+     "Аудитория определяет форму: внутри команды — часто и неформально; итоговый отчёт — по шаблону и один раз. Шаблоны есть в ISO/IEC/IEEE 29119-3 (отчёт о ходе там называется отчётом о статусе). Ловушка: «извлечённые уроки» и «неисправленные дефекты» — признаки итогового отчёта, «план на следующий период» — признак отчёта о ходе."
+    ],
+    "en": [
+     "A test progress report is issued regularly (daily, weekly) while testing runs. Its purpose is to support test control: give enough information to change the schedule, resources or plan when things deviate. Content: the period; progress (ahead or behind) and notable deviations; impediments and workarounds; metrics; new and changed risks; testing planned for the next period.",
+     "A test completion report is prepared once, at completion (of a project, level, test type, iteration), ideally when exit criteria are met. It uses the progress reports. Content: summary; evaluation of testing and product quality against the plan (objectives, exit criteria); deviations from the plan; impediments; metrics; unmitigated risks and unfixed defects; lessons learned.",
+     "The audience shapes the form: inside the team — frequent and informal; the completion report — templated and once. ISO/IEC/IEEE 29119-3 has templates (the progress report is called a test status report there). Trap: \"lessons learned\" and \"defects not fixed\" point to a completion report; \"plan for the next period\" points to a progress report."
+    ]
+   },
+   "wallet": {
+    "ru": "Итоговый отчёт для Card Wallet v1 сравнил бы результаты с критериями выхода из test-plan.md (все тесты проходят, трассируемость полная, все внесённые дефекты пойманы, нет открытых Critical/Major), перечислил бы неисправленные BUG-12…BUG-16 как известные ограничения и добавил бы урок: тесты параллельности приходилось гонять по 5 раз, чтобы убедиться, что они не нестабильны.",
+    "en": "A completion report for Card Wallet v1 would compare results with the exit criteria in test-plan.md (all tests pass, full traceability, all planted defects caught, no open Critical/Major), list the unfixed BUG-12…BUG-16 as known limitations, and add a lesson: concurrency tests had to be run 5 times in a row to be sure they were not flaky.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/README.md"
+   }
+  },
+  {
+   "lo": "FL-5.3.3",
+   "explain": {
+    "ru": [
+     "Как сообщать о статусе тестирования — зависит от задач управления, стратегии организации, регуляторных стандартов, а в самоорганизующейся команде — от самой команды.",
+     "Варианты: устно с командой и заинтересованными сторонами; дашборды (CI/CD-дашборды, доски задач, диаграммы сгорания); электронные каналы (почта, чат); онлайн-документация; формальные отчёты о тестировании. Можно сочетать несколько.",
+     "Распределённым командам (разные города, часовые пояса) обычно подходит более формальная коммуникация, потому что поговорить лицом к лицу трудно. Разным людям интересно разное, поэтому сообщение подстраивают под аудиторию: разработчику — какой тест упал и почему, руководителю — готовы ли мы к выпуску и какие риски остались."
+    ],
+    "en": [
+     "How to communicate test status depends on test management concerns, the organisation's test strategy, regulatory standards or, in a self-organising team, on the team itself.",
+     "Options: verbal communication with the team and stakeholders; dashboards (CI/CD dashboards, task boards, burn-down charts); electronic channels (email, chat); online documentation; formal test reports. Several can be combined.",
+     "Distributed teams (different cities, time zones) usually need more formal communication, because face-to-face talk is hard. Different people want different things, so tailor the message: a developer wants to know which test failed and why, a manager — are we ready to release and what risks remain."
+    ]
+   },
+   "wallet": {
+    "ru": "Card Wallet сообщает статус несколькими способами: бейдж CI в README и Allure-отчёт на GitHub Pages — дашборды; таблица в docs/qa/bug-reports/README.md и матрица трассируемости — онлайн-документация. Руководитель или владелец продукта увидит зелёный бейдж за секунду, а разработчик откроет Allure и найдёт упавший шаг.",
+    "en": "Card Wallet communicates status in several ways: the CI badge in the README and the Allure report on GitHub Pages are dashboards; the table in docs/qa/bug-reports/README.md and the traceability matrix are online documentation. A manager or product owner sees the green badge in a second, while a developer opens Allure to find the failing step.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/README.md"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "мониторинг тестирования",
+   "en": "test monitoring",
+   "explain": {
+    "ru": "Сбор информации о тестировании, чтобы оценить ход работ и выполнение критериев выхода.",
+    "en": "Gathering information about testing to assess progress and whether exit criteria are met."
+   }
+  },
+  {
+   "ru": "контроль тестирования",
+   "en": "test control",
+   "explain": {
+    "ru": "Корректирующие действия на основе данных мониторинга, чтобы тестирование шло эффективно.",
+    "en": "Corrective actions based on monitoring data to keep testing effective."
+   }
+  },
+  {
+   "ru": "отчет о ходе тестирования",
+   "en": "test progress report",
+   "explain": {
+    "ru": "Регулярный отчёт во время тестирования для поддержки контроля.",
+    "en": "A regular report during testing that supports test control."
+   }
+  },
+  {
+   "ru": "итоговый отчет о тестировании",
+   "en": "test completion report",
+   "explain": {
+    "ru": "Отчёт в конце работ: итоги относительно плана, остаточные риски, уроки.",
+    "en": "A report at the end of the work: results against the plan, remaining risks, lessons learned."
+   }
+  },
+  {
+   "ru": "метрика",
+   "en": "metric",
+   "explain": {
+    "ru": "Измеряемый показатель, например число упавших тестов или покрытие требований.",
+    "en": "A measured value, e.g. the number of failed tests or requirements coverage."
+   }
+  }
+ ]
+}

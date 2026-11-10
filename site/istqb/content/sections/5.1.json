@@ -1,0 +1,223 @@
+{
+ "id": "5.1",
+ "objectives": [
+  {
+   "lo": "FL-5.1.1",
+   "explain": {
+    "ru": [
+     "План тестирования отвечает на вопросы «что тестируем, зачем, как, кто, чем, когда и сколько это стоит». Он фиксирует цели тестирования, ресурсы и процессы, по которым команда будет их достигать.",
+     "Зачем он нужен: это договорённость и средство общения с командой и заинтересованными сторонами; он помогает убедиться, что работы приведут к заданным критериям; показывает, что тестирование следует политике и стратегии тестирования (или объясняет, почему отступает). А сам процесс написания плана заставляет заранее подумать о рисках, сроках, людях, инструментах и затратах.",
+     "Типичное содержание: контекст (объём, цели, базис тестирования), допущения и ограничения, заинтересованные стороны и роли, коммуникация, реестр рисков (продукта и проекта), подход к тестированию (уровни, типы, методы, критерии входа и выхода, независимость, метрики, требования к данным и окружению), бюджет и график.",
+     "Ловушка на экзамене: сами сценарии тестирования и результаты их выполнения — не содержание плана. План описывает подход, а не конкретные шаги тестов."
+    ],
+    "en": [
+     "A test plan answers \"what do we test, why, how, who, with what, when and at what cost\". It records the test objectives, the resources and the processes the team will use to reach them.",
+     "Why it is useful: it is an agreement and a communication tool for the team and stakeholders; it helps make sure the work will meet the agreed criteria; it shows that testing follows the test policy and test strategy (or explains why it deviates). And writing it forces you to think ahead about risks, schedule, people, tools and costs.",
+     "Typical content: context (scope, objectives, test basis), assumptions and constraints, stakeholders and roles, communication, a risk register (product and project risks), the test approach (levels, types, techniques, entry and exit criteria, independence, metrics, test data and environment needs), budget and schedule.",
+     "Exam trap: individual test cases and their execution results are not plan content. The plan describes the approach, not the steps of each test."
+    ]
+   },
+   "wallet": {
+    "ru": "В test-plan.md Card Wallet есть цель (корректность денег, безопасность карт, контроль доступа), объём (в объёме / вне объёма — например, нагрузочное тестирование вне объёма v1), подход по уровням и инструментам, окружения, критерии входа и выхода, таблица рисков с мерами и правила работы с дефектами. Чего нет: бюджета, графика и раздела о коммуникации — для небольшого учебного проекта это допустимо, но в плане реальной команды они нужны.",
+    "en": "Card Wallet's test-plan.md has an objective (money correctness, card security, access control), scope (in / out — e.g. load testing is out of scope for v1), the approach by level and tool, environments, entry and exit criteria, a risk table with mitigation, and defect-handling rules. What is missing: budget, schedule and a communication section — acceptable for a small portfolio project, but a real team's plan would need them.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md"
+   }
+  },
+  {
+   "lo": "FL-5.1.2",
+   "explain": {
+    "ru": [
+     "В итеративной разработке планируют на двух уровнях. Планирование выпуска смотрит на весь релиз: формирует и уточняет бэклог продукта, дробит крупные истории. Планирование итерации смотрит на одну итерацию и её бэклог.",
+     "В планировании выпуска тестировщик помогает писать тестируемые пользовательские истории и критерии приемки, участвует в анализе рисков проекта и качества, оценивает затраты на тестирование историй, определяет подход к тестированию и планирует тестирование релиза.",
+     "В планировании итерации тестировщик участвует в детальном анализе рисков историй, оценивает их тестируемость, разбивает истории на задачи (особенно тестовые), оценивает трудозатраты и уточняет функциональные и нефункциональные аспекты объекта тестирования.",
+     "Совет: запомните, что тестировщик приносит пользу ещё до появления кода — вопросами к требованиям и критериям приемки."
+    ],
+    "en": [
+     "Iterative development plans at two levels. Release planning looks at the whole release: it builds and refines the product backlog and splits large stories. Iteration planning looks at one iteration and its backlog.",
+     "In release planning a tester helps write testable user stories and acceptance criteria, takes part in project and quality risk analysis, estimates the test effort of stories, decides the test approach and plans testing for the release.",
+     "In iteration planning a tester takes part in detailed risk analysis of stories, judges their testability, breaks stories into tasks (especially testing tasks), estimates the effort and refines the functional and non-functional aspects of the test object.",
+     "Tip: remember that a tester adds value before any code exists — by asking questions about requirements and acceptance criteria."
+    ]
+   },
+   "wallet": {
+    "ru": "При планировании Card Wallet тестировщик читала требования до кода и нашла BUG-05: правило антифрода «сумма > 5000» никогда не могло сработать, потому что дневной лимит карты тогда был не больше 5000 и проверяется раньше. Дефект требований исправили до реализации — это и есть вклад тестировщика в планирование.",
+    "en": "While planning Card Wallet, the tester read the requirements before coding and found BUG-05: the anti-fraud rule \"amount > 5000\" could never fire, because a card's daily limit was then at most 5000 and is checked first. The requirements defect was fixed before implementation — exactly the tester's contribution to planning.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-05.md"
+   }
+  },
+  {
+   "lo": "FL-5.1.3",
+   "explain": {
+    "ru": [
+     "Критерии входа — предварительные условия, чтобы начать работу (например, уровень тестирования). Если их не выполнить, работа будет труднее, дольше, дороже и рискованнее. Примеры: есть люди, инструменты, окружение, тестовые данные, бюджет и время; есть тестируемые требования или истории; объект прошёл дымовые тесты.",
+     "Критерии выхода — что должно быть достигнуто, чтобы объявить работу завершённой. Бывают измеримые (уровень покрытия, число неисправленных дефектов, плотность дефектов, число неудачных тестов) и бинарные «да/нет» (все запланированные тесты выполнены, статическое тестирование проведено, все найденные дефекты зарегистрированы, все регрессионные тесты автоматизированы).",
+     "Окончание времени или бюджета тоже может быть допустимым критерием выхода — если заинтересованные стороны рассмотрели и приняли риск выпуска без дальнейшего тестирования.",
+     "В Agile критерии выхода называют критериями завершения (Definition of Done), а критерии входа для пользовательской истории — критериями готовности (Definition of Ready). Ловушка: «вход» = можно ли начинать, «выход» = можно ли заканчивать."
+    ],
+    "en": [
+     "Entry criteria are the preconditions for starting an activity (for example a test level). If they are not met, the work becomes harder, longer, more costly and riskier. Examples: people, tools, environment, test data, budget and time are available; testable requirements or stories exist; the test object passed the smoke tests.",
+     "Exit criteria say what must be achieved to declare the activity done. They can be measures of thoroughness (coverage achieved, number of unresolved defects, defect density, number of failed tests) or binary yes/no checks (all planned tests run, static testing done, all found defects reported, all regression tests automated).",
+     "Running out of time or budget can also be a valid exit criterion — if stakeholders have reviewed and accepted the risk of going live without more testing.",
+     "In Agile, exit criteria are called the Definition of Done, and entry criteria for a user story are the Definition of Ready. Trap: \"entry\" = may we start, \"exit\" = may we stop."
+    ]
+   },
+   "wallet": {
+    "ru": "Критерий входа в test-plan.md: стенд запущен и GET /api/v1/health отвечает \"status\": \"ok\". Критерии выхода: 100% автотестов проходят, контрактные тесты не дают 5xx, scripts/traceability.py завершается с кодом 0 (у каждого требования есть тест), все внесённые дефекты пойманы и нет открытых дефектов Critical или Major. Последний — измеримый критерий (число неисправленных дефектов), traceability — бинарный.",
+    "en": "Entry criterion in test-plan.md: the stack is up and GET /api/v1/health returns \"status\": \"ok\". Exit criteria: 100% of automated tests pass, contract tests find no 5xx, scripts/traceability.py exits 0 (every requirement has a test), every planted defect is caught, and no Critical or Major defects are open. The last one is a measure (number of unresolved defects); traceability is a binary check.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#5-entry-and-exit-criteria"
+   }
+  },
+  {
+   "lo": "FL-5.1.4",
+   "explain": {
+    "ru": [
+     "Оценка трудозатрат — это прогноз, а не обещание: она опирается на допущения и всегда содержит погрешность. Маленькие задачи оцениваются точнее больших, поэтому большую задачу лучше разбить на части и оценить каждую.",
+     "Два метода на основе метрик. Оценка на основе коэффициентов: берём соотношение из прошлых проектов своей организации. Если раньше разработка : тестирование = 3 : 2, а разработка нового проекта — 600 человеко-дней, то тестирование ≈ 600 × 2 / 3 = 400. Экстраполяция: измеряем как можно раньше в текущем проекте и продлеваем тренд; например, затраты следующей итерации = среднее за последние три итерации. Хорошо подходит для итеративной разработки.",
+     "Два метода на основе экспертизы. Широкополосный метод Дельфи: каждый эксперт оценивает отдельно; если оценки сильно расходятся, эксперты обсуждают их и снова оценивают поодиночке — до консенсуса. Покер планирования — его вариант с карточками. Оценка по трём точкам: оптимистичная a, наиболее вероятная m, пессимистичная b; E = (a + 4m + b) / 6, погрешность SD = (b − a) / 6.",
+     "Ловушка в расчётах: в трёх точках m весит в 4 раза больше, а делим на 6, а не на 3. Ответ записывают как E ± SD. Для коэффициентов следите, какая часть пропорции — тестирование."
+    ],
+    "en": [
+     "Effort estimation is a forecast, not a promise: it rests on assumptions and always has an error. Small tasks are estimated more accurately than large ones, so split a big task into parts and estimate each.",
+     "Two metrics-based techniques. Estimation based on ratios: use a ratio from your organisation's past projects. If development : test was 3 : 2 and the new project needs 600 person-days of development, test ≈ 600 × 2 / 3 = 400. Extrapolation: measure as early as possible in the current project and extend the trend; e.g. next iteration's test effort = the average of the last three iterations. Well suited to iterative development.",
+     "Two expert-based techniques. Wideband Delphi: each expert estimates alone; if estimates diverge too much, the experts discuss them and estimate again alone — until consensus. Planning Poker is a card-based variant. Three-point estimation: optimistic a, most likely m, pessimistic b; E = (a + 4m + b) / 6, error SD = (b − a) / 6.",
+     "Calculation traps: in three-point, m weighs 4 times more and you divide by 6, not 3. The answer is written as E ± SD. With ratios, check which side of the ratio is testing."
+    ]
+   },
+   "wallet": {
+    "ru": "Пример (условные числа): оценим автотесты для нового потокового метода gRPC в Card Wallet. Оптимистично a = 3 ч, вероятно m = 6 ч, пессимистично b = 15 ч. E = (3 + 4×6 + 15) / 6 = 42 / 6 = 7 ч, SD = (15 − 3) / 6 = 2 ч, то есть 7 ± 2 ч (от 5 до 9 часов). Для последующих уроков gRPC Lab можно экстраполировать: среднее время трёх последних уроков.",
+    "en": "Example (made-up numbers): estimate automated tests for a new gRPC streaming method in Card Wallet. Optimistic a = 3 h, most likely m = 6 h, pessimistic b = 15 h. E = (3 + 4×6 + 15) / 6 = 42 / 6 = 7 h, SD = (15 − 3) / 6 = 2 h, so 7 ± 2 h (5 to 9 hours). For the next gRPC Lab lessons you could extrapolate: the average time of the last three lessons.",
+    "link": "https://github.com/Tomullya/card-wallet/tree/main/tests/grpc"
+   }
+  },
+  {
+   "lo": "FL-5.1.5",
+   "explain": {
+    "ru": [
+     "Когда тесты собраны в наборы, нужно решить порядок выполнения. Три частые стратегии. На основе рисков: сначала тесты, покрывающие самые важные риски. На основе покрытия: сначала тесты с наибольшим покрытием (например, операторов). На основе требований: сначала тесты, связанные с самыми приоритетными требованиями; приоритеты требований задают заинтересованные стороны.",
+     "Вариант покрытия — дополнительное покрытие: первым идёт тест с наибольшим покрытием, а каждый следующий — тот, что добавляет больше всего ещё не покрытого. Это может отличаться от простой сортировки по покрытию!",
+     "Зависимости важнее приоритета: если тест с высоким приоритетом зависит от теста с низким, низкоприоритетный выполняют раньше. Учитывают и ресурсы: инструмент, окружение или человек могут быть доступны только в определённое время.",
+     "Как решать задачу на экзамене: 1) отсортируйте по выбранной стратегии; 2) идите сверху вниз, и если у теста есть невыполненная зависимость — сначала вставьте её; 3) проверьте ограничения по ресурсам."
+    ],
+    "en": [
+     "Once tests are grouped into suites, you decide the execution order. Three common strategies. Risk-based: tests covering the most important risks run first. Coverage-based: tests with the highest coverage (e.g. statement coverage) run first. Requirements-based: tests linked to the highest-priority requirements run first; stakeholders set the requirement priorities.",
+     "A coverage variant is additional coverage: the test with the highest coverage runs first, and each next test is the one that adds the most not-yet-covered items. This can differ from simply sorting by coverage!",
+     "Dependencies beat priority: if a high-priority test depends on a low-priority one, the low-priority test runs first. Resources matter too: a tool, environment or person may be available only in a certain time window.",
+     "How to solve an exam task: 1) sort by the chosen strategy; 2) walk down the list, and if a test has an unmet dependency, insert that dependency first; 3) check resource constraints."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet самый важный риск — деньги, поэтому тест «платёж ровно до дневного лимита» (ловит BUG-02) идёт раньше теста фильтров выписки. Но для платежа нужна выпущенная карта, поэтому тест выпуска карты, хоть и с меньшим риском, выполняется первым. Так в test-plan.md риски платежей стоят во главе таблицы рисков.",
+    "en": "In Card Wallet the biggest risk is money, so the \"payment exactly up to the daily limit\" test (it catches BUG-02) runs before the statement-filter test. But a payment needs an issued card, so the card-issuing test — lower risk — runs first. That is why payment risks top the risk table in test-plan.md.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-02.md"
+   }
+  },
+  {
+   "lo": "FL-5.1.6",
+   "explain": {
+    "ru": [
+     "Пирамида тестирования — модель, показывающая, что тесты бывают разной детализации, и помогающая распределить автоматизацию и затраты.",
+     "Чем выше слой, тем ниже детализация и изоляция (больше зависимостей от других частей системы) и тем дольше выполнение. Внизу — маленькие, изолированные, быстрые тесты на небольшой кусок функциональности; их нужно много. Наверху — сложные сквозные тесты на большой кусок; они медленнее, и их нужно немного.",
+     "Число и названия слоёв различаются: у Майка Кона (Cohn) это «модульные — сервисные — UI», в другой популярной модели «модульные (компонентные) — интеграционные — сквозные». Ловушка: пирамида не говорит, что верхние тесты не нужны; она говорит о пропорциях и скорости."
+    ],
+    "en": [
+     "The test pyramid is a model showing that tests have different granularity; it helps the team distribute automation and effort.",
+     "The higher the layer, the lower the granularity and isolation (more dependence on other parts of the system) and the longer the execution time. At the bottom: small, isolated, fast tests of a small piece of functionality; you need many of them. At the top: complex end-to-end tests of a large piece; they are slower and you need only a few.",
+     "The number and names of layers vary: Cohn's original has \"unit — service — UI\", another popular model has \"unit (component) — integration — end-to-end\". Trap: the pyramid does not say top-layer tests are unnecessary; it is about proportions and speed."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet около 62 модульных тестовых функций (tests/unit, выполняются без сервисов, ещё до запуска стенда в scripts/ci_local.sh), около 85 API-тестов и всего около 20 браузерных E2E-тестов кошелька (Playwright). Вершина узкая, как и положено. Но средний слой шире нижнего — хороший вопрос для ревью: какие API-проверки можно перенести в быстрые модульные тесты?",
+    "en": "Card Wallet has about 62 unit test functions (tests/unit, they need no services and run before the stack starts in scripts/ci_local.sh), about 85 API tests and only about 20 browser E2E tests of the wallet (Playwright). The top is narrow, as it should be. But the middle layer is wider than the bottom — a good review question: which API checks could move down into fast unit tests?",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/scripts/ci_local.sh"
+   }
+  },
+  {
+   "lo": "FL-5.1.7",
+   "explain": {
+    "ru": [
+     "Квадранты тестирования (Брайан Марик) — модель для Agile, которая связывает уровни тестирования с типами, активностями, методами и рабочими продуктами. Она помогает убедиться, что ни один нужный тип и уровень не забыт, и объяснить типы тестирования всем — разработчикам, тестировщикам, бизнесу.",
+     "Две оси: тесты ориентированы на бизнес или на технологии; тесты поддерживают команду (направляют разработку) или критикуют продукт (сравнивают поведение с ожиданиями).",
+     "Q1 (технологии, поддержка команды): компонентные и интеграционные тесты компонентов, автоматизированы и входят в CI. Q2 (бизнес, поддержка команды): функциональные тесты, примеры, тесты историй, прототипы UX, тестирование API, моделирование; проверяют критерии приемки, ручные или авто. Q3 (бизнес, критика продукта): исследовательское, тестирование практичности (usability), приемочное пользователями; часто вручную. Q4 (технологии, критика продукта): дымовые и нефункциональные тесты (кроме usability); часто автоматизированы.",
+     "Ловушка: usability — это Q3, хотя оно нефункциональное. Тестирование API — Q2, а не Q1."
+    ],
+    "en": [
+     "The testing quadrants (Brian Marick) are an Agile model linking test levels with test types, activities, techniques and work products. It helps make sure no needed type or level is forgotten and explains test types to everyone — developers, testers, business.",
+     "Two axes: tests are business facing or technology facing; tests support the team (guide development) or critique the product (compare behaviour with expectations).",
+     "Q1 (technology, support the team): component and component integration tests, automated and part of CI. Q2 (business, support the team): functional tests, examples, story tests, UX prototypes, API testing, simulations; they check acceptance criteria, manual or automated. Q3 (business, critique the product): exploratory, usability, user acceptance testing; often manual. Q4 (technology, critique the product): smoke tests and non-functional tests (except usability); often automated.",
+     "Trap: usability is Q3 even though it is non-functional. API testing is Q2, not Q1."
+    ]
+   },
+   "wallet": {
+    "ru": "Разложим Card Wallet: Q1 — tests/unit и tests/integration в CI; Q2 — tests/api и коллекция Postman, проверяющие бизнес-правила BR-*; Q3 — ручные исследовательские проверки в Postman (в test-plan.md); Q4 — дымовой тест tests/e2e/test_smoke.py и проверки безопасности хранения в tests/db. Модель сразу показывает пробел: нагрузочное тестирование (Q4) вне объёма v1, а приемочного тестирования пользователями (Q3) нет.",
+    "en": "Mapping Card Wallet: Q1 — tests/unit and tests/integration in CI; Q2 — tests/api and the Postman collection, checking BR-* business rules; Q3 — manual exploratory checks in Postman (listed in test-plan.md); Q4 — the smoke test tests/e2e/test_smoke.py and the storage-security checks in tests/db. The model shows the gaps at once: load testing (Q4) is out of scope for v1, and there is no user acceptance testing (Q3).",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#3-test-approach"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "план тестирования",
+   "en": "test plan",
+   "explain": {
+    "ru": "Документ с целями тестирования, ресурсами, процессами, подходом, рисками, графиком и бюджетом.",
+    "en": "A document with the test objectives, resources, processes, approach, risks, schedule and budget."
+   }
+  },
+  {
+   "ru": "планирование тестирования",
+   "en": "test planning",
+   "explain": {
+    "ru": "Работа по определению целей тестирования и подхода к их достижению.",
+    "en": "The activity of defining the test objectives and the approach to meet them."
+   }
+  },
+  {
+   "ru": "подход к тестированию",
+   "en": "test approach",
+   "explain": {
+    "ru": "Как именно будем тестировать в проекте: уровни, типы, методы, критерии, окружения.",
+    "en": "How testing is done in a given project: levels, types, techniques, criteria, environments."
+   }
+  },
+  {
+   "ru": "стратегия тестирования",
+   "en": "test strategy",
+   "explain": {
+    "ru": "Общее описание того, как в организации или программе обычно проводится тестирование.",
+    "en": "A general description of how testing is usually done in an organisation or programme."
+   }
+  },
+  {
+   "ru": "критерии входа",
+   "en": "entry criteria",
+   "explain": {
+    "ru": "Условия, которые должны быть выполнены, чтобы начать работу.",
+    "en": "Conditions that must be met before an activity may start."
+   }
+  },
+  {
+   "ru": "критерии выхода",
+   "en": "exit criteria",
+   "explain": {
+    "ru": "Условия, которые должны быть выполнены, чтобы объявить работу завершённой.",
+    "en": "Conditions that must be met to declare an activity complete."
+   }
+  },
+  {
+   "ru": "пирамида тестирования",
+   "en": "test pyramid",
+   "explain": {
+    "ru": "Модель: много быстрых изолированных тестов внизу, мало медленных сквозных наверху.",
+    "en": "A model: many fast isolated tests at the bottom, few slow end-to-end tests at the top."
+   }
+  },
+  {
+   "ru": "квадранты тестирования",
+   "en": "testing quadrants",
+   "explain": {
+    "ru": "Модель из четырёх групп тестов по осям «бизнес/технологии» и «поддержка команды/критика продукта».",
+    "en": "A model of four test groups on the axes business/technology and support the team/critique the product."
+   }
+  }
+ ]
+}

@@ -1,0 +1,155 @@
+{
+ "id": "5.2",
+ "objectives": [
+  {
+   "lo": "FL-5.2.1",
+   "explain": {
+    "ru": [
+     "Риск — возможное событие или ситуация, наступление которой приведёт к неблагоприятным последствиям. Его описывают двумя показателями: вероятность (шанс, что он случится; строго больше 0 и меньше 1) и влияние, или ущерб (насколько плохо будет, если случится).",
+     "Вместе они дают уровень риска: чем он выше, тем важнее с риском работать. В количественном подходе уровень = вероятность × влияние. В качественном подходе уровень находят по матрице рисков (например, «высокая вероятность» и «среднее влияние» → «высокий»).",
+     "Ловушка: событие с вероятностью 1 уже не риск, а проблема (оно точно случится); с вероятностью 0 — тоже не риск. Высокое влияние при очень низкой вероятности может дать такой же уровень, как среднее влияние при средней вероятности."
+    ],
+    "en": [
+     "A risk is a possible event or situation whose occurrence causes an adverse effect. It is described by two factors: likelihood (the chance it happens; strictly greater than 0 and less than 1) and impact, or harm (how bad it is if it happens).",
+     "Together they give the risk level: the higher it is, the more important it is to treat the risk. In the quantitative approach, level = likelihood × impact. In the qualitative approach, the level is read from a risk matrix (e.g. \"high likelihood\" and \"medium impact\" → \"high\").",
+     "Trap: an event with likelihood 1 is no longer a risk but an issue (it will happen); likelihood 0 is not a risk either. A high impact with a very low likelihood can give the same level as a medium impact with medium likelihood."
+    ]
+   },
+   "wallet": {
+    "ru": "Пример с условными числами (вероятность от 0 до 1, влияние по шкале 1–5): двойное списание при повторе запроса — вероятность 0,4, влияние 5 (клиент теряет деньги), уровень 2,0. Неверная пагинация выписки — вероятность 0,4, влияние 2, уровень 0,8. Поэтому двойное списание стоит в таблице рисков test-plan.md и против него есть отдельные тесты идемпотентности и параллельных платежей, а пагинации там нет.",
+    "en": "An example with made-up numbers (likelihood between 0 and 1, impact on a 1–5 scale): double charge on a retried request — likelihood 0.4, impact 5 (the client loses money), level 2.0. Wrong statement pagination — likelihood 0.4, impact 2, level 0.8. That is why double charge is in the risk table of test-plan.md with dedicated idempotency and parallel-payment tests, while pagination is not listed there.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#6-risks-and-mitigation"
+   }
+  },
+  {
+   "lo": "FL-5.2.2",
+   "explain": {
+    "ru": [
+     "Риски проекта касаются управления проектом и его хода. Группы: организационные (задержка поставки рабочих продуктов, неточные оценки, сокращение бюджета), человеческие (не хватает навыков или людей, конфликты, плохая коммуникация), технические (расползание объёма, плохие инструменты), поставщики (сторонняя поставка сорвалась, поставщик обанкротился). Если они наступают, страдают график, бюджет или объём.",
+     "Риски продукта касаются характеристик качества самого продукта (ISO 25010): отсутствующая или неверная функция, неверные вычисления, ошибки во время выполнения, слабая архитектура, неэффективные алгоритмы, медленный отклик, плохой пользовательский опыт, уязвимости. Последствия: недовольство пользователей, потеря денег, доверия и репутации, ущерб третьим лицам, дорогое сопровождение, уголовная ответственность, в крайних случаях — вред здоровью.",
+     "Простой тест: «это может пойти не так в программе?» — риск продукта. «Это может помешать нам сделать работу вовремя и в бюджет?» — риск проекта. Ловушка: «плохой инструмент тестирования» — это риск проекта, а не продукта."
+    ],
+    "en": [
+     "Project risks concern managing and running the project. Groups: organisational (late delivery of work products, inaccurate estimates, budget cuts), people (missing skills or staff, conflicts, poor communication), technical (scope creep, poor tool support), suppliers (a third-party delivery fails, the supplier goes bankrupt). When they happen, the schedule, budget or scope suffer.",
+     "Product risks concern the quality characteristics of the product itself (ISO 25010): missing or wrong function, wrong calculations, runtime errors, poor architecture, inefficient algorithms, slow response, poor user experience, security holes. Consequences: unhappy users, loss of revenue, trust and reputation, harm to third parties, costly maintenance, criminal penalties, in extreme cases physical harm.",
+     "Quick test: \"can this go wrong in the software?\" — product risk. \"Can this stop us from finishing on time and on budget?\" — project risk. Trap: \"poor test tool support\" is a project risk, not a product risk."
+    ]
+   },
+   "wallet": {
+    "ru": "Риски продукта Card Wallet: чужая карта доступна по id (IDOR, BUG-04, Critical), ошибки округления комиссии, номер карты восстанавливается из хеша (BUG-10). Возможные риски проекта (гипотетические): тестовое окружение поставят с опозданием; ключевой участник команды окажется недоступен; у команды не хватает опыта тестирования gRPC. Они угрожают графику и объёму работ, а не качеству самого кошелька.",
+    "en": "Card Wallet product risks: another client's card readable by id (IDOR, BUG-04, Critical), commission rounding errors, the card number recoverable from its hash (BUG-10). Possible project risks (hypothetical): the test environment is delivered late; a key team member becomes unavailable; the team lacks gRPC testing experience. They threaten the schedule and scope, not the quality of the wallet itself.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-04.md"
+   }
+  },
+  {
+   "lo": "FL-5.2.3",
+   "explain": {
+    "ru": [
+     "Анализ рисков продукта нужен, чтобы направить усилия тестирования туда, где они сильнее всего снижают остаточный риск. Лучше начинать его рано в жизненном цикле.",
+     "Он состоит из определения рисков (составить как можно более полный список: мозговой штурм, семинары, интервью, диаграммы причин и следствий) и оценки рисков (категоризировать, определить вероятность, влияние и уровень, расставить приоритеты, предложить способы обработки).",
+     "Результаты анализа влияют на тщательность и объём: какой объём тестировать; какие уровни и типы тестирования; какие методы и какое покрытие; сколько трудозатрат на каждую задачу; в каком порядке тестировать, чтобы критичные дефекты нашлись пораньше; нужны ли меры помимо тестирования.",
+     "Идея для экзамена: высокий риск → больше тестов, более строгие методы, более высокое покрытие, раньше в очереди. Низкий риск → меньше усилий, иногда только смоук-проверка."
+    ],
+    "en": [
+     "Product risk analysis aims the test effort where it lowers the residual risk the most. It is best started early in the SDLC.",
+     "It consists of risk identification (build a list as complete as possible: brainstorming, workshops, interviews, cause-effect diagrams) and risk assessment (categorise, determine likelihood, impact and level, prioritise, propose ways to handle each risk).",
+     "Its results shape thoroughness and scope: what scope to test; which test levels and types; which techniques and what coverage; how much effort for each task; the order of testing so critical defects are found early; whether measures beyond testing are needed.",
+     "Exam idea: high risk → more tests, more rigorous techniques, higher coverage, earlier in the queue. Low risk → less effort, sometimes just a smoke check."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet платежи — самый рискованный участок, поэтому для них применены граничные значения, таблицы решений (порядок проверок платежа), тесты параллельности и идемпотентности, плюс проверки в базе (баланс = сумма транзакций). Выписка с меньшим риском получила меньше тестов. Нагрузочное тестирование вынесено за объём v1 — это осознанное решение по итогам анализа.",
+    "en": "In Card Wallet payments are the riskiest area, so they get boundary values, decision tables (payment check order), concurrency and idempotency tests, plus database checks (balance = sum of transactions). The lower-risk statement got fewer tests. Load testing was put out of scope for v1 — a conscious decision after the analysis.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-cases/TC-payments.md"
+   }
+  },
+  {
+   "lo": "FL-5.2.4",
+   "explain": {
+    "ru": [
+     "Контроль рисков продукта — все меры в ответ на проанализированные риски. Он состоит из смягчения рисков (выполнить предложенные действия, чтобы снизить уровень риска) и мониторинга рисков (проверять, что меры работают, уточнять оценку, замечать новые риски).",
+     "Возможные ответы на риск: смягчение тестированием, принятие риска, передача риска (например, третьей стороне) или запасной план (план на случай, если риск наступит).",
+     "Как смягчать тестированием: подобрать тестировщиков с нужным опытом для этого типа риска; обеспечить подходящий уровень независимости; провести рецензирование и статический анализ; применить подходящие методы и уровни покрытия; применить типы тестирования, нацеленные на затронутые характеристики качества; выполнять динамическое тестирование, включая регрессионное.",
+     "Ловушка: тестирование не убирает риск полностью — оно снижает его уровень и даёт информацию. Принятие риска — тоже законный ответ, если ущерб мал."
+    ],
+    "en": [
+     "Product risk control means all measures taken in response to analysed risks. It consists of risk mitigation (carry out the proposed actions to lower the risk level) and risk monitoring (check that the actions work, improve the assessment, spot new risks).",
+     "Possible responses to a risk: mitigation by testing, risk acceptance, risk transfer (e.g. to a third party) or a contingency plan (what to do if the risk happens).",
+     "How to mitigate by testing: choose testers with the right experience for that risk type; apply a suitable level of test independence; do reviews and static analysis; apply suitable techniques and coverage levels; apply test types aimed at the affected quality characteristics; run dynamic testing, including regression testing.",
+     "Trap: testing does not remove a risk completely — it lowers its level and provides information. Accepting a risk is also a valid response when the harm is small."
+    ]
+   },
+   "wallet": {
+    "ru": "Риск «номер карты восстанавливается из базы» в Card Wallet смягчили независимым код-ревью — так нашли BUG-10 — и добавили тесты базы на отсутствие полного номера и CVV. А BUG-13 (просроченную карту можно заблокировать, Trivial) осознанно приняли: он отложен, потому что ущерба нет.",
+    "en": "In Card Wallet the risk \"card number recoverable from the database\" was mitigated by an independent code review — it found BUG-10 — plus database tests checking that no full PAN or CVV is stored. BUG-13 (an expired card can be blocked, Trivial) was consciously accepted: it is deferred because it causes no harm.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-10.md"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "риск",
+   "en": "risk",
+   "explain": {
+    "ru": "Возможное событие, которое, если наступит, приведёт к неблагоприятным последствиям.",
+    "en": "A possible event that, if it happens, has an adverse effect."
+   }
+  },
+  {
+   "ru": "уровень риска",
+   "en": "risk level",
+   "explain": {
+    "ru": "Мера риска, определяемая его вероятностью и влиянием.",
+    "en": "The measure of a risk, given by its likelihood and impact."
+   }
+  },
+  {
+   "ru": "риск продукта",
+   "en": "product risk",
+   "explain": {
+    "ru": "Риск, связанный с качеством самого продукта.",
+    "en": "A risk related to the quality of the product itself."
+   }
+  },
+  {
+   "ru": "риск проекта",
+   "en": "project risk",
+   "explain": {
+    "ru": "Риск, связанный с управлением проектом: сроки, бюджет, люди, поставщики.",
+    "en": "A risk related to managing the project: schedule, budget, people, suppliers."
+   }
+  },
+  {
+   "ru": "анализ рисков",
+   "en": "risk analysis",
+   "explain": {
+    "ru": "Определение рисков плюс их оценка.",
+    "en": "Risk identification plus risk assessment."
+   }
+  },
+  {
+   "ru": "оценка рисков",
+   "en": "risk assessment",
+   "explain": {
+    "ru": "Категоризация, определение вероятности, влияния и уровня рисков и их приоритизация.",
+    "en": "Categorising risks, determining their likelihood, impact and level, and prioritising them."
+   }
+  },
+  {
+   "ru": "смягчение рисков",
+   "en": "risk mitigation",
+   "explain": {
+    "ru": "Действия, снижающие уровень риска.",
+    "en": "Actions that lower the risk level."
+   }
+  },
+  {
+   "ru": "тестирование на основе рисков",
+   "en": "risk-based testing",
+   "explain": {
+    "ru": "Подход, где выбор, приоритеты и управление тестированием опираются на анализ и контроль рисков.",
+    "en": "An approach where test activities are chosen, prioritised and managed based on risk analysis and control."
+   }
+  }
+ ]
+}
