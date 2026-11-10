@@ -1,0 +1,81 @@
+{
+ "id": "2.2",
+ "objectives": [
+  {
+   "lo": "FL-2.2.1",
+   "explain": {
+    "ru": [
+     "Уровень тестирования — группа тестовых работ, которые организуют и ведут вместе, применительно к ПО на определённой стадии: от отдельного компонента до всей системы или системы систем. Силлабус описывает пять уровней.",
+     "Компонентное (модульное, unit) — компоненты по отдельности, обычно разработчики, в своей среде, с фреймворком или тестовой обвязкой. Тестирование интеграции компонентов — интерфейсы и взаимодействие между компонентами; сильно зависит от стратегии интеграции (снизу вверх, сверху вниз, «большой взрыв»). Системное — поведение и возможности всей системы: сквозные функциональные задачи и нефункциональные характеристики; часто независимая команда, основа — спецификации системы.",
+     "Системное интеграционное — интерфейсы нашей системы с другими системами и внешними сервисами; нужна среда, похожая на эксплуатационную. Приемочное — валидация и готовность к развертыванию: удовлетворяет ли система бизнес-потребности пользователя; в идеале проводят будущие пользователи. Формы: пользовательское (UAT), эксплуатационное, контрактное, нормативное, альфа и бета.",
+     "Уровни различают по признакам: объект тестирования, цели, тестовый базис, типичные дефекты и отказы, подход и ответственность. Ловушка: «интеграция компонентов» (внутри системы) и «системная интеграция» (с внешними системами) — разные уровни."
+    ],
+    "en": [
+     "A test level is a group of test activities organised and managed together, for software at a given stage: from a single component up to a whole system or a system of systems. The syllabus describes five levels.",
+     "Component (unit) testing — components in isolation, usually by developers in their own environment, using a framework or test harness. Component integration testing — the interfaces and interactions between components; strongly depends on the integration strategy (bottom-up, top-down, big-bang). System testing — the behaviour and capabilities of the whole system: end-to-end functional tasks and non-functional characteristics; often by an independent team, based on system specifications.",
+     "System integration testing — the interfaces between our system and other systems and external services; needs an environment close to production. Acceptance testing — validation and readiness for deployment: does the system meet the user's business needs; ideally done by the intended users. Forms: user acceptance (UAT), operational, contractual, regulatory, alpha and beta.",
+     "Levels are told apart by: test object, test objectives, test basis, typical defects and failures, approach and responsibilities. Trap: 'component integration' (inside the system) and 'system integration' (with external systems) are different levels."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet: tests/unit — компонентное тестирование (комиссия, Луна, фрод-правила без сервисов); tests/integration и tests/grpc — интеграция компонентов (кошелёк ↔ фрод-сервис по gRPC); tests/api и tests/e2e (Playwright) — системное тестирование всего стека. Критерии приемки в docs/requirements — основа для приемочного тестирования. Настоящей системной интеграции нет: платёжные сети только симулируются.",
+    "en": "In Card Wallet: tests/unit is component testing (commission, Luhn, fraud rules without services); tests/integration and tests/grpc are component integration (wallet ↔ fraud service over gRPC); tests/api and tests/e2e (Playwright) are system testing of the whole stack. The acceptance criteria in docs/requirements are the basis for acceptance testing. There is no real system integration: payment networks are only simulated.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md"
+   }
+  },
+  {
+   "lo": "FL-2.2.2",
+   "explain": {
+    "ru": [
+     "Тип тестирования — группа тестовых работ, связанная с определёнными характеристиками качества. Силлабус рассматривает четыре типа, и почти все их можно применять на любом уровне — меняется только фокус.",
+     "Функциональное тестирование проверяет, ЧТО система делает: функциональную полноту, правильность и уместность. Нефункциональное — НАСКОЛЬКО ХОРОШО она это делает: характеристики по ISO/IEC 25010 — производительность, совместимость, практичность (удобство использования), надёжность, безопасность (security), сопровождаемость, переносимость, защищённость (safety). Нефункциональные тесты часто строятся на функциональных (та же функция + проверка времени ответа), их полезно начинать рано, а поздно найденные нефункциональные дефекты опасны для проекта.",
+     "Тестирование методом черного ящика основано на спецификации и не смотрит на внутреннее устройство: цель — сверить поведение со спецификацией. Тестирование методом белого ящика основано на структуре (код, архитектура, потоки работ и данных): цель — покрыть структуру тестами до приемлемого уровня.",
+     "Ловушка: тип ≠ уровень. «Белый ящик только на компонентном уровне» — неверно; «нефункциональное только на системном» — тоже неверно."
+    ],
+    "en": [
+     "A test type is a group of test activities related to particular quality characteristics. The syllabus covers four types, and nearly all of them can be used at any test level — only the focus changes.",
+     "Functional testing checks WHAT the system does: functional completeness, correctness and appropriateness. Non-functional testing checks HOW WELL it does it: the ISO/IEC 25010 characteristics — performance efficiency, compatibility, usability, reliability, security, maintainability, portability, safety. Non-functional tests are often built on functional ones (same function + a response-time check), it pays to start them early, and late non-functional defects threaten the project.",
+     "Black-box testing is specification-based and ignores the internal structure: its goal is to check behaviour against the specification. White-box testing is structure-based (code, architecture, work flows, data flows): its goal is to cover the structure with tests to an acceptable level.",
+     "Trap: type ≠ level. 'White-box only at component level' is wrong; 'non-functional only at system level' is wrong too."
+    ]
+   },
+   "wallet": {
+    "ru": "Card Wallet: функциональное — tests/api/test_payments.py (одобрение, отказы, комиссия); нефункциональное — безопасность по NFR-04: test_no_sensitive_logs.py (в логах нет PAN/CVV) и tests/db (ключевой хеш PAN). Нагрузочное тестирование в тест-плане явно вне объёма. Черный ящик — API-тесты по требованиям; белый ящик — покрытие операторов и ветвей функции комиссии (тренажёр раздела 4.3).",
+    "en": "Card Wallet: functional — tests/api/test_payments.py (approvals, declines, commission); non-functional — security per NFR-04: test_no_sensitive_logs.py (no PAN/CVV in logs) and tests/db (keyed PAN hash). Load testing is explicitly out of scope in the test plan. Black-box — API tests derived from requirements; white-box — statement and branch coverage of the commission function (the section 4.3 trainer).",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/requirements/NFR.md"
+   }
+  },
+  {
+   "lo": "FL-2.2.3",
+   "explain": {
+    "ru": [
+     "После изменения — новой функции или исправления дефекта — нужны два вида тестирования. Подтверждающее тестирование проверяет, что исходный дефект действительно исправлен. Регрессионное — что изменение (включая уже подтверждённое исправление) не сломало ничего другого.",
+     "Подтверждающее: повторить тесты, которые падали из-за дефекта, и/или добавить новые тесты на изменения, сделанные при исправлении. Если времени или денег мало — хотя бы пройти шаги воспроизведения и убедиться, что отказа больше нет.",
+     "Регрессионное: побочные эффекты могут появиться в том же компоненте, в других компонентах, в связанных системах и даже из-за среды. Сначала полезен анализ влияния — он показывает, какие части могут пострадать. Регрессионные наборы запускаются много раз и растут с каждым релизом, поэтому это первый кандидат на автоматизацию, особенно в CI.",
+     "Оба вида нужны на всех уровнях, где были исправления или изменения. Подсказка: «тот самый дефект исправлен?» → подтверждающее; «ничего не сломалось вокруг?» → регрессионное."
+    ],
+    "en": [
+     "After a change — a new feature or a defect fix — two kinds of testing are needed. Confirmation testing checks that the original defect really is fixed. Regression testing checks that the change (including a fix that already passed confirmation) did not break anything else.",
+     "Confirmation: re-run the tests that failed because of the defect, and/or add new tests for whatever was changed to fix it. If time or money is short — at least repeat the reproduction steps and check the failure is gone.",
+     "Regression: side effects can appear in the same component, in other components, in connected systems and even through the environment. An impact analysis first helps — it shows which parts may be affected. Regression suites run many times and grow with every release, so they are the top candidate for automation, especially in CI.",
+     "Both are needed at every level where fixes or changes were made. Hint: 'is that defect fixed?' → confirmation; 'did nothing else break?' → regression."
+    ]
+   },
+   "wallet": {
+    "ru": "BUG-10: номер карты восстанавливался из простого SHA-256. После перехода на HMAC подтверждающее тестирование — повторить сценарий перебора и убедиться, что PAN больше не находится (тесты test_pan_hash_is_keyed_*). Регрессионное — весь автоматический набор в CI плюс чек-лист регресса платежей: не сломались ли выпуск карт, платежи, выписка.",
+    "en": "BUG-10: the card number could be recovered from a plain SHA-256. After the switch to HMAC, confirmation testing = repeat the brute-force scenario and check the PAN is no longer found (the test_pan_hash_is_keyed_* tests). Regression testing = the whole automated suite in CI plus the payments regression checklist: did card issuing, payments and the statement keep working.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/checklists/payments-regression.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "Уровень тестирования", "en": "Test level", "explain": {"ru": "Группа тестовых работ для ПО на определённой стадии: компонент, интеграция компонентов, система, системная интеграция, приемка.", "en": "A group of test activities for software at a given stage: component, component integration, system, system integration, acceptance."}},
+  {"ru": "Тип тестирования", "en": "Test type", "explain": {"ru": "Группа тестовых работ, нацеленная на определённые характеристики качества (функциональные, нефункциональные, черный и белый ящик).", "en": "A group of test activities aimed at particular quality characteristics (functional, non-functional, black-box, white-box)."}},
+  {"ru": "Компонентное тестирование", "en": "Component testing", "explain": {"ru": "Тестирование отдельных компонентов в изоляции, обычно разработчиками.", "en": "Testing individual components in isolation, usually by developers."}},
+  {"ru": "Тестирование интеграции компонентов", "en": "Component integration testing", "explain": {"ru": "Тестирование интерфейсов и взаимодействия между компонентами одной системы.", "en": "Testing the interfaces and interactions between components of one system."}},
+  {"ru": "Системное интеграционное тестирование", "en": "System integration testing", "explain": {"ru": "Тестирование интерфейсов системы с другими системами и внешними сервисами.", "en": "Testing the interfaces between the system and other systems or external services."}},
+  {"ru": "Приемочное тестирование", "en": "Acceptance testing", "explain": {"ru": "Проверка, что система отвечает бизнес-потребностям пользователей и готова к развертыванию.", "en": "Checking that the system meets users' business needs and is ready for deployment."}},
+  {"ru": "Подтверждающее тестирование", "en": "Confirmation testing", "explain": {"ru": "Проверка, что исходный дефект успешно исправлен.", "en": "Checking that the original defect has been successfully fixed."}},
+  {"ru": "Регрессионное тестирование", "en": "Regression testing", "explain": {"ru": "Проверка, что изменение не вызвало негативных последствий в других местах.", "en": "Checking that a change has not caused adverse effects elsewhere."}}
+ ]
+}

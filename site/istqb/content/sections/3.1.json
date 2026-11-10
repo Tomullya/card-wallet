@@ -1,0 +1,109 @@
+{
+ "id": "3.1",
+ "objectives": [
+  {
+   "lo": "FL-3.1.1",
+   "explain": {
+    "ru": [
+     "Статическое тестирование — проверка без запуска ПО: вручную (рецензирование) или инструментом (статический анализ). Проверять так можно почти любой рабочий продукт: спецификации требований, исходный код, тест-планы, тестовые сценарии, элементы бэклога продукта, тест-хартии, проектную документацию, контракты, модели.",
+     "Для рецензирования подходит всё, что человек может прочитать и понять. Для статического анализа нужен продукт со структурой, которую инструмент может проверить: код, модели, текст с формальным синтаксисом.",
+     "Что НЕ подходит: то, что людям трудно понять и что нельзя анализировать инструментами — например, исполняемый код третьих сторон, который запрещено анализировать по юридическим причинам.",
+     "Ловушка: «статическое тестирование применимо только к коду» — неверно; документы, тесты и даже договоры тоже можно рецензировать."
+    ],
+    "en": [
+     "Static testing examines work without running the software: manually (reviews) or with a tool (static analysis). Almost any work product can be examined this way: requirement specifications, source code, test plans, test cases, product backlog items, test charters, project documentation, contracts, models.",
+     "Anything a person can read and understand can be reviewed. Static analysis needs a work product with a structure that a tool can check: code, models, text with a formal syntax.",
+     "Not suitable: things that are hard for people to interpret and must not be analysed by tools — for example third-party executable code that may not be analysed for legal reasons.",
+     "Trap: 'static testing applies only to code' — wrong; documents, tests and even contracts can be reviewed."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet статически проверяются: требования docs/requirements (их чтение нашло BUG-05), код (линтер ruff в CI, код-ревью нашло BUG-10) и даже QA-документы — scripts/check_docs.py проверяет, что тест-кейсы и чек-листы ссылаются только на существующие требования и тесты. Это статический анализ документов: они имеют структуру (ID вида BR-PAY-01), которую можно проверить скриптом.",
+    "en": "In Card Wallet these are checked statically: the requirements in docs/requirements (reading them found BUG-05), the code (ruff linter in CI; a code review found BUG-10) and even the QA documents — scripts/check_docs.py checks that test cases and checklists refer only to existing requirements and tests. That is static analysis of documents: they have a structure (IDs like BR-PAY-01) a script can check.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/scripts/check_docs.py"
+   }
+  },
+  {
+   "lo": "FL-3.1.2",
+   "explain": {
+    "ru": [
+     "Главная ценность — дефекты находятся на самых ранних этапах, когда кода ещё может не быть (принцип раннего тестирования). Кроме того, статическое тестирование находит то, что динамическое не может: недостижимый код, неправильно реализованные шаблоны проектирования, дефекты в неисполняемых продуктах (документах).",
+     "Оно помогает оценить качество рабочих продуктов и укрепить доверие к ним. Проверяя требования, заинтересованные стороны убеждаются, что записано то, что им действительно нужно. А раз это происходит рано, у всех формируется общее понимание и улучшается коммуникация — поэтому в статическое тестирование стоит вовлекать самых разных людей.",
+     "Про деньги: рецензирование стоит усилий, но общий бюджет проекта обычно ниже, чем без рецензий, — меньше тратится на исправление дефектов позже. Статический анализ находит некоторые дефекты кода эффективнее динамического тестирования, что даёт меньше дефектов и меньше общих трудозатрат."
+    ],
+    "en": [
+     "The main value: defects are found in the earliest phases, possibly before code exists (the early testing principle). Also, static testing finds things dynamic testing cannot: unreachable code, design patterns not implemented as intended, defects in non-executable work products (documents).",
+     "It helps evaluate the quality of work products and build confidence in them. By checking requirements, stakeholders make sure what is written is what they really need. And because it happens early, everyone builds a shared understanding and communication improves — so a wide range of people should take part in static testing.",
+     "On cost: reviews take effort, but the overall project cost is usually lower than without them — less is spent on fixing defects later. Static analysis finds some code defects more efficiently than dynamic testing, giving fewer defects and less total effort."
+    ]
+   },
+   "wallet": {
+    "ru": "BUG-05 в отчёте прямо назван «самым дешёвым видом дефекта — найден до того, как появился код»: противоречие между BR-CARD-02, BR-FRD-01 и BR-PAY-02 исправили правкой одного числа в документе. Найди его тестами после реализации — пришлось бы менять код, тесты и данные.",
+    "en": "The BUG-05 report literally calls it the 'cheapest kind of defect — found before any code existed': the conflict between BR-CARD-02, BR-FRD-01 and BR-PAY-02 was fixed by changing one number in a document. Found by tests after implementation, it would have meant changing code, tests and data.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-05.md"
+   }
+  },
+  {
+   "lo": "FL-3.1.3",
+   "explain": {
+    "ru": [
+     "Статическое и динамическое тестирование дополняют друг друга: цели похожи (найти дефекты), но есть различия. Некоторые типы дефектов находит только одно из них.",
+     "Ключевое различие: статическое находит сам дефект напрямую, а динамическое вызывает отказ, и дефект потом ищут анализом. Статическое легче находит дефекты на редко выполняемых или труднодостижимых путях кода; применимо к неисполняемым продуктам (динамическое — только к исполняемым); измеряет характеристики, не зависящие от выполнения (сопровождаемость), а динамическое — зависящие (производительность).",
+     "Что дешевле/проще найти статически: дефекты требований (противоречия, неоднозначности, пропуски, неточности, дубли), дефекты проектирования (неэффективная структура БД, плохая модульность), некоторые дефекты кода (переменные без значения, необъявленные переменные, недостижимый или дублированный код, лишняя сложность), отклонения от стандартов (именование), неверные спецификации интерфейсов (число, тип, порядок параметров), некоторые уязвимости (переполнение буфера), пробелы в покрытии тестового базиса (нет тестов для критерия приемки)."
+    ],
+    "en": [
+     "Static and dynamic testing complement each other: their objectives are similar (find defects), but there are differences. Some defect types can be found by only one of them.",
+     "Key difference: static testing finds the defect itself directly, while dynamic testing causes a failure and the defect is found by later analysis. Static testing more easily finds defects on rarely executed or hard-to-reach code paths; it works on non-executable work products (dynamic testing only on executable ones); it measures characteristics that do not depend on execution (maintainability), while dynamic testing measures those that do (performance efficiency).",
+     "Easier/cheaper to find statically: requirement defects (inconsistencies, ambiguities, omissions, inaccuracies, duplicates), design defects (inefficient database structure, poor modularisation), some coding defects (variables without values, undeclared variables, unreachable or duplicated code, excessive complexity), deviations from standards (naming), incorrect interface specifications (number, type, order of parameters), some security vulnerabilities (buffer overflow), gaps in test basis coverage (no test for an acceptance criterion)."
+    ]
+   },
+   "wallet": {
+    "ru": "Сравните два бага Card Wallet. BUG-10 нашли статически: ревьюер прочитал код хеширования и сразу увидел дефект — простой SHA-256 от номера, где неизвестны только 6 цифр. BUG-02 нашли динамически: тест test_daily_limit_exact_allowed увидел отказ (платёж ровно на лимит отклонён), а причину — проверка лимита вела себя как «>=» вместо «>» — нашли уже анализом. А пробел «требование без теста» ловит статический скрипт traceability.py.",
+    "en": "Compare two Card Wallet bugs. BUG-10 was found statically: the reviewer read the hashing code and saw the defect directly — a plain SHA-256 of a number with only 6 unknown digits. BUG-02 was found dynamically: the test test_daily_limit_exact_allowed saw a failure (a payment exactly at the limit was declined), and the cause — the limit check behaved like '>=' instead of '>' — was found by analysis afterwards. And the 'requirement without a test' gap is caught by the static script traceability.py.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-10.md"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "Статическое тестирование",
+   "en": "Static testing",
+   "explain": {
+    "ru": "Тестирование рабочего продукта без его выполнения: рецензирование или статический анализ.",
+    "en": "Testing a work product without executing it: reviews or static analysis."
+   }
+  },
+  {
+   "ru": "Динамическое тестирование",
+   "en": "Dynamic testing",
+   "explain": {
+    "ru": "Тестирование, при котором ПО выполняется.",
+    "en": "Testing in which the software is executed."
+   }
+  },
+  {
+   "ru": "Статический анализ",
+   "en": "Static analysis",
+   "explain": {
+    "ru": "Проверка рабочего продукта инструментом без выполнения, например линтером кода.",
+    "en": "Tool-based examination of a work product without executing it, e.g. a code linter."
+   }
+  },
+  {
+   "ru": "Рецензирование",
+   "en": "Review",
+   "explain": {
+    "ru": "Ручная проверка рабочего продукта одним или несколькими людьми для поиска аномалий и оценки качества.",
+    "en": "Manual examination of a work product by one or more people to find anomalies and evaluate quality."
+   }
+  },
+  {
+   "ru": "Аномалия",
+   "en": "Anomaly",
+   "explain": {
+    "ru": "Любое отклонение от ожиданий; при рецензировании ещё не обязательно дефект — это решают при анализе.",
+    "en": "Any deviation from expectations; in a review it is not necessarily a defect — that is decided during analysis."
+   }
+  }
+ ]
+}

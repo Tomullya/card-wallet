@@ -1,0 +1,167 @@
+{
+ "id": "3.2",
+ "objectives": [
+  {
+   "lo": "FL-3.2.1",
+   "explain": {
+    "ru": [
+     "Ранняя и частая обратная связь от заинтересованных сторон позволяет рано заговорить о возможных проблемах качества. Если заинтересованные стороны почти не участвуют в разработке, продукт может не совпасть с их исходным или текущим видением.",
+     "Последствия «не того продукта»: дорогие переделки, сорванные сроки, поиск виноватых, а иногда и полный провал проекта.",
+     "Частая обратная связь на протяжении всего SDLC предотвращает недопонимание требований и помогает раньше понять и внедрить изменения требований. Команда лучше понимает, что строит, и может сосредоточиться на функциях с наибольшей ценностью для заинтересованных сторон и наибольшим положительным влиянием на выявленные риски."
+    ],
+    "en": [
+     "Early and frequent feedback from stakeholders lets potential quality problems be raised early. If stakeholders are barely involved during development, the product may not match their original or current vision.",
+     "The cost of 'the wrong product': expensive rework, missed deadlines, blame games, and sometimes complete project failure.",
+     "Frequent feedback throughout the SDLC prevents misunderstandings about requirements and helps changes to requirements be understood and implemented earlier. The team understands better what it is building and can focus on the features that bring stakeholders the most value and do the most to reduce identified risks."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet каждый план (docs/plans) записывается до реализации, поэтому владелец проекта может высказаться по нему ещё до появления кода; после каждого плана результат сразу виден — работающий сайт или Allure-отчёт на GitHub Pages. Так недопонимание выясняется на уровне плана, а не после недели кода.",
+    "en": "In Card Wallet every plan (docs/plans) is written down before implementation, so the project owner can comment on it before any code exists; after each plan the result is visible right away — a working site or the Allure report on GitHub Pages. So misunderstandings surface at plan level, not after a week of code.",
+    "link": "https://github.com/Tomullya/card-wallet/tree/main/docs/plans"
+   }
+  },
+  {
+   "lo": "FL-3.2.2",
+   "explain": {
+    "ru": [
+     "Стандарт ISO/IEC 20246 задаёт общий процесс рецензирования — структурированный, но гибкий: его подстраивают под ситуацию, и чем формальнее рецензирование, тем больше задач из процесса выполняется. Большой продукт можно рецензировать частями, запуская процесс несколько раз.",
+     "Пять мероприятий. 1) Планирование: объём — цель, что рецензируем, какие характеристики качества, на чём сосредоточиться, критерии завершения, стандарты, трудозатраты и сроки. 2) Инициирование: убедиться, что всё и все готовы — у каждого есть доступ к продукту, понятна роль, есть всё нужное. 3) Индивидуальное рецензирование: каждый рецензент сам оценивает продукт техниками (по чек-листу, по сценариям) и записывает аномалии, рекомендации и вопросы.",
+     "4) Коммуникация и анализ: аномалии — не обязательно дефекты, поэтому их обсуждают и по каждой решают статус, владельца и действия; обычно на совещании, где также оценивают уровень качества продукта и нужны ли последующие действия или повторное рецензирование. 5) Исправление и отчетность: на каждый дефект — отчёт о дефекте; когда критерии завершения достигнуты, продукт принимают, результаты сообщают.",
+     "Ловушка: аномалии записывают при индивидуальном рецензировании, а решение «дефект или нет» принимают на этапе коммуникации и анализа."
+    ],
+    "en": [
+     "The ISO/IEC 20246 standard defines a generic review process — structured but flexible: it is tailored to the situation, and the more formal the review, the more of its tasks are performed. A large work product can be reviewed in parts by running the process several times.",
+     "Five activities. 1) Planning: the scope — purpose, what is reviewed, which quality characteristics, focus areas, exit criteria, standards, effort and timeframes. 2) Review initiation: make sure everyone and everything is ready — everyone has access to the work product, understands their role and has what they need. 3) Individual review: each reviewer assesses the work product using techniques (checklist-based, scenario-based) and logs anomalies, recommendations and questions.",
+     "4) Communication and analysis: anomalies are not necessarily defects, so they are discussed, and for each one status, owner and actions are decided; usually in a meeting that also judges the quality level of the work product and whether follow-up actions or a follow-up review are needed. 5) Fixing and reporting: a defect report for every defect; once exit criteria are met, the work product is accepted and the results are reported.",
+     "Trap: anomalies are logged during individual review, while 'defect or not' is decided in communication and analysis."
+    ]
+   },
+   "wallet": {
+    "ru": "Код-ревью, нашедшее BUG-10, разложенное по пяти мероприятиям (первые два восстановлены для иллюстрации): планирование — проверить хранение карт на соответствие NFR-04; инициирование — ревьюер получает код и требования; индивидуальное рецензирование — ревьюер замечает простой SHA-256 и пишет скрипт-доказательство (PAN восстановлен за 0,18 с); коммуникация и анализ — аномалию признают критическим дефектом; исправление и отчётность — отчёт BUG-10, переход на HMAC и регрессионные тесты.",
+    "en": "The code review that found BUG-10, mapped onto the five activities (the first two are reconstructed for illustration): planning — check card storage against NFR-04; initiation — the reviewer gets the code and requirements; individual review — the reviewer spots the plain SHA-256 and writes a proof script (PAN recovered in 0.18 s); communication and analysis — the anomaly is accepted as a critical defect; fixing and reporting — report BUG-10, switch to HMAC, regression tests.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-10.md"
+   }
+  },
+  {
+   "lo": "FL-3.2.3",
+   "explain": {
+    "ru": [
+     "Шесть основных ролей. Руководитель (менеджер) решает, что рецензировать, и даёт ресурсы — людей и время. Автор создаёт рецензируемый продукт и исправляет его. Модератор (фасилитатор) обеспечивает эффективное проведение совещаний: посредничество, управление временем, безопасная атмосфера, где все могут говорить свободно.",
+     "Секретарь (регистратор) собирает аномалии от рецензентов и записывает информацию о рецензировании — решения и новые аномалии, найденные на совещании. Рецензент выполняет рецензирование; это может быть участник проекта, эксперт в предметной области или любое другое заинтересованное лицо. Лидер рецензирования несёт общую ответственность: решает, кого привлечь, организует, когда и где пройдёт рецензирование.",
+     "Один человек может совмещать несколько ролей. Ловушки: ресурсы выделяет руководитель, а не лидер рецензирования; ведёт совещание модератор, а организует всё рецензирование лидер; записывает секретарь, а не автор."
+    ],
+    "en": [
+     "Six principal roles. The manager decides what is reviewed and provides resources — people and time. The author creates the work product under review and fixes it. The moderator (facilitator) makes review meetings run effectively: mediation, time management, and a safe atmosphere where everyone can speak freely.",
+     "The scribe (recorder) collects anomalies from reviewers and records review information — decisions and new anomalies found during the meeting. The reviewer performs the review; this can be a project member, a subject matter expert or any other stakeholder. The review leader takes overall responsibility: decides who is involved and organises when and where the review takes place.",
+     "One person may hold several roles. Traps: resources come from the manager, not the review leader; the moderator runs the meeting, while the review leader organises the whole review; the scribe records, not the author."
+    ]
+   },
+   "wallet": {
+    "ru": "Рецензирование требований Card Wallet перед планом 1 могло бы выглядеть так: автор — тот, кто написал BR-*.md; рецензенты — тестировщик и разработчик (именно при таком чтении требований и нашли BUG-05); владелец проекта — руководитель, выделяющий время; лидер рецензирования назначает встречу, модератор ведёт её, секретарь записывает «BR-CARD-02 конфликтует с BR-FRD-01» и решение поднять лимит до 10000,00.",
+    "en": "A review of Card Wallet's requirements before plan 1 could look like this: the author is whoever wrote BR-*.md; reviewers are a tester and a developer (this kind of requirements reading is what found BUG-05); the project owner is the manager who gives the time; the review leader schedules the meeting, the moderator runs it, the scribe records 'BR-CARD-02 conflicts with BR-FRD-01' and the decision to raise the limit to 10000.00.",
+    "link": "https://github.com/Tomullya/card-wallet/tree/main/docs/requirements"
+   }
+  },
+  {
+   "lo": "FL-3.2.4",
+   "explain": {
+    "ru": [
+     "Типы рецензирования различаются степенью формальности. Нужная формальность зависит от модели SDLC, зрелости процесса, критичности и сложности продукта, законодательных и нормативных требований, необходимости аудиторского следа. Один продукт можно рецензировать разными типами — сначала неформально, потом формальнее. Выбор типа зависит также от потребностей проекта, ресурсов, рисков, предметной области и культуры компании.",
+     "Неформальное рецензирование: без определённого процесса и без обязательного документированного результата; главная цель — найти аномалии. Разбор (walkthrough): ведёт автор; целей много — оценить качество и укрепить доверие, обучить рецензентов, достичь согласия, родить идеи, мотивировать автора, найти аномалии; индивидуальная подготовка рецензентов возможна, но не обязательна.",
+     "Технический анализ (technical review): технически квалифицированные рецензенты под руководством модератора; цели — достичь согласия и принять решение по технической проблеме, а также найти аномалии, оценить качество и др. Инспекция: самый формальный тип, проходит полный общий процесс; главная цель — найти максимум аномалий; собираются метрики для улучшения SDLC и самого процесса инспекции; автор не может быть лидером рецензирования или секретарём.",
+     "Подсказки: «ведёт автор» → разбор; «решение по технической проблеме, модератор» → технический анализ; «метрики, максимум аномалий, полный процесс» → инспекция."
+    ],
+    "en": [
+     "Review types differ in formality. The right formality depends on the SDLC model, process maturity, the criticality and complexity of the work product, legal or regulatory requirements and the need for an audit trail. The same work product can be reviewed with different types — first informally, later more formally. The choice also depends on project needs, resources, risks, business domain and company culture.",
+     "Informal review: no defined process and no required documented output; the main goal is detecting anomalies. Walkthrough: led by the author; many goals — evaluate quality and build confidence, educate reviewers, reach consensus, generate ideas, motivate the author, detect anomalies; individual preparation by reviewers is possible but not required.",
+     "Technical review: technically qualified reviewers led by a moderator; goals — reach consensus and make decisions about a technical problem, plus detect anomalies, evaluate quality, etc. Inspection: the most formal type, follows the complete generic process; main goal — find the maximum number of anomalies; metrics are collected to improve the SDLC and the inspection process itself; the author cannot be the review leader or scribe.",
+     "Hints: 'led by the author' → walkthrough; 'decision on a technical problem, moderator' → technical review; 'metrics, maximum anomalies, full process' → inspection."
+    ]
+   },
+   "wallet": {
+    "ru": "BUG-10 нашло независимое код-ревью хранения карт. Для Card Wallet уместны разные типы: быстрый неформальный просмотр pull request; разбор, где автор показывает команде новый gRPC-поток; технический анализ, чтобы решить, чем хешировать номер карты (SHA-256 или HMAC); а для кода, где на кону деньги и данные карт, в настоящем банке выбрали бы инспекцию с чек-листом безопасности и метриками.",
+    "en": "BUG-10 was found by an independent code review of card storage. Card Wallet suits different types: a quick informal look at a pull request; a walkthrough where the author shows the team a new gRPC stream; a technical review to decide how to hash the card number (SHA-256 or HMAC); and for code where money and card data are at stake, a real bank would choose an inspection with a security checklist and metrics.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/checklists/security.md"
+   }
+  },
+  {
+   "lo": "FL-3.2.5",
+   "explain": {
+    "ru": [
+     "Факторы успеха рецензирования: ясные цели и измеримые критерии завершения (и никогда — оценка участников как цель); тип рецензирования, подходящий под цели, продукт, участников, потребности проекта и контекст; рецензирование небольшими частями, чтобы рецензенты не теряли концентрацию.",
+     "Дальше: обратная связь от рецензирования заинтересованным сторонам и авторам, чтобы они улучшали продукт и свою работу; достаточно времени на подготовку; поддержка руководства; рецензирование как часть культуры организации, ради обучения и улучшения процесса; обучение всех участников их ролям; фасилитация совещаний.",
+     "Ловушка: «оценивать по результатам рецензий, кто из авторов хуже работает» — это прямо противоречит факторам успеха. Ещё одна: «рецензировать весь документ за один раз» — наоборот, лучше малыми порциями."
+    ],
+    "en": [
+     "Success factors for reviews: clear objectives and measurable exit criteria (and never evaluating participants as an objective); a review type that fits the objectives, the work product, the participants, the project needs and context; reviewing small chunks so reviewers keep their concentration.",
+     "Also: feedback from reviews to stakeholders and authors so they can improve the product and their work; enough time to prepare; management support; reviews as part of the organisation's culture, for learning and process improvement; training for all participants in their roles; facilitated meetings.",
+     "Trap: 'use review results to judge which authors perform worst' — this directly contradicts the success factors. Another: 'review the whole document in one go' — the opposite, small chunks are better."
+    ]
+   },
+   "wallet": {
+    "ru": "Требования Card Wallet разбиты на небольшие файлы (BR-auth, BR-cards, BR-payments, BR-fraud…) — их удобно рецензировать по одному, не теряя концентрацию. Чек-листы в docs/qa/checklists дают ясные, проверяемые пункты, а выход из рецензирования можно сделать измеримым: «каждое требование имеет ID и проверяемый критерий приемки».",
+    "en": "Card Wallet's requirements are split into small files (BR-auth, BR-cards, BR-payments, BR-fraud…) — easy to review one at a time without losing concentration. The checklists in docs/qa/checklists give clear, checkable items, and the review exit can be made measurable: 'every requirement has an ID and a testable acceptance criterion'.",
+    "link": "https://github.com/Tomullya/card-wallet/tree/main/docs/requirements"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "Неформальное рецензирование",
+   "en": "Informal review",
+   "explain": {
+    "ru": "Рецензирование без определённого процесса и без обязательного документированного результата.",
+    "en": "A review with no defined process and no required documented output."
+   }
+  },
+  {
+   "ru": "Разбор",
+   "en": "Walkthrough",
+   "explain": {
+    "ru": "Рецензирование, которое ведёт автор; цели — от обучения и согласия до поиска аномалий.",
+    "en": "A review led by the author; goals range from education and consensus to finding anomalies."
+   }
+  },
+  {
+   "ru": "Технический анализ",
+   "en": "Technical review",
+   "explain": {
+    "ru": "Рецензирование технически квалифицированными людьми под руководством модератора для решений по технической проблеме.",
+    "en": "A review by technically qualified people, led by a moderator, to make decisions on a technical problem."
+   }
+  },
+  {
+   "ru": "Инспекция",
+   "en": "Inspection",
+   "explain": {
+    "ru": "Самый формальный тип рецензирования: полный процесс, метрики, цель — максимум аномалий.",
+    "en": "The most formal review type: full process, metrics, goal — the maximum number of anomalies."
+   }
+  },
+  {
+   "ru": "Формальное рецензирование",
+   "en": "Formal review",
+   "explain": {
+    "ru": "Рецензирование с определённым процессом, ролями и документированным результатом.",
+    "en": "A review with a defined process, roles and documented output."
+   }
+  },
+  {
+   "ru": "Модератор",
+   "en": "Moderator",
+   "explain": {
+    "ru": "Роль, обеспечивающая эффективное и безопасное проведение совещаний по рецензированию.",
+    "en": "The role that makes review meetings effective and safe."
+   }
+  },
+  {
+   "ru": "Лидер рецензирования",
+   "en": "Review leader",
+   "explain": {
+    "ru": "Роль с общей ответственностью за рецензирование: кто участвует, когда и где.",
+    "en": "The role with overall responsibility for the review: who takes part, when and where."
+   }
+  }
+ ]
+}

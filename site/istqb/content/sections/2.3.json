@@ -1,0 +1,34 @@
+{
+ "id": "2.3",
+ "objectives": [
+  {
+   "lo": "FL-2.3.1",
+   "explain": {
+    "ru": [
+     "Тестирование в период сопровождения — тестирование изменений в системе, которая уже работает в эксплуатации. Сопровождение бывает корректирующим (исправить дефекты), адаптивным (подстроиться под изменения среды) и улучшающим (производительность, сопровождаемость). Выпуски бывают плановыми и внеплановыми — срочные исправления (hotfix).",
+     "Тестирование здесь делает две вещи: проверяет, что само изменение внедрено успешно, и ищет регрессию в неизменённых частях — а это обычно почти вся система. До изменения можно провести анализ влияния, чтобы решить, стоит ли вообще его делать, учитывая последствия для других областей.",
+     "Объём тестирования зависит от трёх вещей: степени риска изменения, размера существующей системы и размера изменения.",
+     "Предпосылки (триггеры) — три группы: модификации (плановые улучшения по релизам, корректирующие изменения, hotfix); обновления или миграции эксплуатационной среды (переход на другую платформу — тесты новой среды и изменённого ПО, тесты преобразования данных при переносе из другого приложения); вывод из эксплуатации (тестирование архивирования данных при долгом хранении, а также процедур восстановления и извлечения из архива). Ловушка: вывод из эксплуатации — тоже триггер тестирования."
+    ],
+    "en": [
+     "Maintenance testing is testing changes to a system that is already in operation. Maintenance can be corrective (fix defects), adaptive (adjust to changes in the environment) or improving (performance, maintainability). Releases can be planned or unplanned — hot fixes.",
+     "Testing here does two things: it checks that the change itself was implemented successfully, and it looks for regressions in the unchanged parts — usually most of the system. Before the change, an impact analysis can help decide whether to make it at all, given its consequences for other areas.",
+     "The scope of maintenance testing depends on three things: the risk of the change, the size of the existing system and the size of the change.",
+     "Triggers fall into three groups: modifications (planned release-based enhancements, corrective changes, hot fixes); upgrades or migrations of the operational environment (moving to another platform — tests of the new environment and the changed software, data conversion tests when data comes from another application); retirement (testing data archiving when long retention is needed, plus restore and retrieval procedures). Trap: retirement is also a trigger for testing."
+    ]
+   },
+   "wallet": {
+    "ru": "Представим, что Card Wallet уже в эксплуатации. Триггер «модификация» — срочное исправление вроде BUG-10 (смена хеширования номера карты; старые хеши в базе надо пересчитать). Триггер «обновление среды» — переход с образа postgres:16 на новую версию: прогнать миграции Alembic и весь регресс. Триггер «вывод из эксплуатации» — при закрытии сервиса проверить архивацию выписок и их восстановление.",
+    "en": "Imagine Card Wallet is already in production. A 'modification' trigger — a hot fix like BUG-10 (changing how the card number is hashed; old hashes in the database must be recomputed). An 'environment upgrade' trigger — moving from the postgres:16 image to a newer version: run the Alembic migrations and the full regression suite. A 'retirement' trigger — when the service shuts down, test archiving of statements and restoring them.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docker-compose.yml"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "Тестирование в период сопровождения", "en": "Maintenance testing", "explain": {"ru": "Тестирование изменений в работающей системе, включая проверку на регрессию в неизменённых частях.", "en": "Testing changes to an operational system, including checking unchanged parts for regressions."}},
+  {"ru": "Анализ влияния", "en": "Impact analysis", "explain": {"ru": "Оценка того, какие части системы может затронуть изменение; помогает решить, делать ли его и насколько широк регресс.", "en": "Assessing which parts of a system a change may affect; helps decide whether to make it and how wide regression testing must be."}},
+  {"ru": "Срочное исправление (hotfix)", "en": "Hot fix", "explain": {"ru": "Внеплановый выпуск, который быстро исправляет дефект в эксплуатации.", "en": "An unplanned release that quickly fixes a defect in production."}},
+  {"ru": "Миграция", "en": "Migration", "explain": {"ru": "Перенос системы или данных в другую среду или из другого приложения; требует тестов среды и преобразования данных.", "en": "Moving a system or data to another environment or from another application; needs environment and data conversion tests."}},
+  {"ru": "Вывод из эксплуатации", "en": "Retirement", "explain": {"ru": "Завершение жизни системы; может потребовать тестирования архивирования и восстановления данных.", "en": "The end of a system's life; may require testing data archiving and restoring."}}
+ ]
+}

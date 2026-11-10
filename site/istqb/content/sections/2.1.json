@@ -1,0 +1,185 @@
+{
+ "id": "2.1",
+ "objectives": [
+  {
+   "lo": "FL-2.1.1",
+   "explain": {
+    "ru": [
+     "Модель жизненного цикла разработки (SDLC) — это общая схема, в каком порядке и как связаны работы над ПО. Бывают последовательные модели (водопад, V-модель), итеративные (спиральная, прототипирование) и инкрементные (Unified Process). Тестирование не бывает «одно на все случаи» — его подстраивают под выбранную модель.",
+     "От модели зависят: когда и в каком объёме идут тестовые работы (какие уровни и типы тестирования), насколько подробна тестовая документация, какие техники и подход выбрать, сколько автоматизировать и какую роль играет тестировщик.",
+     "В последовательной модели кода в начале ещё нет, поэтому тестировщик сначала рецензирует требования, анализирует и проектирует тесты, а динамическое тестирование начинается поздно. В итеративной и инкрементной каждая итерация даёт работающий кусок продукта: в каждой итерации можно делать и статическое, и динамическое тестирование на всех уровнях, а частые поставки требуют быстрой обратной связи и большого регресса.",
+     "В Agile изменения ожидаются всё время, поэтому документацию делают лёгкой, а регресс — максимально автоматизированным. Ручное тестирование там чаще основано на опыте (исследовательское и т. п.), без долгого предварительного проектирования. Ловушка на экзамене: «в Agile тестовая документация не нужна» — неверно, она просто легче."
+    ],
+    "en": [
+     "An SDLC model is a high-level picture of how software development activities are ordered and related. There are sequential models (waterfall, V-model), iterative ones (spiral, prototyping) and incremental ones (Unified Process). Testing is never one-size-fits-all — it is adapted to the chosen model.",
+     "The model influences: when and how much testing happens (which test levels and test types), how detailed the test documentation is, which test techniques and approach are chosen, how much is automated, and what the tester's role is.",
+     "In a sequential model there is no code at the start, so testers first review requirements, do test analysis and test design, and dynamic testing starts late. In iterative and incremental models each iteration delivers a working piece of the product, so static and dynamic testing can happen at all test levels in every iteration, and frequent delivery needs fast feedback and a lot of regression testing.",
+     "Agile expects change all the time, so documentation is kept light and regression testing is heavily automated. Manual testing there is mostly experience-based (e.g. exploratory) and needs little up-front design. Exam trap: 'Agile needs no test documentation' — wrong, it is just lighter."
+    ]
+   },
+   "wallet": {
+    "ru": "Card Wallet строился инкрементно: план 1 — бэкенд, план 2 — фронтенд, план 3 — QA-документы, планы 4–5 — gRPC, план 6 — этот сайт. Каждый план добавлял работающий кусок, поэтому после каждого прогонялся весь автоматический регресс в CI, а документы (тест-план, чек-листы) оставались короткими.",
+    "en": "Card Wallet was built incrementally: plan 1 — backend, plan 2 — frontend, plan 3 — QA docs, plans 4–5 — gRPC, plan 6 — this site. Each plan added a working piece, so after each one the whole automated regression suite ran in CI, while the documents (test plan, checklists) stayed short.",
+    "link": "https://github.com/Tomullya/card-wallet/tree/main/docs/plans"
+   }
+  },
+  {
+   "lo": "FL-2.1.2",
+   "explain": {
+    "ru": [
+     "Есть хорошие практики тестирования, которые работают в любой модели SDLC. Их четыре, и их стоит запомнить почти дословно по смыслу.",
+     "1) У каждой работы по разработке есть парная тестовая работа — так всё, что делают разработчики, попадает под контроль качества. 2) У разных уровней тестирования свои, разные цели — тестирование получается полным, но без лишнего дублирования.",
+     "3) Анализ и проектирование тестов для уровня начинаются на соответствующей фазе разработки — это принцип раннего тестирования. 4) Тестировщики рецензируют рабочие продукты, как только появляются черновики, — это поддерживает сдвиг влево.",
+     "Ловушка: варианты вроде «все тесты должны быть автоматизированы» или «тестирование начинается после завершения кодирования» — это не хорошие практики из силлабуса."
+    ],
+    "en": [
+     "Some good testing practices work in any SDLC model. There are four of them, and it is worth remembering their meaning almost word for word.",
+     "1) Every development activity has a matching test activity, so everything developers produce is under quality control. 2) Different test levels have their own, different test objectives, so testing is thorough without needless duplication.",
+     "3) Test analysis and design for a test level start during the matching development phase — the early testing principle. 4) Testers review work products as soon as drafts exist, which supports shift left.",
+     "Trap: options like 'all tests must be automated' or 'testing starts once coding is finished' are not good practices from the syllabus."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet у каждого требования BR-* / NFR-* есть хотя бы один тест — это проверяет scripts/traceability.py в CI. Так «у каждой работы по разработке есть парная тестовая работа» превращается в автоматический шлюз: требование без теста ломает сборку.",
+    "en": "In Card Wallet every BR-* / NFR-* requirement has at least one test — scripts/traceability.py checks this in CI. So 'every development activity has a matching test activity' becomes an automatic gate: a requirement without a test breaks the build.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/traceability-matrix.md"
+   }
+  },
+  {
+   "lo": "FL-2.1.3",
+   "explain": {
+    "ru": [
+     "Есть подходы, где тесты пишут до кода, и они направляют разработку. Силлабус называет три: TDD (разработка на основе тестов), ATDD (разработка через приемочное тестирование) и BDD (разработка на основе поведения). Все три реализуют раннее тестирование и сдвиг влево и подходят для итеративной разработки.",
+     "TDD: сначала тест, затем код, чтобы тест прошёл, затем рефакторинг кода и тестов. Тесты заменяют подробное проектирование. ATDD: тесты выводятся из критериев приемки при проектировании системы и пишутся до того, как сделана соответствующая часть приложения.",
+     "BDD: желаемое поведение описывают тестовыми сценариями на простом естественном языке, понятном заинтересованным сторонам, обычно в формате Given/When/Then (Дано/Когда/Затем), а затем эти сценарии превращают в исполняемые автотесты.",
+     "Во всех трёх подходах тесты потом остаются как автотесты и защищают код при будущих изменениях и рефакторинге. Подсказка: Given/When/Then → BDD; критерии приемки → ATDD; «красный-зелёный-рефакторинг» → TDD."
+    ],
+    "en": [
+     "Some approaches write tests before code and let the tests drive development. The syllabus names three: TDD (test-driven development), ATDD (acceptance test-driven development) and BDD (behavior-driven development). All three implement early testing and shift left, and they fit iterative development.",
+     "TDD: test first, then code to make it pass, then refactor code and tests. The tests replace extensive design. ATDD: tests are derived from acceptance criteria during system design and written before the matching part of the application is built.",
+     "BDD: the desired behaviour is described by test cases in simple natural language that stakeholders understand, usually Given/When/Then, and these cases are then turned into executable automated tests.",
+     "In all three approaches the tests stay on as automated tests and protect the code during later changes and refactoring. Hint: Given/When/Then → BDD; acceptance criteria → ATDD; 'red-green-refactor' → TDD."
+    ]
+   },
+   "wallet": {
+    "ru": "Планы Card Wallet написаны в стиле TDD: шаг 1 почти каждой задачи — «написать падающие тесты», и только потом код. А критерии приемки в BR-PAY-01 («неверные поля → 422», «чужая карта → 404») — готовый материал для ATDD; в BDD их записали бы как «Дано чужая карта, Когда я плачу, Тогда 404».",
+    "en": "Card Wallet's plans follow TDD: step 1 of almost every task is 'write the failing tests', and only then the code. The acceptance criteria in BR-PAY-01 ('invalid fields → 422', 'another client's card → 404') are ready material for ATDD; in BDD they would read 'Given another client's card, When I pay, Then 404'.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/plans/2026-11-08-plan-1-backend.md"
+   }
+  },
+  {
+   "lo": "FL-2.1.4",
+   "explain": {
+    "ru": [
+     "DevOps — это организационный подход: разработка (включая тестирование) и эксплуатация работают вместе ради общих целей. Это прежде всего смена культуры, плюс автономия команд, быстрая обратная связь, связанные инструменты и практики CI/CD (непрерывная интеграция и поставка) через конвейер поставки.",
+     "Плюсы для тестирования: быстрая обратная связь о качестве кода и о том, не сломало ли изменение старое; CI подталкивает к сдвигу влево — разработчики сдают код вместе с компонентными тестами и статическим анализом; автоматизированные процессы помогают получить стабильные тестовые среды; лучше видны нефункциональные характеристики (производительность, надёжность); меньше повторяющегося ручного тестирования; риск регрессии ниже благодаря большому автоматическому регрессу.",
+     "Риски и сложности: конвейер нужно спроектировать и построить, инструменты CI/CD — внедрить и поддерживать, а автоматизация тестов требует ресурсов и её трудно создать и сопровождать.",
+     "Ловушка на экзамене: «в DevOps ручное тестирование больше не нужно» — неверно. Ручное тестирование, особенно с точки зрения пользователя, всё равно нужно."
+    ],
+    "en": [
+     "DevOps is an organisational approach: development (including testing) and operations work together towards shared goals. It is first of all a cultural shift, plus team autonomy, fast feedback, integrated toolchains and CI/CD practices (continuous integration and delivery) through a delivery pipeline.",
+     "Benefits for testing: fast feedback on code quality and on whether a change broke existing code; CI pushes shift left — developers submit code together with component tests and static analysis; automated processes help create stable test environments; non-functional characteristics (performance, reliability) become more visible; less repetitive manual testing; lower regression risk thanks to a large automated regression suite.",
+     "Risks and challenges: the pipeline must be designed and set up, CI/CD tools must be introduced and maintained, and test automation needs resources and can be hard to build and maintain.",
+     "Exam trap: 'with DevOps manual testing is no longer needed' — wrong. Manual testing, especially from the user's point of view, is still needed."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet при каждом push GitHub Actions запускает scripts/ci_local.sh: линтер, юнит-тесты, весь стек в Docker, API/gRPC/E2E-тесты, Newman, трассируемость, проверку подложенных багов — и публикует Allure-отчёт на GitHub Pages. Тот же скрипт запускается локально, поэтому среда стабильна. Но исследовательские проверки в Postman остаются ручными.",
+    "en": "In Card Wallet every push makes GitHub Actions run scripts/ci_local.sh: lint, unit tests, the whole stack in Docker, API/gRPC/E2E tests, Newman, traceability, the planted-bug check — and publishes the Allure report to GitHub Pages. The same script runs locally, so the environment is stable. Exploratory checks in Postman stay manual, though.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/.github/workflows/ci.yml"
+   }
+  },
+  {
+   "lo": "FL-2.1.5",
+   "explain": {
+    "ru": [
+     "Сдвиг влево — другое название принципа раннего тестирования: тестировать раньше в SDLC, не дожидаясь готового кода или интеграции компонентов. Важно: это НЕ значит, что позднее тестирование можно бросить.",
+     "Как это делают на практике: тестировщик рецензирует спецификацию и находит неоднозначности, пропуски и противоречия; тесты пишутся до кода, а код во время разработки гоняется в тестовой обвязке; CI (а ещё лучше CD) даёт быструю обратную связь и автоматические компонентные тесты при каждой сдаче кода; статический анализ кода выполняется до динамического тестирования или автоматически; нефункциональное тестирование, где возможно, начинают уже на уровне компонентов.",
+     "Цена: в начале нужны дополнительное обучение, усилия или деньги, но ожидается экономия позже. И заинтересованные стороны должны поверить в подход и поддержать его — без этого сдвиг влево не работает."
+    ],
+    "en": [
+     "Shift left is another name for the early testing principle: test earlier in the SDLC, without waiting for finished code or integrated components. Important: it does NOT mean that later testing can be dropped.",
+     "How it is done in practice: testers review the specification and find ambiguities, gaps and inconsistencies; tests are written before code, and the code runs in a test harness while it is being written; CI (or better, CD) gives fast feedback and automated component tests with every code submission; static analysis of the code runs before dynamic testing or as an automated step; non-functional testing starts at component level where possible.",
+     "The price: extra training, effort or cost early on, expected to save effort and cost later. And stakeholders must believe in the approach and support it — without that, shift left does not work."
+    ]
+   },
+   "wallet": {
+    "ru": "BUG-05 — сдвиг влево в чистом виде: при чтении требований до написания кода выяснилось, что дневной лимит карты (до 5000) проверяется раньше антифрода (> 5000), поэтому фрод-правило никогда не сработало бы. Исправили документ, а не код. Плюс в CI первым шагом идёт статический анализ ruff, а юнит-тесты — до запуска всего стека.",
+    "en": "BUG-05 is shift left in its purest form: reading the requirements before any code existed showed that the card daily limit (up to 5000) is checked before anti-fraud (> 5000), so the fraud rule could never fire. The document was fixed, not code. Also, CI runs ruff static analysis first, and unit tests before the whole stack starts.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-05.md"
+   }
+  },
+  {
+   "lo": "FL-2.1.6",
+   "explain": {
+    "ru": [
+     "Ретроспектива — встреча, где команда оглядывается назад: в конце проекта или итерации, на вехе релиза или когда понадобится. Когда и как её проводить, зависит от модели SDLC. Участвуют не только тестировщики, но и разработчики, архитекторы, владелец продукта, бизнес-аналитики.",
+     "Обсуждают три вопроса: что получилось и это надо сохранить; что не получилось и что можно улучшить; как внедрить улучшения и сохранить успехи. Результаты записывают — обычно они входят в отчёт о завершении тестирования.",
+     "Ретроспектива — механизм непрерывного улучшения процесса, но только если по предложенным улучшениям действительно что-то делают. Польза для тестирования: выше результативность и эффективность тестирования, лучше качество тестовых артефактов, сплочение и обучение команды, лучше качество тестового базиса (требований), лучше сотрудничество разработки и тестирования.",
+     "Ловушка: цель ретроспективы — улучшить процесс, а не найти виноватых или оценить отдельных людей."
+    ],
+    "en": [
+     "A retrospective is a meeting where the team looks back: at the end of a project or iteration, at a release milestone, or whenever needed. Its timing and format depend on the SDLC model. Not only testers take part, but also developers, architects, the product owner and business analysts.",
+     "Three questions are discussed: what went well and should be kept; what did not go well and could be improved; how to put the improvements in place and keep the successes. The results are recorded — usually as part of the test completion report.",
+     "A retrospective is a mechanism for continuous process improvement, but only if the agreed improvements are actually followed up. Benefits for testing: more effective and efficient testing, better testware, team bonding and learning, a better test basis (requirements), and better cooperation between development and testing.",
+     "Trap: the goal of a retrospective is to improve the process, not to find someone to blame or to evaluate individuals."
+    ]
+   },
+   "wallet": {
+    "ru": "Пример ретро после плана 1 Card Wallet: «что сработало» — чтение требований до кода нашло BUG-05; «что улучшить» — уязвимость BUG-10 (хеш номера карты) нашли только независимым код-ревью; «как внедрить» — закрепить проверку в чек-листе безопасности. В нём действительно есть пункт «PAN hash is keyed (HMAC), not a plain SHA-256» — так решение ретро превращается в действие, которое выполняется на каждом релизе.",
+    "en": "A sample retrospective after Card Wallet's plan 1: 'what went well' — reading the requirements before coding found BUG-05; 'what to improve' — the BUG-10 vulnerability (card number hash) was found only by an independent code review; 'how to act' — anchor the check in the security checklist. It does contain the item 'PAN hash is keyed (HMAC), not a plain SHA-256' — that is how a retrospective decision becomes an action carried out at every release.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/checklists/security.md"
+   }
+  }
+ ],
+ "terms": [
+  {
+   "ru": "Сдвиг влево",
+   "en": "Shift left",
+   "explain": {
+    "ru": "Подход, при котором тестирование выполняется как можно раньше в жизненном цикле разработки.",
+    "en": "An approach where testing is done as early as possible in the software development lifecycle."
+   }
+  },
+  {
+   "ru": "Разработка на основе тестов (TDD)",
+   "en": "Test-driven development (TDD)",
+   "explain": {
+    "ru": "Сначала пишется тест, потом код, чтобы он прошёл, затем код и тесты рефакторятся.",
+    "en": "A test is written first, then code to pass it, then code and tests are refactored."
+   }
+  },
+  {
+   "ru": "Разработка через приемочное тестирование (ATDD)",
+   "en": "Acceptance test-driven development (ATDD)",
+   "explain": {
+    "ru": "Тесты выводятся из критериев приемки и пишутся до разработки соответствующей части системы.",
+    "en": "Tests are derived from acceptance criteria and written before the matching part of the system is built."
+   }
+  },
+  {
+   "ru": "Разработка на основе поведения (BDD)",
+   "en": "Behavior-driven development (BDD)",
+   "explain": {
+    "ru": "Поведение описывается сценариями на понятном языке (Given/When/Then), которые затем автоматизируются.",
+    "en": "Behaviour is described in plain-language scenarios (Given/When/Then) that are then automated."
+   }
+  },
+  {
+   "ru": "DevOps",
+   "en": "DevOps",
+   "explain": {
+    "ru": "Организационный подход, объединяющий разработку, тестирование и эксплуатацию вокруг общих целей и автоматизированного конвейера CI/CD.",
+    "en": "An organisational approach that unites development, testing and operations around shared goals and an automated CI/CD pipeline."
+   }
+  },
+  {
+   "ru": "Ретроспектива",
+   "en": "Retrospective",
+   "explain": {
+    "ru": "Встреча команды, где обсуждают, что сохранить, что улучшить и как внедрить улучшения.",
+    "en": "A team meeting about what to keep, what to improve and how to put improvements in place."
+   }
+  }
+ ]
+}
