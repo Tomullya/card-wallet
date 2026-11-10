@@ -1,0 +1,57 @@
+{
+ "id": "1.1",
+ "objectives": [
+  {
+   "lo": "FL-1.1.1",
+   "explain": {
+    "ru": [
+     "Тестирование — это не только «запустить программу и посмотреть». Это набор активностей, которые ищут дефекты и оценивают качество рабочих продуктов: требований, дизайна, кода, документации. То, что мы проверяем, называется объектом тестирования. Тестирование бывает динамическим (программа запускается) и статическим (ревью и статический анализ, без запуска).",
+     "Типичные цели тестирования: оценить рабочие продукты (требования, пользовательские истории, дизайн, код); вызвать отказы и найти дефекты; достичь нужного покрытия; снизить риск недостаточного качества; проверить, что заданные требования выполнены; проверить соответствие договору, законам и стандартам; дать заинтересованным сторонам информацию для решений; укрепить уверенность в качестве; убедиться, что продукт полный и работает так, как ждут пользователи.",
+     "Две цели стоит различать: верификация — «сделано по спецификации?», валидация — «это то, что действительно нужно пользователям в их реальной среде?». Тестирование включает обе.",
+     "Цели зависят от контекста: какой объект, какой уровень тестирования, какие риски, какая модель разработки, бизнес-давление (например, срок выхода на рынок). Ловушка экзамена: «доказать, что дефектов нет» — НЕ цель тестирования, это невозможно."
+    ],
+    "en": [
+     "Testing is not just “run the program and look”. It is a set of activities that look for defects and evaluate the quality of work products: requirements, designs, code, documentation. The thing we test is called the test object. Testing can be dynamic (the software runs) or static (reviews and static analysis, nothing runs).",
+     "Typical test objectives: evaluate work products (requirements, user stories, designs, code); cause failures and find defects; reach the required coverage; reduce the risk of inadequate quality; check that specified requirements are met; check compliance with contracts, laws and standards; give stakeholders information for decisions; build confidence in the quality; confirm that the product is complete and works as users expect.",
+     "Two objectives are worth telling apart: verification — “was it built to the specification?”, validation — “is this what users really need in their real environment?”. Testing includes both.",
+     "Objectives depend on the context: the test object, the test level, the risks, the development model, business pressure (for example, time to market). Exam trap: “prove there are no defects” is NOT a test objective — it is impossible."
+    ]
+   },
+   "wallet": {
+    "ru": "Раздел 1 тест-плана Card Wallet формулирует цель: подтвердить, что кошелёк выполняет каждое бизнес-требование правильно и безопасно, с особым вниманием к корректности денег, безопасности карт и контролю доступа. В одной фразе сразу несколько типичных целей: верификация требований и снижение риска (деньги, данные карт). А критерии выхода в разделе 5 превращают результаты тестов в информацию для решения о релизе.",
+    "en": "Section 1 of the Card Wallet test plan states the objective: confirm that the wallet implements every business requirement correctly and safely, with special attention to money correctness, card security and access control. One sentence holds several typical objectives: verifying requirements and reducing risk (money, card data). The exit criteria in section 5 turn test results into information for the release decision.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#1-objective"
+   }
+  },
+  {
+   "lo": "FL-1.1.2",
+   "explain": {
+    "ru": [
+     "Тестирование и отладка — разные активности. Тестирование обнаруживает проблему: динамическое тестирование вызывает отказ, а статическое (ревью, статический анализ) находит дефект прямо в рабочем продукте. Отладка — это устранение: найти причину, проанализировать её и убрать.",
+     "Когда динамический тест вызвал отказ, отладка обычно идёт так: воспроизвести отказ → диагностировать (найти дефект) → исправить. Потом подтверждающее тестирование проверяет, что исправление помогло, — лучше, если его делает тот же человек, что выполнил исходный тест. Регрессионное тестирование проверяет, не сломало ли исправление что-то в других местах.",
+     "Если дефект найден статическим тестированием, воспроизводить и диагностировать нечего: дефект уже виден, и отладка сводится к его удалению. Статическое тестирование вообще не вызывает отказов — программа не запускается.",
+     "Ловушка экзамена: отладка — НЕ активность тестирования, её обычно делает разработчик. А подтверждающий и регрессионный тесты после исправления — это снова тестирование."
+    ],
+    "en": [
+     "Testing and debugging are separate activities. Testing reveals the problem: dynamic testing triggers a failure, while static testing (reviews, static analysis) finds a defect directly in the work product. Debugging is the removal: find the cause, analyse it and get rid of it.",
+     "When a dynamic test triggers a failure, debugging usually goes: reproduce the failure → diagnose (find the defect) → fix it. Then confirmation testing checks that the fix worked — preferably done by the same person who ran the original test. Regression testing checks that the fix did not break something elsewhere.",
+     "When static testing finds a defect, there is nothing to reproduce or diagnose: the defect is already visible, so debugging is just removing it. Static testing never causes failures — the software does not run.",
+     "Exam trap: debugging is NOT a test activity; it is usually done by the developer. The confirmation and regression tests after the fix are testing again."
+    ]
+   },
+   "wallet": {
+    "ru": "BUG-02: тест test_daily_limit_exact_allowed при лимите 100,00 платит 60,00, потом 40,00 и получает DECLINED вместо APPROVED — это тестирование, оно показало отказ. Этот дефект внедрён специально (сборка BUGGY_MODE), но разделение то же: найти в коде условие «>=» вместо «>» и поправить его — это отладка. Повторный запуск того же теста после исправления — подтверждающее тестирование, а полный прогон набора в CI — регрессионное.",
+    "en": "BUG-02: with a daily limit of 100.00 the test test_daily_limit_exact_allowed pays 60.00, then 40.00, and gets DECLINED instead of APPROVED — that is testing; it revealed a failure. This defect is planted on purpose (BUGGY_MODE build), but the split is the same: finding the “>=” instead of “>” in the code and correcting it is debugging. Re-running the same test after the fix is confirmation testing; the full suite run in CI is regression testing.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-02.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "тестирование", "en": "testing", "explain": {"ru": "Набор активностей, чтобы находить дефекты и оценивать качество рабочих продуктов.", "en": "A set of activities to find defects and evaluate the quality of work products."}},
+  {"ru": "цель тестирования", "en": "test objective", "explain": {"ru": "Причина или назначение тестирования: что именно мы хотим получить от него в данном контексте.", "en": "The reason for testing: what exactly we want testing to achieve in this context."}},
+  {"ru": "объект тестирования", "en": "test object", "explain": {"ru": "Рабочий продукт, который тестируют: требования, код, система, документ.", "en": "The work product being tested: requirements, code, a system, a document."}},
+  {"ru": "отладка", "en": "debugging", "explain": {"ru": "Поиск, анализ и устранение причин отказов; не является активностью тестирования.", "en": "Finding, analysing and removing the causes of failures; not a test activity."}},
+  {"ru": "верификация", "en": "verification", "explain": {"ru": "Проверка, что объект соответствует заданным требованиям («сделали правильно?»).", "en": "Checking that the object meets the specified requirements (“did we build it right?”)."}},
+  {"ru": "валидация", "en": "validation", "explain": {"ru": "Проверка, что объект отвечает потребностям пользователей и других заинтересованных сторон в реальной среде («сделали то, что нужно?»).", "en": "Checking that the object meets the needs of users and other stakeholders in their real environment (“did we build the right thing?”)."}}
+ ]
+}

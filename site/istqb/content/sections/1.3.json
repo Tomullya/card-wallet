@@ -1,0 +1,34 @@
+{
+ "id": "1.3",
+ "objectives": [
+  {
+   "lo": "FL-1.3.1",
+   "explain": {
+    "ru": [
+     "1) Тестирование показывает наличие дефектов, а не их отсутствие. Если тесты ничего не нашли, вероятность скрытых дефектов меньше, но это не доказательство, что их нет. 2) Исчерпывающее тестирование невозможно (кроме тривиальных случаев). Вместо «проверить всё» используем техники тест-дизайна, приоритизацию сценариев тестирования (тест-кейсов) и тестирование на основе рисков.",
+     "3) Раннее тестирование экономит время и деньги. Дефект, убранный рано, не порождает новых дефектов в продуктах, сделанных на его основе, и позже будет меньше отказов. Поэтому и статическое, и динамическое тестирование начинают как можно раньше. 4) Дефекты группируются (кластеризация дефектов). Небольшая часть компонентов обычно содержит большинство дефектов или даёт большинство отказов в эксплуатации — это проявление принципа Парето. Ожидаемые и найденные кластеры — важный вход для тестирования на основе рисков.",
+     "5) Тесты устаревают (раньше это называли «парадоксом пестицида»). Одни и те же тесты, повторённые много раз, всё хуже находят новые дефекты, поэтому тесты и тестовые данные меняют и пишут новые. Но иногда повторение полезно — например, в автоматизированном регрессионном тестировании. 6) Тестирование зависит от контекста: единого подхода для всех случаев нет.",
+     "7) Заблуждение об отсутствии дефектов. Даже если проверить все заданные требования и исправить все найденные дефекты, система может не отвечать потребностям пользователей, не помогать бизнесу или уступать конкурентам. Поэтому кроме верификации нужна валидация. Совет для экзамена: вопрос обычно описывает ситуацию — узнайте принцип по ключевой мысли («всё не проверить», «старые тесты больше ничего не находят», «баги сидят в одном модуле», «всё по ТЗ, но клиентам не нужно»)."
+    ],
+    "en": [
+     "1) Testing shows the presence, not the absence, of defects. If tests found nothing, hidden defects are less likely, but that is no proof that none exist. 2) Exhaustive testing is impossible (except in trivial cases). Instead of “test everything” we use test techniques, test case prioritization and risk-based testing.",
+     "3) Early testing saves time and money. A defect removed early does not breed further defects in the work products derived from it, and fewer failures happen later. So both static and dynamic testing should start as early as possible. 4) Defects cluster together. A small part of the components usually holds most of the defects or causes most of the operational failures — an example of the Pareto principle. Predicted and observed clusters are an important input to risk-based testing.",
+     "5) Tests wear out (this used to be called the “pesticide paradox”). The same tests repeated many times get worse at finding new defects, so tests and test data are changed and new tests are written. But sometimes repetition helps — for example, in automated regression testing. 6) Testing is context dependent: there is no single approach that fits every case.",
+     "7) Absence-of-defects fallacy. Even if all specified requirements are tested and all defects found are fixed, the system can still fail users’ needs, fail to help the business or lose to competitors. So validation is needed in addition to verification. Exam tip: a question usually describes a situation — recognise the principle by its key idea (“cannot test everything”, “old tests no longer find anything”, “bugs sit in one module”, “built to spec, but customers do not want it”)."
+    ]
+   },
+   "wallet": {
+    "ru": "Исчерпывающее тестирование: сумма платежа от 0,01 до 10000,00 с шагом 0,01 — это 1 000 000 допустимых значений одного только поля, поэтому тесты выбирают классы и границы. Кластеризация: требования BR-PAY-* упоминаются в 7 из 19 баг-репортов, а требования к счетам (BR-ACC) — ни в одном. Раннее тестирование: BUG-05 нашли на ревью требований ещё до кода — самый дешёвый дефект проекта. Устаревание тестов: набор, ловящий внедрённые дефекты (verify_bugs_caught.py), при каждом запуске находит те же семь, а новые BUG-06…08 нашли контрактные тесты schemathesis, которые каждый раз генерируют новые данные.",
+    "en": "Exhaustive testing: the payment amount from 0.01 to 10000.00 in steps of 0.01 has 1,000,000 valid values for one field alone, so tests pick partitions and boundaries. Clustering: payment requirements BR-PAY-* appear in 7 of the 19 bug reports, account requirements (BR-ACC) in none. Early testing: BUG-05 was found in a requirements review before any code — the cheapest defect in the project. Tests wear out: the suite that catches the planted defects (verify_bugs_caught.py) finds the same seven on every run, while the new BUG-06…08 were found by schemathesis contract tests, which generate new data each time.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/README.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "исчерпывающее тестирование", "en": "exhaustive testing", "explain": {"ru": "Тестирование всех комбинаций входных значений и предусловий; на практике невозможно.", "en": "Testing every combination of input values and preconditions; not feasible in practice."}},
+  {"ru": "покрытие", "en": "coverage", "explain": {"ru": "Насколько тесты проверили выбранные элементы покрытия, в процентах.", "en": "How much of the chosen coverage items the tests have exercised, as a percentage."}},
+  {"ru": "тестирование на основе рисков", "en": "risk-based testing", "explain": {"ru": "Подход, при котором усилия тестирования распределяют по уровню рисков.", "en": "An approach that spreads the test effort according to risk levels."}},
+  {"ru": "верификация", "en": "verification", "explain": {"ru": "Проверка соответствия заданным требованиям; одной её мало (принцип 7).", "en": "Checking against specified requirements; on its own it is not enough (principle 7)."}},
+  {"ru": "валидация", "en": "validation", "explain": {"ru": "Проверка, что система отвечает реальным потребностям пользователей; спасает от заблуждения об отсутствии дефектов.", "en": "Checking that the system meets users’ real needs; the cure for the absence-of-defects fallacy."}}
+ ]
+}

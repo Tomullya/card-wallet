@@ -1,0 +1,119 @@
+{
+ "id": "1.4",
+ "objectives": [
+  {
+   "lo": "FL-1.4.1",
+   "explain": {
+    "ru": [
+     "Процесс тестирования состоит из групп активностей: планирование; мониторинг и контроль; анализ; проектирование; реализация; выполнение; завершение. Они выглядят как последовательность, но на практике часто идут итеративно или параллельно, и их подстраивают под систему и проект.",
+     "Планирование — определяем цели тестирования и выбираем подход, который лучше всего их достигает при имеющихся ограничениях. Мониторинг — постоянно сравниваем фактический ход работ с планом; контроль — действия, чтобы всё же достичь целей. Анализ отвечает на вопрос «что тестировать?»: изучаем базис тестирования, выделяем тестовые условия и расставляем приоритеты по рискам; заодно ищем дефекты в базисе и оцениваем тестируемость.",
+     "Проектирование отвечает на «как тестировать?»: из тестовых условий получаем сценарии тестирования (тест-кейсы), определяем элементы покрытия, требования к тестовым данным и окружению. Реализация — создаём всё для запуска: тестовые данные, процедуры и наборы тестов, ручные и автоматизированные тестовые скрипты, расписание выполнения; собираем и проверяем окружение. Выполнение — запускаем тесты, сравниваем фактический результат с ожидаемым, записываем результаты, анализируем аномалии и сообщаем о них.",
+     "Завершение — на вехах проекта (релиз, конец итерации): по неустранённым дефектам заводим запросы на изменение или задачи в бэклоге, архивируем полезное тестовое обеспечение, приводим окружение в согласованное состояние, собираем уроки и пишем итоговый отчёт. Ловушка экзамена: «определить требования к тестовым данным» — проектирование, а «создать тестовые данные» — реализация."
+    ],
+    "en": [
+     "The test process consists of groups of activities: planning; monitoring and control; analysis; design; implementation; execution; completion. They look like a sequence, but in practice they often run iteratively or in parallel and are tailored to the system and the project.",
+     "Planning — define the test objectives and choose the approach that best reaches them within the constraints. Monitoring — continuously compare actual progress with the plan; control — take actions so the objectives are still met. Analysis answers “what to test?”: study the test basis, identify test conditions and prioritise them by risk; along the way look for defects in the test basis and assess testability.",
+     "Design answers “how to test?”: turn test conditions into test cases, identify coverage items, test data requirements and environment requirements. Implementation — create everything needed to run: test data, test procedures and suites, manual and automated scripts, the execution schedule; build and check the environment. Execution — run the tests, compare actual with expected results, log the results, analyse anomalies and report them.",
+     "Completion — at project milestones (release, end of iteration): raise change requests or backlog items for unresolved defects, archive useful testware, bring the environment to an agreed state, collect lessons learned and write the completion report. Exam trap: “define test data requirements” is design, while “create the test data” is implementation."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet видны все активности. Планирование — test-plan.md с подходом и критериями выхода; анализ — разбор требований BR-*/NFR-*, во время которого нашли BUG-05; проектирование — сценарии тестирования TC-PAY-* с шагами и ожидаемым результатом; реализация — автотесты в tests/ и коллекция Postman. Выполнение — прогон pytest и Newman в CI с Allure-отчётом; завершение — мелкие дефекты BUG-12…16 оставлены со статусом «Open — deferred» и описаны для будущих версий.",
+    "en": "All activities are visible in Card Wallet. Planning — test-plan.md with the approach and exit criteria; analysis — studying the BR-*/NFR-* requirements, which revealed BUG-05; design — the TC-PAY-* test cases with steps and expected results; implementation — automated tests in tests/ and the Postman collection. Execution — the pytest and Newman run in CI with an Allure report; completion — minor defects BUG-12…16 kept as “Open — deferred” and documented for future versions.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md"
+   }
+  },
+  {
+   "lo": "FL-1.4.2",
+   "explain": {
+    "ru": [
+     "Тестирование не живёт само по себе: оно часть процессов разработки в организации, его оплачивают заинтересованные стороны, и его конечная задача — помочь им достичь бизнес-целей. Поэтому то, как тестируют, зависит от контекста.",
+     "Факторы контекста: заинтересованные стороны (ожидания, требования, готовность сотрудничать); члены команды (навыки, опыт, доступность, потребность в обучении); предметная область (критичность объекта, риски, рынок, законы); технические факторы (тип ПО, архитектура, технологии); ограничения проекта (объём, сроки, бюджет, ресурсы); организационные факторы (структура, политики, практики); жизненный цикл разработки (инженерные практики, методы); инструменты (доступность, удобство, соответствие требованиям).",
+     "Эти факторы влияют на стратегию тестирования, выбор техник, степень автоматизации, нужный уровень покрытия, детальность тестового обеспечения и отчётность. Совет для экзамена: «медицинский прибор» или «строгий регулятор» — ждите больше формальности, документации и покрытия; «стартап, горят сроки» — больше лёгких форм и приоритизации."
+    ],
+    "en": [
+     "Testing does not live on its own: it is part of the organisation’s development processes, stakeholders pay for it, and its final goal is to help them meet business needs. So how testing is done depends on the context.",
+     "Context factors: stakeholders (expectations, requirements, willingness to cooperate); team members (skills, experience, availability, training needs); business domain (criticality of the test object, risks, market, laws); technical factors (type of software, architecture, technology); project constraints (scope, time, budget, resources); organisational factors (structure, policies, practices); the development lifecycle (engineering practices, methods); tools (availability, usability, compliance).",
+     "These factors shape the test strategy, the techniques used, the degree of automation, the required coverage, how detailed the testware is, and test reporting. Exam tip: “medical device” or “strict regulator” — expect more formality, documentation and coverage; “startup, tight deadline” — expect lighter forms and prioritisation."
+    ]
+   },
+   "wallet": {
+    "ru": "Card Wallet — финтех: в домене деньги и данные карт, поэтому тест-план уделяет особое внимание корректности сумм, безопасности карт и доступу к чужим данным. Технический контекст (REST, gRPC, Postgres, React) дал разные инструменты: pytest, schemathesis, grpcio, Playwright. Ограничения проекта (один человек, учебный проект) объясняют, почему нагрузочное тестирование вынесено за рамки v1, а почти всё автоматизировано и запускается одной командой в CI.",
+    "en": "Card Wallet is fintech: the domain is money and card data, so the test plan pays special attention to correct amounts, card security and access to other clients’ data. The technical context (REST, gRPC, Postgres, React) brought different tools: pytest, schemathesis, grpcio, Playwright. Project constraints (one person, a learning project) explain why load testing is out of scope for v1 while almost everything is automated and runs with one command in CI.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#2-scope"
+   }
+  },
+  {
+   "lo": "FL-1.4.3",
+   "explain": {
+    "ru": [
+     "Тестовое обеспечение (testware) — рабочие продукты, которые получаются в ходе активностей тестирования. Организации называют, оформляют и хранят их по-разному; управление конфигурацией помогает держать их согласованными и целостными.",
+     "По активностям. Планирование: план тестирования, расписание, реестр рисков, критерии входа и выхода (часто всё это — части плана). Мониторинг и контроль: отчёты о ходе тестирования, документированные управляющие решения, информация о рисках. Анализ: приоритизированные тестовые условия (например, критерии приёмки) и отчёты о дефектах в базисе тестирования. Проектирование: сценарии тестирования, концепции тестирования (test charters), элементы покрытия, требования к тестовым данным и окружению.",
+     "Реализация: процедуры тестирования, ручные и автоматизированные тестовые скрипты, наборы тестов, тестовые данные, расписание выполнения, элементы окружения — заглушки, драйверы, симуляторы, виртуализация сервисов. Выполнение: протоколы (логи) тестов и отчёты о дефектах. Завершение: итоговый отчёт, действия по улучшению, задокументированные уроки, запросы на изменение.",
+     "Ловушка экзамена: отчёт о дефекте появляется и при анализе (дефект в требованиях), и при выполнении (обнаружен отказ). Тестовые данные — продукт реализации, а требования к ним — продукт проектирования."
+    ],
+    "en": [
+     "Testware is the set of work products produced by the test activities. Organisations name, shape and store them differently; configuration management keeps them consistent and intact.",
+     "By activity. Planning: test plan, test schedule, risk register, entry and exit criteria (often all parts of the plan). Monitoring and control: test progress reports, documented control directives, risk information. Analysis: prioritised test conditions (for example, acceptance criteria) and defect reports about the test basis. Design: test cases, test charters, coverage items, test data requirements and test environment requirements.",
+     "Implementation: test procedures, manual and automated scripts, test suites, test data, the execution schedule, test environment items — stubs, drivers, simulators, service virtualisation. Execution: test logs and defect reports. Completion: the test completion report, improvement actions, documented lessons learned, change requests.",
+     "Exam trap: a defect report can come from analysis (a defect in the requirements) as well as from execution (a failure observed). Test data is an implementation product, while test data requirements are a design product."
+    ]
+   },
+   "wallet": {
+    "ru": "Планирование: test-plan.md с рисками и критериями входа и выхода. Анализ: отчёт BUG-05 о дефекте в требованиях. Проектирование: сценарии тестирования в docs/qa/test-cases. Реализация: автотесты в tests/, коллекция Postman, стенд Docker Compose и тестовые данные (каждый тест создаёт своего клиента через API). Выполнение: Allure-отчёт и баг-репорты об отказах, например BUG-02.",
+    "en": "Planning: test-plan.md with risks and entry/exit criteria. Analysis: the BUG-05 report about a defect in the requirements. Design: test cases in docs/qa/test-cases. Implementation: automated tests in tests/, the Postman collection, the Docker Compose stack and the test data (every test creates its own client through the API). Execution: the Allure report and bug reports about failures, such as BUG-02.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#8-deliverables"
+   }
+  },
+  {
+   "lo": "FL-1.4.4",
+   "explain": {
+    "ru": [
+     "Трассируемость — связи между элементами базиса тестирования (требованиями, рисками) и связанным с ними тестовым обеспечением: тестовыми условиями, сценариями тестирования, а также результатами тестов и дефектами. Её устанавливают и поддерживают на протяжении всего процесса — без неё трудно вести мониторинг и контроль.",
+     "Главная польза — оценка покрытия. Связь сценариев тестирования с требованиями показывает, все ли требования покрыты; связь результатов тестов с рисками показывает, какой риск остался. Если в базисе тестирования заданы измеримые критерии покрытия, они работают как ключевые показатели того, насколько достигнуты цели тестирования.",
+     "Ещё трассируемость помогает: оценить влияние изменений (что перепроверить, если поменялось требование); проходить аудиты и выполнять требования ИТ-управления; делать отчёты понятными — со статусом каждого элемента базиса; объяснять технические детали нетехническим людям; оценивать качество продукта, зрелость процесса и прогресс проекта. Совет для экзамена: ищите в ответах «покрытие», «анализ влияния», «аудит», «понятные отчёты»."
+    ],
+    "en": [
+     "Traceability is the set of links between test basis elements (requirements, risks) and the testware related to them: test conditions, test cases, and also test results and defects. It is set up and maintained throughout the process — without it, monitoring and control are hard.",
+     "The main benefit is coverage evaluation. Linking test cases to requirements shows whether every requirement is covered; linking test results to risks shows how much risk remains. If the test basis defines measurable coverage criteria, they work as key indicators of how far the test objectives are met.",
+     "Traceability also helps to: assess the impact of changes (what to retest when a requirement changes); pass audits and meet IT governance criteria; make reports understandable — with the status of each test basis element; explain technical details to non-technical people; assess product quality, process capability and project progress. Exam tip: look for “coverage”, “impact analysis”, “audit”, “understandable reports” in the options."
+    ]
+   },
+   "wallet": {
+    "ru": "Каждый автотест Card Wallet помечен маркером @pytest.mark.req с ID требований, а scripts/traceability.py собирает из этих меток traceability-matrix.md: сейчас покрыто 46 из 46 требований. В CI скрипт работает как гейт — если у требования нет теста или тест ссылается на неизвестный ID, сборка падает. А если изменится, например, BR-PAY-04 (дневной лимит), матрица сразу показывает четыре теста, которые надо пересмотреть.",
+    "en": "Every Card Wallet automated test carries a @pytest.mark.req marker with requirement IDs, and scripts/traceability.py builds traceability-matrix.md from these markers: 46 of 46 requirements are covered now. In CI the script is a gate — if a requirement has no test, or a test names an unknown ID, the build fails. And if, say, BR-PAY-04 (daily limit) changes, the matrix immediately shows the four tests to review.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/traceability-matrix.md"
+   }
+  },
+  {
+   "lo": "FL-1.4.5",
+   "explain": {
+    "ru": [
+     "Силлабус выделяет две основные роли: роль руководителя тестирования (test management role) и роль тестировщика (testing role). Это роли, а не должности: руководителем тестирования может выступать тимлид, тест-менеджер, руководитель разработки; один человек может совмещать обе роли, а разные люди могут брать их в разное время.",
+     "Руководитель тестирования отвечает за процесс тестирования в целом, команду тестирования и руководство активностями. Его фокус — планирование, мониторинг и контроль, завершение. В Agile часть этих задач берёт на себя сама команда, а задачи для нескольких команд или всей организации может вести тест-менеджер вне команды разработки.",
+     "Тестировщик отвечает за инженерную (техническую) сторону тестирования. Его фокус — анализ, проектирование, реализация и выполнение тестов. Совет для экзамена: «кто решает, что делать при отставании от плана, и пишет итоговый отчёт?» — руководитель тестирования; «кто выводит тестовые условия и пишет сценарии тестирования?» — тестировщик."
+    ],
+    "en": [
+     "The syllabus describes two principal roles: the test management role and the testing role. They are roles, not job titles: the test management role can be taken by a team lead, a test manager or a development manager; one person can hold both roles, and different people can take them at different times.",
+     "The test management role owns the test process as a whole, the test team and the leadership of test activities. Its focus is planning, monitoring and control, and completion. In Agile some of these tasks are handled by the team itself, while tasks spanning several teams or the whole organisation may be led by a test manager outside the development team.",
+     "The testing role owns the engineering (technical) side of testing. Its focus is analysis, design, implementation and execution. Exam tip: “who decides what to do when testing falls behind the plan and writes the completion report?” — test management; “who derives test conditions and writes test cases?” — testing role."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet обе роли у одного человека — автора проекта, и силлабус это допускает. В роли руководителя тестирования она написала тест-план с критериями выхода и решила отложить мелкие дефекты BUG-12…16. В роли тестировщика — разобрала требования, написала сценарии тестирования, автотесты и баг-репорты.",
+    "en": "In Card Wallet both roles belong to one person — the project author, which the syllabus allows. In the test management role she wrote the test plan with exit criteria and decided to defer the minor defects BUG-12…16. In the testing role she analysed the requirements and wrote test cases, automated tests and bug reports.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "базис тестирования", "en": "test basis", "explain": {"ru": "Всё, из чего выводят тесты: требования, пользовательские истории, дизайн, код.", "en": "Everything tests are derived from: requirements, user stories, designs, code."}},
+  {"ru": "тестовое условие", "en": "test condition", "explain": {"ru": "Проверяемый аспект объекта, выделенный при анализе («что тестировать»).", "en": "A testable aspect of the test object identified in analysis (“what to test”)."}},
+  {"ru": "сценарий тестирования (тест-кейс)", "en": "test case", "explain": {"ru": "Набор предусловий, входных данных, действий и ожидаемых результатов для проверки тестового условия.", "en": "A set of preconditions, inputs, actions and expected results that exercises a test condition."}},
+  {"ru": "процедура тестирования", "en": "test procedure", "explain": {"ru": "Последовательность сценариев тестирования в порядке выполнения вместе с нужными подготовительными и завершающими действиями.", "en": "A sequence of test cases in execution order, with any setup and wrap-up steps they need."}},
+  {"ru": "тестовое обеспечение", "en": "testware", "explain": {"ru": "Рабочие продукты, созданные в ходе тестирования: планы, сценарии тестирования, данные, скрипты, отчёты.", "en": "Work products created by testing: plans, test cases, data, scripts, reports."}},
+  {"ru": "трассируемость", "en": "traceability", "explain": {"ru": "Связи между элементами базиса тестирования, тестовым обеспечением, результатами и дефектами.", "en": "Links between test basis elements, testware, results and defects."}},
+  {"ru": "мониторинг тестирования", "en": "test monitoring", "explain": {"ru": "Постоянное сравнение фактического хода тестирования с планом.", "en": "Continuous comparison of actual test progress with the plan."}},
+  {"ru": "контроль тестирования", "en": "test control", "explain": {"ru": "Действия, которые предпринимают, чтобы всё же достичь целей тестирования.", "en": "Actions taken so that the test objectives are still met."}}
+ ]
+}

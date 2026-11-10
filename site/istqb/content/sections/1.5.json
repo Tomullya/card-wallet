@@ -1,0 +1,71 @@
+{
+ "id": "1.5",
+ "objectives": [
+  {
+   "lo": "FL-1.5.1",
+   "explain": {
+    "ru": [
+     "Тестировщику особенно нужны: знание тестирования (например, техник тест-дизайна); тщательность, внимательность, любопытство, внимание к деталям, методичность — чтобы находить трудноуловимые дефекты; коммуникация, активное слушание, умение работать в команде; аналитическое и критическое мышление, креативность; технические знания (например, умение пользоваться инструментами); знание предметной области — чтобы понимать пользователей и бизнес и говорить с ними на одном языке.",
+     "Тестировщик часто приносит плохие новости, а «гонца» люди склонны винить. Отчёт о дефекте могут воспринять как критику продукта и его автора, а предвзятость автора продукта (confirmation bias; в обиходе — «предвзятость подтверждения») мешает принять информацию, которая расходится с убеждениями. Некоторые считают тестирование разрушительной деятельностью, хотя оно сильно помогает проекту.",
+     "Поэтому о дефектах и отказах сообщают конструктивно: факты, шаги, ожидаемое и фактическое, без обвинений. Совет для экзамена: вопрос обычно описывает ситуацию и просит назвать навык. «Понимает, как работают банковские карты» — знание предметной области; «быстро настроил инструмент» — технические знания; «сообщил о баге так, что автор не обиделся» — коммуникация."
+    ],
+    "en": [
+     "Testers especially need: testing knowledge (for example, test techniques); thoroughness, carefulness, curiosity, attention to detail, being methodical — to find defects that are hard to spot; communication, active listening, being a team player; analytical and critical thinking, creativity; technical knowledge (for example, using tools well); domain knowledge — to understand users and the business and speak their language.",
+     "Testers often bring bad news, and people tend to blame the messenger. A defect report can feel like criticism of the product and its author, and confirmation bias makes it hard to accept information that contradicts what one believes. Some people even see testing as destructive, although it helps the project a lot.",
+     "So defects and failures are reported constructively: facts, steps, expected and actual, no blame. Exam tip: a question usually describes a situation and asks for the skill. “Knows how bank cards work” — domain knowledge; “quickly set up a tool” — technical knowledge; “reported a bug so that the author was not offended” — communication."
+    ]
+   },
+   "wallet": {
+    "ru": "Знание домена из работы с банковскими картами помогло увидеть главные риски кошелька: двойное списание, хранение PAN и CVV, дневные лимиты. Технические знания дали BUG-06: контрактные тесты schemathesis показали, что пароль длиннее 72 байт (а 72 кириллических символа — это уже 144 байта) ронял логин с ошибкой 500. А единый шаблон баг-репорта — шаги, ожидаемое, фактическое, доказательство — это и есть конструктивная коммуникация.",
+    "en": "Domain knowledge from working with bank cards helped spot the wallet’s main risks: double charges, storing PAN and CVV, daily limits. Technical knowledge led to BUG-06: schemathesis contract tests showed that a password over 72 bytes (72 Cyrillic characters are already 144 bytes) crashed login with a 500 error. And the single bug report template — steps, expected, actual, evidence — is constructive communication in practice.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-06.md"
+   }
+  },
+  {
+   "lo": "FL-1.5.2",
+   "explain": {
+    "ru": [
+     "Командный подход (whole team approach) пришёл из экстремального программирования (XP). Любой участник с нужными знаниями и навыками может взяться за любую задачу, и за качество отвечают все. Команда работает в общем пространстве — физическом или виртуальном, — потому что так легче общаться.",
+     "Преимущества: лучше командная динамика, сильнее общение и сотрудничество, синергия — разные навыки участников работают на общий результат. Тестировщики помогают представителям бизнеса составлять приёмочные тесты, договариваются с разработчиками о стратегии тестирования и автоматизации и передают команде свои знания о тестировании.",
+     "Ограничение: подход уместен не всегда — например, в системах, критичных для безопасности, может понадобиться высокий уровень независимости тестирования. Ловушка экзамена: командный подход НЕ означает, что тестировщики не нужны, и НЕ означает, что качество — дело только тестировщиков."
+    ],
+    "en": [
+     "The whole team approach comes from Extreme Programming (XP). Any team member with the right knowledge and skills can take on any task, and everyone is responsible for quality. The team shares a workspace — physical or virtual — because that makes communication easier.",
+     "Advantages: better team dynamics, stronger communication and collaboration, synergy — the different skills of team members work for one result. Testers help business representatives create acceptance tests, agree on the test strategy and automation approach with developers, and pass their testing knowledge on to the team.",
+     "Limitation: it is not always appropriate — for example, safety-critical systems may need a high level of test independence. Exam trap: the whole team approach does NOT mean testers are unnecessary, and it does NOT mean quality is only the testers’ job."
+    ]
+   },
+   "wallet": {
+    "ru": "Card Wallet делает один человек с ИИ-помощником, но идея «качество — общее дело» встроена в процесс: тесты пишутся вместе с кодом, а CI не пропускает изменение без теста на каждое требование. В настоящей команде раздел 3 тест-плана (какой уровень что проверяет: unit, API, контрактные, e2e) стал бы общим договором тестировщика и разработчиков о стратегии и автоматизации.",
+    "en": "Card Wallet is built by one person with an AI assistant, but the idea “quality is everyone’s job” is built into the process: tests are written together with the code, and CI rejects a change unless every requirement has a test. In a real team, section 3 of the test plan (which level checks what: unit, API, contract, e2e) would be the shared agreement between the tester and developers on strategy and automation.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#3-test-approach"
+   }
+  },
+  {
+   "lo": "FL-1.5.3",
+   "explain": {
+    "ru": [
+     "Независимость помогает находить дефекты: у автора и проверяющего разные когнитивные искажения (в русском силлабусе — «когнитивные убеждения»), и свежий взгляд замечает то, что автор пропускает. Но независимость не заменяет знания продукта — разработчики эффективно находят много дефектов в собственном коде.",
+     "Уровни: проверяет сам автор — независимости нет; коллеги из той же команды — некоторая независимость; тестировщики вне команды автора, но внутри организации — высокая; тестировщики из другой организации — очень высокая. Обычно лучше сочетать несколько уровней: разработчики делают компонентное и интеграционное тестирование компонентов, команда тестирования — системное и системное интеграционное, представители бизнеса — приёмочное.",
+     "Плюсы: независимые тестировщики находят другие виды отказов и дефектов благодаря другому опыту, взглядам и предубеждениям; они могут проверить, оспорить или опровергнуть допущения, сделанные при написании спецификации и реализации. Минусы: изоляция от разработки — плохое сотрудничество, проблемы в общении, даже противостояние; разработчики теряют чувство ответственности за качество; независимых тестировщиков считают узким местом и винят в задержке релиза."
+    ],
+    "en": [
+     "Independence helps find defects: the author and the reviewer have different cognitive biases, and fresh eyes notice what the author misses. But independence does not replace familiarity — developers efficiently find many defects in their own code.",
+     "Levels: the author tests their own work — no independence; peers from the same team — some independence; testers outside the author’s team but in the same organisation — high; testers from another organisation — very high. Usually a mix of levels works best: developers do component and component integration testing, the test team does system and system integration testing, business representatives do acceptance testing.",
+     "Benefits: independent testers find different kinds of failures and defects thanks to different backgrounds, viewpoints and biases; they can verify, challenge or disprove assumptions made during specification and implementation. Drawbacks: isolation from development — poor collaboration, communication problems, even an adversarial relationship; developers lose their sense of responsibility for quality; independent testers are seen as a bottleneck and blamed for release delays."
+    ]
+   },
+   "wallet": {
+    "ru": "BUG-10 нашло независимое ревью кода: скрипт-доказательство восстановил полный номер карты по хранимому SHA-256 за 0,18 с, потому что неизвестных цифр в номере всего шесть. Ревьюер оспорил допущение автора «хэш защищает номер» — типичная польза независимого взгляда. Независимым ревью кода найдены и BUG-09, BUG-11, BUG-12, BUG-13, BUG-14 и BUG-16.",
+    "en": "BUG-10 was found by an independent code review: a proof script recovered the full card number from its stored SHA-256 in 0.18 s, because only six digits of the number are unknown. The reviewer challenged the author’s assumption that “the hash protects the number” — a typical benefit of an independent view. Independent code review also found BUG-09, BUG-11, BUG-12, BUG-13, BUG-14 and BUG-16.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-10.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "командный подход", "en": "whole team approach", "explain": {"ru": "Практика из XP: любой участник с нужными навыками берётся за любую задачу, за качество отвечают все.", "en": "An XP practice: anyone with the right skills takes on any task, and everyone is responsible for quality."}},
+  {"ru": "независимость тестирования", "en": "independence of testing", "explain": {"ru": "Разделение ответственности между автором и проверяющим, чтобы тестирование было объективнее.", "en": "Separation of responsibilities between author and tester to make testing more objective."}},
+  {"ru": "предвзятость автора продукта (предвзятость подтверждения)", "en": "confirmation bias", "explain": {"ru": "Склонность принимать информацию, подтверждающую наши убеждения, и отвергать противоречащую им.", "en": "The tendency to accept information that confirms our beliefs and reject what contradicts them."}},
+  {"ru": "заинтересованная сторона", "en": "stakeholder", "explain": {"ru": "Человек или группа, у которых есть интерес к продукту или проекту: пользователи, бизнес, разработчики, регулятор.", "en": "A person or group with an interest in the product or project: users, business, developers, a regulator."}}
+ ]
+}

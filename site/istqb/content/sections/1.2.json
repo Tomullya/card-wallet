@@ -1,0 +1,77 @@
+{
+ "id": "1.2",
+ "objectives": [
+  {
+   "lo": "FL-1.2.1",
+   "explain": {
+    "ru": [
+     "Сбои ПО стоят денег, времени и репутации, а в крайних случаях — здоровья и жизни. Тестирование — экономически выгодный способ найти дефекты до того, как они дойдут до пользователей. Само тестирование дефекты не исправляет (это делает отладка), поэтому качество объекта оно повышает косвенно.",
+     "Тестирование даёт прямую оценку качества на разных этапах жизненного цикла. Эти данные помогают решать, можно ли идти дальше — например, выпускать релиз. Ещё тестировщики косвенно представляют пользователей в проекте: следят, чтобы их потребности учитывались. Держать в проекте настоящих пользователей обычно слишком дорого или их просто нет.",
+     "Иногда тестирование нужно, чтобы выполнить договор, закон или отраслевой стандарт. И тестовые навыки полезны не только команде тестирования — любой участник может с их помощью приблизить проект к успеху.",
+     "Совет для экзамена: в вопросах «пример вклада тестирования» ищите конкретную пользу — дефект, найденный до релиза; данные для решения о выпуске; учёт потребностей пользователей; соответствие нормам."
+    ],
+    "en": [
+     "Software failures cost money, time and reputation, and in extreme cases health or lives. Testing is a cost-effective way to find defects before they reach users. Testing itself does not fix defects (debugging does), so it improves the quality of the test object only indirectly.",
+     "Testing gives a direct measure of quality at different points in the lifecycle. This information helps decide whether to move on — for example, whether to release. Testers also indirectly represent users on the project, making sure their needs are taken into account. Keeping real users on the project is usually too expensive, or suitable users are not available.",
+     "Sometimes testing is needed to meet a contract, a law or an industry standard. And testing skills are useful beyond the test team — any stakeholder can use them to bring the project closer to success.",
+     "Exam tip: in “example of testing’s contribution” questions look for a concrete benefit — a defect found before release, data for the release decision, users’ needs considered, compliance with regulations."
+    ]
+   },
+   "wallet": {
+    "ru": "Риски из раздела 6 тест-плана — двойное списание, ошибка округления комиссии, доступ к чужим данным — это ровно то, ради чего кошелёк тестируют. Например, BUG-04 (GET /cards/{id} отдаёт карту другого клиента, Critical) ловит автотест test_other_users_card_and_account_404 до того, как дефект увидит пользователь. А критерии выхода (все тесты зелёные, нет открытых Critical/Major) превращают результаты тестов в решение о выпуске.",
+    "en": "The risks in section 6 of the test plan — double charge, commission rounding errors, access to another client’s data — are exactly why the wallet is tested. For example, BUG-04 (GET /cards/{id} returns another client’s card, Critical) is caught by the automated test test_other_users_card_and_account_404 before any user sees it. The exit criteria (all tests green, no open Critical/Major defects) turn test results into a release decision.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#6-risks-and-mitigation"
+   }
+  },
+  {
+   "lo": "FL-1.2.2",
+   "explain": {
+    "ru": [
+     "«Тестирование» и «обеспечение качества» (QA) часто используют как синонимы, но это разные вещи. Тестирование ориентировано на продукт и носит корректирующий характер: проверяем конкретный объект, находим дефекты, их исправляют. Тестирование — основной вид контроля качества; к другим видам относятся формальные методы (проверка моделей, доказательство корректности), моделирование и прототипирование.",
+     "Обеспечение качества ориентировано на процесс и носит превентивный характер: если процесс хороший и его правильно соблюдают, продукт получится хорошим. QA касается и процессов разработки, и процессов тестирования, и отвечает за него каждый участник проекта.",
+     "Результаты тестов нужны обоим: в тестировании — чтобы исправить дефекты, в QA — как обратная связь о том, насколько хорошо работают процессы разработки и тестирования. Запоминалка: тестирование — «продукт, исправляем», QA — «процесс, предотвращаем»."
+    ],
+    "en": [
+     "People often use “testing” and “quality assurance” (QA) as synonyms, but they are different. Testing is product-oriented and corrective: we check a concrete object, find defects, and they get fixed. Testing is the main form of quality control; other forms include formal methods (model checking, proof of correctness), simulation and prototyping.",
+     "Quality assurance is process-oriented and preventive: if a good process is followed correctly, it will produce a good product. QA applies to both development and testing processes, and everyone on the project is responsible for it.",
+     "Test results serve both: in testing they are used to fix defects; in QA they give feedback on how well the development and test processes work. Memory hook: testing — “product, correct”; QA — “process, prevent”."
+    ]
+   },
+   "wallet": {
+    "ru": "Тестирование в Card Wallet — это прогон тестов на конкретной сборке и баг-репорты. QA — правила процесса: каждый исправленный дефект получает регрессионный тест, который падал до исправления (раздел 7 тест-плана), а CI не пропускает изменения, если у требования нет теста. Эти правила не ищут текущие дефекты, а предотвращают будущие.",
+    "en": "Testing in Card Wallet is running tests on a concrete build and writing bug reports. QA is the process rules: every fixed defect gets a regression test that failed before the fix (test plan section 7), and CI rejects a change if a requirement has no test. These rules do not find today’s defects; they prevent tomorrow’s.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-plan.md#7-defect-management"
+   }
+  },
+  {
+   "lo": "FL-1.2.3",
+   "explain": {
+    "ru": [
+     "Цепочка такая: человек совершает ошибку (error, mistake) → в рабочем продукте появляется дефект (defect, fault, bug) → при выполнении дефектного кода может случиться отказ (failure): система не делает то, что должна, или делает то, чего не должна. Люди ошибаются из-за спешки, сложности задачи или окружения, усталости, нехватки подготовки.",
+     "Дефект бывает не только в коде, но и в требованиях, тестовом скрипте, файле сборки. Дефект в раннем продукте (например, в требованиях) тянет за собой дефекты в продуктах, сделанных на его основе. Не каждый дефект приводит к отказу: одни срабатывают всегда, другие — только при особых условиях, третьи — никогда. И не каждый отказ вызван дефектом: причиной могут быть условия окружения, например радиация или электромагнитное поле, повредившие прошивку.",
+     "Первопричина (root cause) — самая глубокая причина проблемы, то, из-за чего вообще произошла ошибка. Её ищут анализом первопричин, обычно когда случился отказ или найден дефект. Устранив первопричину, можно предотвратить похожие дефекты или сделать их реже.",
+     "Совет для экзамена: ошибка — в голове человека, дефект — в продукте, отказ — в поведении при выполнении, первопричина — почему человек ошибся."
+    ],
+    "en": [
+     "The chain: a person makes an error (mistake) → a defect (fault, bug) appears in a work product → when the defective code runs, a failure may happen: the system does not do what it should, or does something it should not. People make errors because of time pressure, complex work or surroundings, tiredness, lack of training.",
+     "A defect can sit not only in code but also in requirements, a test script or a build file. A defect in an early work product (for example, requirements) leads to defects in the work products built from it. Not every defect causes a failure: some always do when executed, some only in special circumstances, some never. And not every failure comes from a defect: environmental conditions such as radiation or electromagnetic fields damaging firmware can cause one too.",
+     "A root cause is the most fundamental reason for a problem — what made the error happen in the first place. It is found by root cause analysis, usually when a failure occurs or a defect is found. Addressing the root cause can prevent similar defects or make them rarer.",
+     "Exam tip: the error is in the person’s head, the defect is in the product, the failure is in the behaviour at run time, the root cause is why the person made the error."
+    ]
+   },
+   "wallet": {
+    "ru": "В BUG-02 отказ — ответ DECLINED, когда сумма за день ровно равна лимиту; дефект — в коде условие ведёт себя как «>=» вместо «>». BUG-05 — дефект в требованиях: лимит карты до 5000,00 (BR-CARD-02), фрод-правило «> 5000,00» (BR-FRD-01) и порядок проверок (BR-PAY-02) вместе делали отказ FRAUD_HIGH_AMOUNT недостижимым. Отказа не случилось — дефект нашли на ревью до появления кода. Вероятная первопричина — правила писали по отдельности и не проверяли, как они взаимодействуют.",
+    "en": "In BUG-02 the failure is the DECLINED response when the day’s total exactly equals the limit; the defect is a condition in the code that behaves like “>=” instead of “>”. BUG-05 is a defect in the requirements: the card limit up to 5000.00 (BR-CARD-02), the fraud rule “> 5000.00” (BR-FRD-01) and the order of checks (BR-PAY-02) together made the FRAUD_HIGH_AMOUNT decline unreachable. No failure ever happened — a review found the defect before any code existed. A likely root cause: the rules were written separately and nobody checked how they interact.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-05.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "качество", "en": "quality", "explain": {"ru": "Степень, в которой продукт удовлетворяет явные и подразумеваемые потребности заинтересованных сторон.", "en": "The degree to which a product satisfies the stated and implied needs of its stakeholders."}},
+  {"ru": "обеспечение качества", "en": "quality assurance", "explain": {"ru": "Превентивная, ориентированная на процесс деятельность по внедрению и улучшению процессов; за неё отвечают все.", "en": "Preventive, process-oriented work on setting up and improving processes; everyone is responsible for it."}},
+  {"ru": "ошибка", "en": "error", "explain": {"ru": "Действие человека, которое приводит к неверному результату (синоним: mistake).", "en": "A human action that produces a wrong result (synonym: mistake)."}},
+  {"ru": "дефект", "en": "defect", "explain": {"ru": "Изъян в рабочем продукте — коде, требованиях, скрипте (синонимы: fault, bug).", "en": "A flaw in a work product — code, requirements, a script (synonyms: fault, bug)."}},
+  {"ru": "отказ", "en": "failure", "explain": {"ru": "Событие, когда система при выполнении не делает то, что должна, или делает то, чего не должна.", "en": "An event where the running system does not do what it should, or does something it should not."}},
+  {"ru": "первопричина", "en": "root cause", "explain": {"ru": "Самая глубокая причина проблемы; её устранение предотвращает похожие дефекты.", "en": "The most fundamental reason for a problem; removing it prevents similar defects."}}
+ ]
+}
