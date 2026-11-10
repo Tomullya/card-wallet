@@ -1,0 +1,79 @@
+{
+ "id": "4.5",
+ "objectives": [
+  {
+   "lo": "FL-4.5.1",
+   "explain": {
+    "ru": [
+     "Методы из 4.2–4.4 нацелены на то, чтобы найти дефекты. Подходы на основе совместной работы добавляют ещё одну цель — не допустить дефектов: бизнес, разработка и тестирование договариваются заранее, пока ничего не написано.",
+     "Пользовательская история описывает функцию, ценную для пользователя или покупателя системы. Обычный шаблон: «Как [роль], я хочу [цель], чтобы [польза для этой роли]», а под ним — критерии приемки. У истории «три Си» (3 C's): карточка (Card — носитель, например запись на доске), диалог (Conversation — как будут пользоваться ПО, устно или письменно) и подтверждение (Confirmation — критерии приемки).",
+     "Пишут историю вместе — с помощью мозгового штурма или диаграммы связей (mind map), — чтобы у команды было общее видение результата с трёх сторон: бизнес, разработка, тестирование. Тестировщик здесь не «принимает готовое», а задаёт вопросы «а как это проверить?».",
+     "Хорошая история соответствует INVEST: независимая, обсуждаемая, ценная, оцениваемая, небольшая, тестируемая. Если заинтересованное лицо не понимает, как её протестировать, история, скорее всего, неясна, не несёт для него ценности — или ему просто нужна помощь с тестированием."
+    ],
+    "en": [
+     "The techniques in 4.2–4.4 aim to detect defects. Collaboration-based approaches add another goal — avoiding defects: business, development and testing agree up front, before anything is built.",
+     "A user story describes a feature valuable to a user or purchaser of the system. The usual format is \"As a [role], I want [goal], so that I can [business value for the role]\", followed by acceptance criteria. A story has the 3 C's: Card (the medium, e.g. an entry on a board), Conversation (how the software will be used, verbal or written) and Confirmation (the acceptance criteria).",
+     "The story is written together — using brainstorming or mind mapping — so the team gets a shared vision of what to deliver from three perspectives: business, development and testing. The tester does not just receive a finished story but asks \"how will we check this?\".",
+     "A good story is INVEST: Independent, Negotiable, Valuable, Estimable, Small, Testable. If a stakeholder does not know how to test a story, it may be unclear, may not be valuable to them — or they may just need help with testing."
+    ]
+   },
+   "wallet": {
+    "ru": "Требования Card Wallet записаны как BR-правила, а не истории, но BR-PAY-03 легко переписать: «Как клиент, я хочу заранее знать комиссию платежа, чтобы не уйти в минус». Чем полезен разбор требований до кода, показывает BUG-05: при анализе трёх требований ещё до реализации выяснилось, что правило фрода «сумма > 5000» никогда бы не сработало, потому что раньше срабатывал дневной лимит. Совместное обсуждение истории нацелено как раз на такие находки — это предотвращение дефекта, а не его поиск.",
+    "en": "Card Wallet requirements are written as BR rules, not stories, but BR-PAY-03 rewrites easily: \"As a client, I want to know a payment's commission in advance, so that I don't overdraw my account\". BUG-05 shows why looking at requirements before code pays off: analysing three requirements side by side before implementation revealed that the fraud rule \"amount > 5000\" could never trigger because the daily limit fired first. Collaborative story discussion aims at exactly such findings — that is defect avoidance, not detection.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-05.md"
+   }
+  },
+  {
+   "lo": "FL-4.5.2",
+   "explain": {
+    "ru": [
+     "Критерии приемки — условия, которым должна соответствовать реализация истории, чтобы заинтересованные стороны её приняли. По сути это тестовые условия, которые тесты должны проверить. Обычно они рождаются из диалога (Conversation).",
+     "Зачем они нужны: очертить границы истории, договориться между заинтересованными лицами, описать позитивные и негативные сценарии, стать основой приемочного тестирования истории и помочь точнее планировать и оценивать.",
+     "Два самых распространённых формата. Ориентированный на сценарии — например, Дано/Когда/Тогда (Given/When/Then) из BDD. Ориентированный на правила — список проверок по пунктам или таблица «вход → выход». Команда может придумать и свой формат, лишь бы критерии были чёткими и однозначными.",
+     "Совет для экзамена: узнайте формат по виду. «Дано… Когда… Тогда…» — сценарии; маркированный список «должно…» или таблица значений — правила."
+    ],
+    "en": [
+     "Acceptance criteria are the conditions an implementation of a user story must meet to be accepted by stakeholders. In effect they are the test conditions the tests should exercise. They usually come out of the Conversation.",
+     "They are used to: define the story's scope, reach consensus among stakeholders, describe both positive and negative scenarios, serve as the basis for the story's acceptance testing, and allow accurate planning and estimation.",
+     "The two most common formats. Scenario-oriented — e.g. Given/When/Then as used in BDD. Rule-oriented — a bullet-point verification list or a table mapping inputs to outputs. A team may use its own format too, as long as the criteria are well-defined and unambiguous.",
+     "Exam tip: recognise the format by its shape. \"Given… When… Then…\" is scenario-oriented; a bullet list of \"must…\" or a table of values is rule-oriented."
+    ]
+   },
+   "wallet": {
+    "ru": "Почти все критерии приемки Card Wallet ориентированы на правила: в BR-PAY-04 — список пунктов, в BR-PAY-02 — таблица порядка проверок, в BR-PAY-03 — пары «вход → выход» (10,00 → 0,50; 123,45 → 1,23). Тот же лимит в виде сценария: «Дано лимит карты 100,00 и сегодня одобрено 60,00; Когда клиент платит 40,00; Тогда платёж APPROVED». Ровно этот сценарий ломает BUG-02.",
+    "en": "Almost all Card Wallet acceptance criteria are rule-oriented: BR-PAY-04 is a bullet list, BR-PAY-02 is a table of check order, BR-PAY-03 gives input → output pairs (10.00 → 0.50; 123.45 → 1.23). The same limit as a scenario: \"Given the card's daily limit is 100.00 and 60.00 was approved today; When the client pays 40.00; Then the payment is APPROVED\". This very scenario is what BUG-02 breaks.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/requirements/BR-payments.md"
+   }
+  },
+  {
+   "lo": "FL-4.5.3",
+   "explain": {
+    "ru": [
+     "Разработка через приемочное тестирование (ATDD) — подход «сначала тест»: сценарии тестирования пишут до реализации истории, и пишут люди с разными взглядами — заказчик, разработчик, тестировщик. Выполнять их можно вручную или автоматически.",
+     "Шаг 1 — совместная работа над спецификацией (specification workshop): команда разбирает историю и критерии приемки (или пишет их, если их ещё нет) и устраняет неполноту, неоднозначности и дефекты. Шаг 2 — тесты по критериям приемки: всей командой или один тестировщик. Тесты — это примеры того, как должна работать система, поэтому «пример» и «тест» здесь почти синонимы. Можно применять методы из 4.2–4.4, например граничные значения.",
+     "Порядок: сначала позитивные тесты (всё идёт как надо, без ошибок), затем негативные, в конце — нефункциональные характеристики (производительность, удобство). Тесты пишут понятным заинтересованным лицам языком: предусловия, входные данные, постусловия.",
+     "Правила, которые проверяют на экзамене: тесты покрывают все характеристики истории и не выходят за её рамки; два теста не должны проверять одно и то же. Если тесты записаны в формате фреймворка автоматизации, разработчики автоматизируют их по ходу реализации — и приемочные тесты становятся исполняемыми требованиями."
+    ],
+    "en": [
+     "Acceptance test-driven development (ATDD) is a test-first approach: test cases are written before the story is implemented, by people with different perspectives — customer, developer, tester. They can be run manually or automated.",
+     "Step 1 is a specification workshop: the team analyses the story and its acceptance criteria (or writes them if missing) and resolves incompleteness, ambiguities and defects. Step 2 is creating test cases from the acceptance criteria — by the whole team or by the tester alone. The tests are examples of how the software should work, so \"example\" and \"test\" are used almost interchangeably. Techniques from 4.2–4.4, e.g. boundary values, can be applied.",
+     "Order: positive tests first (everything goes as expected, no errors), then negative tests, and finally non-functional characteristics (performance, usability). Tests are written in language stakeholders understand: preconditions, inputs, postconditions.",
+     "Rules the exam checks: the tests cover all characteristics of the story and do not go beyond it; no two tests describe the same characteristic. If the tests are captured in a format a test automation framework supports, developers automate them while implementing — and the acceptance tests become executable requirements."
+    ]
+   },
+   "wallet": {
+    "ru": "ATDD на BR-PAY-03 «Комиссия = 1% с округлением, минимум 0,50; только для одобренных платежей». Позитивные: 100,00 → 1,00; 123,45 → 1,23 (округление). Минимум: 10,00 → 0,50; граница 50,00 → 0,50. Негативный: отклонённый платёж → комиссии нет, баланс не меняется. Тест «комиссия в другой валюте» был бы лишним — его нет в истории. В проекте эти примеры стали исполняемыми: тест test_calculate_commission в tests/unit/test_money.py.",
+    "en": "ATDD on BR-PAY-03 \"Commission = 1% rounded, minimum 0.50; only for approved payments\". Positive: 100.00 → 1.00; 123.45 → 1.23 (rounding). Minimum: 10.00 → 0.50; boundary 50.00 → 0.50. Negative: a declined payment → no commission, balance unchanged. A test for \"commission in another currency\" would be out of scope — it is not in the story. In the project these examples became executable: test_calculate_commission in tests/unit/test_money.py.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/test-cases/TC-payments.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "подход к тестированию на основе совместной работы", "en": "collaboration-based test approach", "explain": {"ru": "Подход, где бизнес, разработка и тестирование вместе предотвращают дефекты, а не только ищут их.", "en": "An approach where business, development and testing work together to avoid defects, not only detect them."}},
+  {"ru": "пользовательская история", "en": "user story", "explain": {"ru": "Короткое описание ценной для пользователя функции: «Как [роль], я хочу [цель], чтобы [польза]» плюс критерии приемки.", "en": "A short description of a feature valuable to a user: \"As a [role], I want [goal], so that [value]\" plus acceptance criteria."}},
+  {"ru": "критерии приемки", "en": "acceptance criteria", "explain": {"ru": "Условия, которым должна соответствовать реализация, чтобы заинтересованные стороны её приняли.", "en": "Conditions an implementation must meet to be accepted by stakeholders."}},
+  {"ru": "разработка через приемочное тестирование", "en": "acceptance test-driven development (ATDD)", "explain": {"ru": "Подход «сначала тест»: приемочные тесты по критериям приемки пишутся командой до реализации истории.", "en": "A test-first approach: the team writes acceptance tests from the acceptance criteria before the story is implemented."}},
+  {"ru": "три Си (карточка, диалог, подтверждение)", "en": "3 C's (Card, Conversation, Confirmation)", "explain": {"ru": "Три составляющие истории: носитель, обсуждение использования и критерии приемки.", "en": "A story's three aspects: the medium, the discussion of usage and the acceptance criteria."}},
+  {"ru": "INVEST", "en": "INVEST", "explain": {"ru": "Признаки хорошей истории: независимая, обсуждаемая, ценная, оцениваемая, небольшая, тестируемая.", "en": "Qualities of a good story: Independent, Negotiable, Valuable, Estimable, Small, Testable."}}
+ ]
+}

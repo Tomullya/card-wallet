@@ -1,0 +1,79 @@
+{
+ "id": "4.4",
+ "objectives": [
+  {
+   "lo": "FL-4.4.1",
+   "explain": {
+    "ru": [
+     "Предположение об ошибках — тестировщик заранее «угадывает», где могут быть ошибки, дефекты и отказы, и целится тестами именно туда. Источник догадок — знания: как это приложение вело себя раньше, какие ошибки обычно делают разработчики, какие отказы случались в похожих системах.",
+     "Удобно перебирать типовые места: ввод (правильное значение не принимается, параметр пропущен), вывод (не тот формат или результат), логика (забытый случай, не тот оператор), вычисления (неверный операнд), интерфейсы (несовпадение параметров, несовместимые типы), данные (неверная инициализация, не тот тип).",
+     "Систематический вариант — воспроизведение сбоев (fault attack, иногда говорят «атака на сбои»): тестировщик составляет или берёт готовый список возможных ошибок, дефектов и отказов и под каждый пункт проектирует тест. Список собирают из опыта, данных о прошлых дефектах и отказах или общих знаний о том, почему ПО ломается.",
+     "Ловушка: это не «случайный ввод чего попало». Догадки опираются на знания, а результат сильно зависит от опыта тестировщика."
+    ],
+    "en": [
+     "In error guessing the tester anticipates where errors, defects and failures are likely and aims tests right there. The guesses come from knowledge: how this application behaved in the past, which mistakes developers tend to make, which failures happened in similar applications.",
+     "It helps to walk through typical areas: input (correct input not accepted, parameter missing), output (wrong format or result), logic (missing case, wrong operator), computation (wrong operand), interfaces (parameter mismatch, incompatible types), data (wrong initialisation, wrong type).",
+     "A systematic way to do it is a fault attack: the tester creates or obtains a list of possible errors, defects and failures and designs a test for each item. The list is built from experience, defect and failure data, or common knowledge about why software fails.",
+     "Trap: it is not \"typing random stuff\". The guesses are based on knowledge, and the results depend heavily on the tester's experience."
+    ]
+   },
+   "wallet": {
+    "ru": "В тест-плане Card Wallet предположение об ошибках названо прямо: NUL-символы, некорректный UTF-8, огромные числа. Такие места действительно ломались: NUL в имени или e-mail давал 500 (BUG-08), пароль длиннее 72 байт ронял bcrypt (BUG-06), а date_to=9999-12-31 или offset больше bigint — выписку (BUG-09); их поймали контрактные тесты и ревью кода. Теперь это постоянный список «атак» для любого нового поля: «abc» в числе, NUL, очень длинная строка, гигантское число, крайняя дата.",
+    "en": "The Card Wallet test plan names error guessing explicitly: NUL characters, invalid UTF-8, huge numbers. Such spots really did break: a NUL in a name or e-mail gave 500 (BUG-08), a password over 72 bytes crashed bcrypt (BUG-06), and date_to=9999-12-31 or an offset beyond bigint crashed the statement (BUG-09); contract tests and a code review caught them. Now it is a standing attack list for any new field: \"abc\" in a number, NUL, a very long string, a huge number, an extreme date.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/bug-reports/BUG-08.md"
+   }
+  },
+  {
+   "lo": "FL-4.4.2",
+   "explain": {
+    "ru": [
+     "В исследовательском тестировании тестировщик одновременно проектирует тесты, выполняет их и оценивает результат — и по ходу узнаёт объект всё лучше. Следующий тест подсказывает предыдущий. Цели: понять объект, копнуть глубже прицельными тестами, найти и закрыть непокрытые места.",
+     "Чтобы это не было хаосом, применяют тестирование на основе сеансов: фиксированный отрезок времени (time box), концепция тестирования (charter) с целями сеанса, а после — подведение итогов (debriefing) с заинтересованными лицами. Цели сеанса работают как высокоуровневые тестовые условия, элементы покрытия находят прямо в сеансе, а шаги и находки записывают в протокол сеанса.",
+     "Когда это особенно полезно: спецификаций мало или они плохие, сроки сжаты, или нужно дополнить формальные методы. Лучше всего получается у опытного тестировщика со знанием предметной области, любопытством, аналитическим и творческим мышлением.",
+     "Ловушка: исследовательское тестирование не исключает других методов — внутри сеанса можно применять, например, эквивалентное разбиение. И «без готовых сценариев» не значит «без плана»: у сеанса есть цель и время."
+    ],
+    "en": [
+     "In exploratory testing the tester designs, executes and evaluates tests at the same time, learning more about the test object as they go. Each test suggests the next one. Goals: learn the object, explore it more deeply with focused tests, and create tests for untested areas.",
+     "To keep it structured, teams use session-based testing: a fixed time box, a test charter with the session's test objectives, and afterwards a debriefing with stakeholders interested in the results. The objectives act as high-level test conditions, coverage items are identified during the session, and steps and discoveries go into test session sheets.",
+     "It is most useful when specifications are few or poor, when time is short, or to complement more formal techniques. It works best for an experienced tester with domain knowledge, curiosity, and analytical and creative skills.",
+     "Trap: exploratory testing does not exclude other techniques — inside a session you can apply, say, equivalence partitioning. And \"no prepared scripts\" does not mean \"no plan\": a session has an objective and a time limit."
+    ]
+   },
+   "wallet": {
+    "ru": "Пример сеанса для страницы выписки Card Wallet. Концепция: «Исследовать фильтры и постраничный вывод выписки (статус, тип, даты, страницы по 10), чтобы найти неверные или потерянные операции». Время: 60 минут. По ходу: фильтр DECLINED + COMMISSION (такого не бывает — пусто?), даты «с» позже «по», переход на страницу 2 после смены фильтра, операции на границе суток UTC. Находки — в протокол, итоги — на разбор.",
+    "en": "A sample session for the Card Wallet statement page. Charter: \"Explore the statement filters and paging (status, type, dates, pages of 10) to find wrong or missing transactions\". Time box: 60 minutes. Along the way: filter DECLINED + COMMISSION (never exists — empty?), \"from\" later than \"to\", going to page 2 after changing a filter, transactions at the UTC day boundary. Findings go into the session sheet, results into the debriefing.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/frontend/src/components/Statement.tsx"
+   }
+  },
+  {
+   "lo": "FL-4.4.3",
+   "explain": {
+    "ru": [
+     "При тестировании по чек-листу тестировщик проектирует и выполняет тесты так, чтобы покрыть тестовые условия из списка. Чек-лист составляют по опыту, по тому, что важно пользователю, или по пониманию, почему и как ПО ломается.",
+     "Хороший пункт обычно сформулирован как вопрос и проверяется отдельно и напрямую. Пункты могут касаться требований, интерфейса, характеристик качества — чек-листы бывают и для функционального, и для нефункционального тестирования (например, эвристики удобства использования). В чек-лист не стоит включать то, что проверяется автоматически, то, что лучше сделать входным или выходным критерием, и слишком общие пункты.",
+     "Чек-лист нужно поддерживать: старые пункты со временем «выдыхаются» (разработчики перестают делать эти ошибки), а после серьёзных дефектов появляются новые. Обновляют по анализу дефектов, но не раздувают.",
+     "Без детальных сценариев чек-лист даёт ориентиры и некоторую единообразность. Если пункты высокоуровневые, тестировщики выполняют их по-разному: покрытие может быть шире, но повторяемость ниже — частый вопрос на экзамене."
+    ],
+    "en": [
+     "In checklist-based testing the tester designs, implements and executes tests to cover the test conditions on a checklist. Checklists come from experience, from knowing what matters to the user, or from understanding why and how software fails.",
+     "A good item is usually phrased as a question and can be checked separately and directly. Items can refer to requirements, the UI, quality characteristics — checklists serve both functional and non-functional testing (e.g. usability heuristics). Leave out items that can be checked automatically, items better suited as entry or exit criteria, and items that are too general.",
+     "A checklist needs care: old items lose power over time (developers stop making those mistakes), and new high-severity defects call for new items. Update it from defect analysis, but do not let it grow too long.",
+     "Without detailed test cases a checklist gives guidance and some consistency. If the items are high-level, testers carry them out differently: possibly greater coverage but less repeatability — a common exam question."
+    ]
+   },
+   "wallet": {
+    "ru": "В Card Wallet четыре чек-листа: smoke, регрессия платежей, безопасность, gRPC. Пункт из чек-листа безопасности «Очень длинный пароль (больше 72 байт) → 401 при входе / 422 при регистрации, никогда не 500» — это урок BUG-06, превращённый в строку чек-листа. А по правилу силлабуса пункты, которые уже полностью автоматизированы, в ручном чек-листе лишние — хороший повод пересмотреть его.",
+    "en": "Card Wallet has four checklists: smoke, payments regression, security, gRPC. The security item \"Very long password (over 72 bytes) → 401 on login / 422 on register, never 500\" is the lesson of BUG-06 turned into a checklist line. And by the syllabus rule, items already fully automated do not belong in a manual checklist — a good reason to review it.",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/docs/qa/checklists/security.md"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "предположение об ошибках", "en": "error guessing", "explain": {"ru": "Метод на основе опыта: тесты целятся туда, где по знаниям тестировщика вероятны ошибки, дефекты и отказы.", "en": "An experience-based technique: tests aim where, by the tester's knowledge, errors, defects and failures are likely."}},
+  {"ru": "воспроизведение сбоев (атака на сбои)", "en": "fault attack", "explain": {"ru": "Способ предположения об ошибках: по списку возможных дефектов и отказов под каждый пункт проектируется тест.", "en": "A way to do error guessing: a test is designed for each item of a list of possible defects and failures."}},
+  {"ru": "исследовательское тестирование", "en": "exploratory testing", "explain": {"ru": "Тесты одновременно проектируются, выполняются и оцениваются, пока тестировщик изучает объект.", "en": "Tests are designed, executed and evaluated at the same time while the tester learns the object."}},
+  {"ru": "тестирование на основе сеансов", "en": "session-based testing", "explain": {"ru": "Исследовательское тестирование в рамках отрезка времени, по концепции (charter), с подведением итогов.", "en": "Exploratory testing within a time box, guided by a charter, followed by a debriefing."}},
+  {"ru": "концепция тестирования", "en": "test charter", "explain": {"ru": "Документ с целями сеанса исследовательского тестирования.", "en": "A document with the test objectives of an exploratory test session."}},
+  {"ru": "тестирование на основе чек-листов", "en": "checklist-based testing", "explain": {"ru": "Тесты проектируются и выполняются так, чтобы покрыть тестовые условия из чек-листа.", "en": "Tests are designed and executed to cover the test conditions on a checklist."}}
+ ]
+}

@@ -1,0 +1,35 @@
+{
+ "id": "4.1",
+ "objectives": [
+  {
+   "lo": "FL-4.1.1",
+   "explain": {
+    "ru": [
+     "Методы тестирования — это способы систематически решить две задачи: что тестировать (анализ) и как тестировать (проектирование). Они помогают найти тестовые условия, элементы покрытия и тестовые данные и получить небольшой, но достаточный набор тестов вместо «проверим всё подряд».",
+     "Силлабус делит методы на три группы. Черный ящик (методы на основе спецификации) смотрит только на то, как объект должен себя вести, и не заглядывает внутрь. Поэтому тесты не зависят от реализации: код переписали, а поведение то же — тесты по-прежнему годятся.",
+     "Белый ящик (методы на основе структуры) строит тесты по внутреннему устройству — коду, его ветвям, обработке данных. Такие тесты зависят от того, как система спроектирована, поэтому их можно сделать только после проектирования или реализации.",
+     "Методы на основе опыта опираются на знания и опыт тестировщика, и их польза сильно зависит от его навыков. Они ловят дефекты, которые черный и белый ящик могут пропустить, поэтому дополняют их, а не заменяют. Ловушка на экзамене: «на основе опыта» не значит «без документации» — и не значит, что формальные методы больше не нужны."
+    ],
+    "en": [
+     "Test techniques are systematic ways to answer two questions: what to test (test analysis) and how to test (test design). They help identify test conditions, coverage items and test data, and give a small but sufficient set of tests instead of \"let's try everything\".",
+     "The syllabus has three groups. Black-box techniques (specification-based) look only at how the test object is supposed to behave, never inside it. So the tests are independent of the implementation: the code is rewritten but the behaviour stays the same — the tests are still useful.",
+     "White-box techniques (structure-based) derive tests from the internal structure — the code, its branches, how it processes data. The tests depend on how the software is designed, so they can only be created after design or implementation.",
+     "Experience-based techniques use the tester's knowledge and experience, and their effectiveness depends heavily on the tester's skills. They find defects that black-box and white-box techniques can miss, so they complement those techniques rather than replace them. Exam trap: \"experience-based\" does not mean \"no documentation\" — and it does not make formal techniques unnecessary."
+    ]
+   },
+   "wallet": {
+    "ru": "Одна и та же функция — комиссия платежа (BR-PAY-03) — тремя способами. Черный ящик: по требованию «1%, минимум 0,50» берём суммы 10,00 → 0,50 и 100,00 → 1,00, не открывая код. Белый ящик: читаем money.py, видим max(1% от суммы, 0,50) и проверяем оба исхода. На основе опыта: вспоминаем, что в деньгах часто ломается округление, и пробуем 150,50 → 1,51 (половина копейки округляется вверх).",
+    "en": "The same feature — payment commission (BR-PAY-03) — three ways. Black box: from the requirement \"1%, minimum 0.50\" we pick 10.00 → 0.50 and 100.00 → 1.00 without opening the code. White box: we read money.py, see max(1% of amount, 0.50) and test both outcomes. Experience-based: we know rounding often breaks in money code, so we try 150.50 → 1.51 (half a cent rounds up).",
+    "link": "https://github.com/Tomullya/card-wallet/blob/main/wallet-api/app/services/money.py"
+   }
+  }
+ ],
+ "terms": [
+  {"ru": "метод проектирования тестов", "en": "test technique", "explain": {"ru": "Систематический способ решить, что и как тестировать: найти тестовые условия, элементы покрытия и тестовые данные.", "en": "A systematic way to decide what and how to test: to find test conditions, coverage items and test data."}},
+  {"ru": "тестирование методом черного ящика", "en": "black-box test technique", "explain": {"ru": "Метод на основе спецификации: тесты строятся по требуемому поведению без взгляда на внутреннее устройство.", "en": "A specification-based technique: tests come from the required behaviour without looking at the internal structure."}},
+  {"ru": "разработка тестов методом белого ящика", "en": "white-box test technique", "explain": {"ru": "Метод на основе структуры: тесты строятся по коду и внутренней обработке данных.", "en": "A structure-based technique: tests come from the code and internal processing."}},
+  {"ru": "метод проектирования тестов на основе опыта", "en": "experience-based test technique", "explain": {"ru": "Метод, где тесты придумываются по знаниям и опыту тестировщика; дополняет черный и белый ящик.", "en": "A technique where tests come from the tester's knowledge and experience; it complements black-box and white-box techniques."}},
+  {"ru": "элемент покрытия", "en": "coverage item", "explain": {"ru": "То, что метод требует «закрыть» тестами (класс, граница, ветвь…), чтобы измерить покрытие.", "en": "What a technique asks tests to exercise (a partition, a boundary, a branch…) so that coverage can be measured."}},
+  {"ru": "покрытие", "en": "coverage", "explain": {"ru": "Доля элементов покрытия, проверенных тестами, в процентах.", "en": "The percentage of coverage items exercised by tests."}}
+ ]
+}
