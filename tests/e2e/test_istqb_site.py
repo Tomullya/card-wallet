@@ -269,3 +269,19 @@ def test_section_43_theory_and_quiz(page, istqb_url):
     page.get_by_test_id("tab-quiz").click()
     expect(page.get_by_test_id("quiz-question")).to_have_count(5)
 
+
+
+# ---------- chapter pages ----------
+
+
+@pytest.mark.req("NFR-11")
+@pytest.mark.parametrize("chapter", ["1", "2", "3", "4", "5", "6"])
+def test_chapter_page_has_comic_and_sections(page, istqb_url, chapter):
+    open_site(page, istqb_url, f"#/ch/{chapter}")
+    panels = page.get_by_test_id("comic-panel")
+    expect(panels.first).to_be_visible()
+    assert 3 <= panels.count() <= 4
+    expect(page.get_by_test_id("comic-bubble").first).not_to_be_empty()
+    expect(page.get_by_test_id("chapter-section").first).to_be_visible()
+    page.get_by_test_id("chapter-section").first.click()
+    expect(page).to_have_url(re.compile(rf"#/s/{chapter}\.1/theory$"))

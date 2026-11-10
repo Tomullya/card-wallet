@@ -125,5 +125,9 @@
  "cov.statement": "Statement coverage: {pct}%",
  "cov.branch": "Branch coverage: {pct}% (taken: {edges})",
  "cov.missing": "Branches not taken: {edges}",
- "state.invalidStep": "invalid transition"
+ "state.invalidStep": "invalid transition",
+ "char.owl": "Post owl",
+ "char.treasurer": "Mage-Treasurer",
+ "char.watcher": "Mage-Watcher",
+ "char.gnome": "Gnome-Trickster"
 }

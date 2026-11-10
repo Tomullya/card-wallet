@@ -1,0 +1,308 @@
+{
+ "1": [
+  {
+   "scene": "bank",
+   "speaker": "treasurer",
+   "pose": "panic",
+   "side": "left",
+   "text": {
+    "ru": "Устал под вечер и написал ≥ вместо > в проверке лимита…",
+    "en": "Tired in the evening, I wrote ≥ instead of > in the limit check…"
+   },
+   "caption": {
+    "ru": "Ошибка (error) — действие человека",
+    "en": "Error — a human action"
+   }
+  },
+  {
+   "scene": "hourglass",
+   "speaker": "gnome",
+   "pose": "sneaky",
+   "side": "right",
+   "text": {
+    "ru": "Хе-хе. Теперь в коде живу я — дефект!",
+    "en": "Heh-heh. Now I live in the code — a defect!"
+   },
+   "caption": {
+    "ru": "Дефект (defect) — изъян в коде",
+    "en": "Defect — a flaw in the code"
+   }
+  },
+  {
+   "scene": "tower",
+   "speaker": "inspector",
+   "pose": "stern",
+   "side": "right",
+   "text": {
+    "ru": "Клиент платит ровно до лимита — и получает отказ. Это отказ системы!",
+    "en": "A client pays exactly up to the limit — and is declined. That is a failure!"
+   },
+   "caption": {
+    "ru": "Отказ (failure) — то, что видно снаружи",
+    "en": "Failure — what you see from outside"
+   },
+   "stamp": "FAILURE"
+  },
+  {
+   "scene": "bank",
+   "speaker": "inspector",
+   "pose": "happy",
+   "side": "left",
+   "text": {
+    "ru": "Тестирование показало отказ. Найти и исправить дефект — это уже отладка.",
+    "en": "Testing showed the failure. Finding and fixing the defect is debugging."
+   },
+   "caption": {
+    "ru": "BUG-02 в Card Wallet",
+    "en": "BUG-02 in Card Wallet"
+   }
+  }
+ ],
+ "2": [
+  {
+   "scene": "tower",
+   "speaker": "inspector",
+   "pose": "idle",
+   "side": "right",
+   "text": {
+    "ru": "Компонент, интеграция, система, приёмка — проверяем на каждом этаже башни.",
+    "en": "Component, integration, system, acceptance — we test on every floor of the tower."
+   },
+   "caption": {
+    "ru": "Уровни тестирования",
+    "en": "Test levels"
+   }
+  },
+  {
+   "scene": "bank",
+   "speaker": "treasurer",
+   "pose": "ask",
+   "side": "left",
+   "text": {
+    "ru": "Тестировщик уже на планировании? Ещё нет ни строчки кода!",
+    "en": "A tester at planning already? There is not a line of code yet!"
+   }
+  },
+  {
+   "scene": "tower",
+   "speaker": "inspector",
+   "pose": "happy",
+   "side": "right",
+   "text": {
+    "ru": "Чем раньше найдём дефект, тем дешевле. Это сдвиг влево.",
+    "en": "The earlier we find a defect, the cheaper it is. That is shift left."
+   },
+   "caption": {
+    "ru": "Сдвиг влево",
+    "en": "Shift left"
+   }
+  },
+  {
+   "scene": "sky",
+   "speaker": "owl",
+   "pose": "idle",
+   "side": "right",
+   "text": {
+    "ru": "После исправления проверяем сам баг — и всё вокруг него.",
+    "en": "After a fix we check the bug itself — and everything around it."
+   },
+   "caption": {
+    "ru": "Подтверждение и регрессия",
+    "en": "Confirmation and regression"
+   },
+   "owls": 3
+  }
+ ],
+ "3": [
+  {
+   "scene": "bank",
+   "speaker": "treasurer",
+   "pose": "ask",
+   "side": "left",
+   "text": {
+    "ru": "Правило: отклонять суммы больше 5000. А лимит карты — максимум 5000, и он проверяется раньше…",
+    "en": "Rule: decline amounts above 5000. But a card limit is at most 5000, and it is checked first…"
+   },
+   "caption": {
+    "ru": "Свиток требований",
+    "en": "The requirements scroll"
+   }
+  },
+  {
+   "scene": "tower",
+   "speaker": "inspector",
+   "pose": "stern",
+   "side": "right",
+   "text": {
+    "ru": "Значит, правило фрода никогда не сработает! Дефект найден, а код ещё не запускали.",
+    "en": "So the fraud rule can never trigger! A defect found before any code ran."
+   },
+   "stamp": "REVIEW"
+  },
+  {
+   "scene": "hourglass",
+   "speaker": "gnome",
+   "pose": "panic",
+   "side": "left",
+   "text": {
+    "ru": "Меня нашли на ревью требований? Так нечестно!",
+    "en": "Found me in a requirements review? Not fair!"
+   },
+   "caption": {
+    "ru": "BUG-05 в Card Wallet",
+    "en": "BUG-05 in Card Wallet"
+   }
+  }
+ ],
+ "4": [
+  {
+   "scene": "sky",
+   "speaker": "owl",
+   "pose": "idle",
+   "side": "right",
+   "text": {
+    "ru": "Не нужно слать сову с каждой суммой — по одной на класс!",
+    "en": "No need to send an owl with every amount — one per partition!"
+   },
+   "caption": {
+    "ru": "Классы эквивалентности",
+    "en": "Equivalence partitions"
+   },
+   "owls": 3
+  },
+  {
+   "scene": "hourglass",
+   "speaker": "gnome",
+   "pose": "sneaky",
+   "side": "left",
+   "text": {
+    "ru": "А я спрячусь ровно на границе, на 5000,00…",
+    "en": "And I will hide right on the boundary, at 5000.00…"
+   },
+   "caption": {
+    "ru": "Граничные значения",
+    "en": "Boundary values"
+   }
+  },
+  {
+   "scene": "tower",
+   "speaker": "inspector",
+   "pose": "happy",
+   "side": "right",
+   "text": {
+    "ru": "Проверим 5000,00 и 5000,01 — тебе негде спрятаться!",
+    "en": "We test 5000.00 and 5000.01 — nowhere to hide!"
+   },
+   "stamp": "BVA"
+  },
+  {
+   "scene": "tower",
+   "speaker": "watcher",
+   "pose": "ask",
+   "side": "left",
+   "text": {
+    "ru": "А ещё я просто введу «abc» в сумму. Опыт подсказывает!",
+    "en": "And I will just type \"abc\" as the amount. Experience says so!"
+   },
+   "caption": {
+    "ru": "Тестирование на основе опыта",
+    "en": "Experience-based testing"
+   }
+  }
+ ],
+ "5": [
+  {
+   "scene": "tower",
+   "speaker": "inspector",
+   "pose": "idle",
+   "side": "right",
+   "text": {
+    "ru": "Что тестируем, чем и когда закончим — всё в плане тестирования.",
+    "en": "What we test, with what, and when we stop — it is all in the test plan."
+   },
+   "caption": {
+    "ru": "План",
+    "en": "The plan"
+   }
+  },
+  {
+   "scene": "bank",
+   "speaker": "treasurer",
+   "pose": "panic",
+   "side": "left",
+   "text": {
+    "ru": "Сломаются платежи — беда. Сломается выписка — неприятно. Где риск выше?",
+    "en": "If payments break — disaster. If the statement breaks — annoying. Where is the risk higher?"
+   },
+   "caption": {
+    "ru": "Риски",
+    "en": "Risks"
+   }
+  },
+  {
+   "scene": "hourglass",
+   "speaker": "gnome",
+   "pose": "sneaky",
+   "side": "right",
+   "text": {
+    "ru": "Опиши меня так, чтобы меня смогли повторить… если сумеешь!",
+    "en": "Describe me so that I can be reproduced… if you can!"
+   },
+   "caption": {
+    "ru": "Отчёт о дефекте",
+    "en": "Defect report"
+   }
+  },
+  {
+   "scene": "tower",
+   "speaker": "inspector",
+   "pose": "happy",
+   "side": "left",
+   "text": {
+    "ru": "Шаги, ожидаемое, фактическое, серьёзность, окружение — готово!",
+    "en": "Steps, expected, actual, severity, environment — done!"
+   },
+   "stamp": "OK"
+  }
+ ],
+ "6": [
+  {
+   "scene": "tower",
+   "speaker": "watcher",
+   "pose": "happy",
+   "side": "left",
+   "text": {
+    "ru": "Волшебные инструменты: CI, отчёты, автотесты в браузере…",
+    "en": "Magic tools: CI, reports, browser automation…"
+   },
+   "caption": {
+    "ru": "Инструменты",
+    "en": "Tools"
+   }
+  },
+  {
+   "scene": "hourglass",
+   "speaker": "gnome",
+   "pose": "sneaky",
+   "side": "right",
+   "text": {
+    "ru": "Купи автоматизацию — и тестировщики больше не нужны!",
+    "en": "Buy automation — and you need no testers anymore!"
+   }
+  },
+  {
+   "scene": "tower",
+   "speaker": "inspector",
+   "pose": "stern",
+   "side": "right",
+   "text": {
+    "ru": "Нет! Скрипты надо поддерживать, а результатам — доверять с умом. Это риски автоматизации.",
+    "en": "No! Scripts need maintenance, and results need sensible trust. Those are automation risks."
+   },
+   "caption": {
+    "ru": "Польза и риски",
+    "en": "Benefits and risks"
+   }
+  }
+ ]
+}

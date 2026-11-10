@@ -125,5 +125,9 @@
  "cov.statement": "Покрытие операторов: {pct}%",
  "cov.branch": "Покрытие ветвей: {pct}% (пройдены: {edges})",
  "cov.missing": "Не пройдены ветви: {edges}",
- "state.invalidStep": "недопустимый переход"
+ "state.invalidStep": "недопустимый переход",
+ "char.owl": "Почтовая сова",
+ "char.treasurer": "Маг-Казначей",
+ "char.watcher": "Маг-Наблюдатель",
+ "char.gnome": "Гном-Проказник"
 }

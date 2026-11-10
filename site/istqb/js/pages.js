@@ -1,5 +1,6 @@
 // Home (map of chapters) and chapter pages.
 
+import { renderComic } from "./comic.js";
 import { pick } from "./i18n.js";
 import { registerPage } from "./tabs.js";
 
@@ -40,11 +41,14 @@ registerPage("home", ({ t, syllabus, progress }) => {
   return wrap;
 });
 
-registerPage("chapter", (ctx) => {
+let comics = null;
+
+registerPage("chapter", async (ctx) => {
   const { t, chapter, progress } = ctx;
+  comics ??= await fetch(new URL("../content/comics.json", import.meta.url)).then((r) => r.json());
   const wrap = el("div", "chapter");
   wrap.dataset.testid = "chapter-page";
-  if (ctx.renderComic) wrap.append(ctx.renderComic(chapter.id));
+  if (comics[chapter.id]) wrap.append(renderComic(comics[chapter.id], t));
   wrap.append(el("h2", "chapter__h", t("chapter.sections")));
   const done = progress.get().sections;
   const list = el("ol", "chapter__sections");

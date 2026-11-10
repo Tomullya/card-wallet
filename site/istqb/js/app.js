@@ -192,7 +192,8 @@ async function render() {
   } else {
     setHead(t(`page.${r.page}.kicker`), t(`page.${r.page}.title`), t(`page.${r.page}.subtitle`));
   }
-  panel.replaceChildren(await Promise.resolve(renderPage(r.page, ctx)));
+  const node = await Promise.resolve(renderPage(r.page, ctx));
+  if (id === renderId) panel.replaceChildren(node); // skip if the reader already moved on
 }
 
 function applyTheme(theme) {
