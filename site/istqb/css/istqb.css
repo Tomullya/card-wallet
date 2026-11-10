@@ -194,3 +194,41 @@
 .code-listing li { padding: 0 6px; border-radius: 4px; }
 .code-listing li[data-hit="true"] { background: color-mix(in srgb, var(--rune-ok) 22%, transparent); }
 .code-listing code { white-space: pre-wrap; }
+
+/* ---------- glossary ---------- */
+.glossary__search { width: 100%; max-width: 520px; margin: 6px 0 16px; padding: 10px 14px; font: 400 16px/1.4 var(--font-body); color: var(--ink); background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; }
+.glossary__ref { margin-left: 6px; font: 600 13px/1 var(--font-mono); color: var(--post-text); }
+
+/* ---------- mock exam ---------- */
+.exam { display: grid; gap: 14px; max-width: 82ch; }
+.exam__extended { display: flex; gap: 8px; align-items: center; }
+.exam__bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  align-items: center;
+  padding: 10px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: var(--paper);
+}
+.exam__timer { font: 700 20px/1 var(--font-mono); }
+.exam__timer[data-low="true"] { color: var(--seal); }
+.exam__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.exam__stem { margin: 0 0 8px; }
+.exam__options { display: grid; gap: 6px; }
+.exam__option { display: flex; gap: 8px; align-items: baseline; padding: 6px 10px; border: 2px solid var(--line); border-radius: 10px; cursor: pointer; }
+.exam__option:has(input:checked) { border-color: var(--post); background: var(--parchment); }
+.exam__confirm { padding: 12px 14px; border: 2px solid var(--seal); border-radius: 12px; background: var(--paper); }
+.exam__table { min-width: 280px; }
+.exam__table td { text-align: right; }
+.exam__review { padding: 14px 16px; border: 2px solid var(--line); border-radius: 12px; background: var(--paper); }
+.exam__answers { margin: 0 0 6px; padding-left: 20px; }
+.exam__answers li[data-state="right"] { color: var(--rune-ok); font-weight: 600; }
+.exam__answers li[data-state="wrong"] { color: var(--seal); text-decoration: line-through; }
+.exam__samples { margin-top: 18px; padding-top: 12px; border-top: 2px solid var(--line); }
+.exam__samples h2 { font: 700 20px/1.2 var(--font-display); margin: 0 0 6px; }
+.exam__samples a { color: var(--post-text); font-weight: 600; }

@@ -46,3 +46,14 @@ export function save(sectionId, quizScore) {
   data.sections = sections;
   writeAll(data);
 }
+
+/** The mock exam in progress or the last finished one (see exam.js), or null. */
+export function getExam() {
+  return readAll().exam ?? null;
+}
+
+export function setExam(state) {
+  const data = readAll();
+  data.exam = state;
+  writeAll(data);
+}

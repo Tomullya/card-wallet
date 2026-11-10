@@ -285,3 +285,75 @@ def test_chapter_page_has_comic_and_sections(page, istqb_url, chapter):
     expect(page.get_by_test_id("chapter-section").first).to_be_visible()
     page.get_by_test_id("chapter-section").first.click()
     expect(page).to_have_url(re.compile(rf"#/s/{chapter}\.1/theory$"))
+
+
+# ---------- glossary and mock exam ----------
+
+
+@pytest.mark.req("NFR-11")
+def test_glossary_search_both_languages(page, istqb_url):
+    open_site(page, istqb_url, "#/glossary")
+    terms = page.get_by_test_id("glossary-term")
+    expect(terms.first).to_be_visible()
+    total = terms.count()
+    page.get_by_test_id("glossary-search").fill("граничн")
+    expect(terms.filter(visible=True).first).to_contain_text("boundary value")
+    ru_hits = terms.filter(visible=True).count()
+    page.get_by_test_id("glossary-search").fill("boundary")
+    expect(terms.filter(visible=True)).to_have_count(ru_hits)
+    assert ru_hits < total
+
+
+def start_exam(page, istqb_url):
+    open_site(page, istqb_url, "#/exam")
+    page.get_by_test_id("exam-start").click()
+    expect(page.get_by_test_id("exam-question")).to_have_count(40)
+
+
+@pytest.mark.req("NFR-11")
+def test_official_samples_links(page, istqb_url):
+    open_site(page, istqb_url, "#/exam")
+    links = page.get_by_test_id("sample-link")
+    assert links.count() >= 4
+    for i in range(links.count()):
+        expect(links.nth(i)).to_have_attribute("href", re.compile(r"^https://(www\.)?(istqb\.org|rstqb\.org)/"))
+
+
+@pytest.mark.req("NFR-11")
+def test_mock_exam_full_run(page, istqb_url):
+    start_exam(page, istqb_url)
+    expect(page.get_by_test_id("exam-timer")).to_contain_text(re.compile(r"\d+:\d\d"))
+    questions = page.get_by_test_id("exam-question")
+    for i in range(40):
+        inputs = questions.nth(i).locator("input")
+        inputs.nth(0).check()
+        if inputs.nth(0).get_attribute("type") == "checkbox":
+            inputs.nth(1).check()
+    expect(page.get_by_test_id("exam-answered")).to_contain_text("40")
+    page.get_by_test_id("exam-submit").click()
+    page.get_by_test_id("exam-confirm").click()
+    expect(page.get_by_test_id("exam-score")).to_contain_text("/ 40")
+    expect(page.get_by_test_id("exam-chapter-row")).to_have_count(6)
+    review = page.get_by_test_id("exam-review-item")
+    if review.count():
+        expect(review.first.get_by_test_id("quiz-why")).to_be_visible()
+
+
+@pytest.mark.req("NFR-11")
+def test_language_switch_keeps_exam(page, istqb_url):
+    start_exam(page, istqb_url)
+    first = page.get_by_test_id("exam-question").first.locator("input")
+    first.nth(1).check()
+    page.get_by_test_id("lang-en").click()
+    expect(page.get_by_test_id("exam-question")).to_have_count(40)
+    expect(page.get_by_test_id("exam-question").first.locator("input").nth(1)).to_be_checked()
+    expect(page.get_by_test_id("exam-answered")).to_contain_text("1")
+
+
+@pytest.mark.req("NFR-11")
+def test_exam_survives_reload(page, istqb_url):
+    start_exam(page, istqb_url)
+    page.get_by_test_id("exam-question").nth(2).locator("input").nth(0).check()
+    page.reload()
+    expect(page.get_by_test_id("exam-question")).to_have_count(40)
+    expect(page.get_by_test_id("exam-question").nth(2).locator("input").nth(0)).to_be_checked()

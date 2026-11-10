@@ -9,6 +9,8 @@ import "./theory.js";
 import "./terms.js";
 import "./quiz.js";
 import "./trainers.js";
+import "./glossary.js";
+import "./exam-page.js";
 
 export const BASE_TABS = ["theory", "terms", "quiz"];
 let syllabus = null;
@@ -145,6 +147,7 @@ async function render() {
     progress,
     syllabus,
     questions,
+    loadSection,
     go,
     rerender: render,
     refreshMenu: () => renderMenu(r),
